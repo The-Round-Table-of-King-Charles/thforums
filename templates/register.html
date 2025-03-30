@@ -3,24 +3,52 @@
 {% block content %}
 	<h1>Register</h1>
 	
-	<form method="POST" action="">
+	<form method="POST" action="" novalidate>
 		{{ form.hidden_tag() }}
 		<fieldset><legend>Register</legend>
 			<div>
 				{{ form.username.label() }}
-				{{ form.username() }}
+				{% if form.username.errors %}
+					{% for error in form.username.errors %}
+						{{ form.username() }}
+						<span>{{ error }}</span>
+					{% endfor %}
+				{% else %}
+					{{ form.username() }}
+				{% endif %}	
 			</div>
 			<div>
 				{{ form.email.label() }}
-				{{ form.email() }}
+				{% if form.email.errors %}
+					{% for error in form.email.errors %}
+						{{ form.email() }}
+						<span>{{ error }}</span>
+					{% endfor %}
+				{% else %}
+					{{ form.email() }}
+				{% endif %}	
 			</div>
 			<div>
 				{{ form.password.label() }}
-				{{ form.password() }}
+				{% if form.password.errors %}
+					{% for error in form.password.errors %}
+						{{ form.password() }}
+						<span>{{ error }}</span>
+					{% endfor %}
+				{% else %}
+					{{ form.password() }}
+				{% endif %}	
 			</div>
 			<div>
 				{{ form.confirm_password.label() }}
-				{{ form.confirm_password() }}
+				{% if form.confirm_password.errors %}
+					{% for error in form.confirm_password.errors %}
+						{{ form.confirm_password() }}
+						<span>{{ error }}</span>
+					{% endfor %}
+				{% else %}
+					{{ form.confirm_password() }}
+				{% endif %}	
 			</div>
 			<div><br>
 				{{ form.submit() }}
@@ -29,6 +57,6 @@
 		
 	</form>
 	<div><br>
-		<a href={{ url_for("register") }}>Don't have an account?</a>
+		<small><a href={{ url_for("register") }}>Don't have an account?</a></small>
 	</div>
 {% endblock %}

@@ -12,6 +12,15 @@
 	<a href={{ url_for("register") }}>Register</a>
 	<hr>
 </div>
+<div>
+	{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+			{% for category, message in messages %}
+				<ul><li>{{ message }}</li></ul>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+</div>
 {% block content %}
 {% endblock %}
 </body>

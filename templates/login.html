@@ -3,7 +3,7 @@
 {% block content %}
 	<h1>Login</h1>
 	
-	<form method="POST" action="">
+	<form method="POST" action="" novalidate>
 		{{ form.hidden_tag() }}
 		<fieldset><legend>Login</legend>
 			<div>
@@ -25,7 +25,7 @@
 		
 	</form>
 	<div><br>
-		<a href={{ url_for("register") }}>Don't have an account?</a>
+		<small><a href={{ url_for("register") }}>Don't have an account?</a></small>
 	</div>
 	
 	
