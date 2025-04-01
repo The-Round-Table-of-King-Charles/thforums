@@ -4,19 +4,28 @@
 	<h1>Register</h1>
 	
 	<form method="POST" action="" novalidate>
-		{{ form.hidden_tag() }}
+		{{ form.hidden_tag() }} <!--CSRF protection daw-->
 		<fieldset><legend>Register</legend>
 			<div>
+				<!-- 
+				Short explanation here para di malimutan:
+				
+				May if statement dito, where ichecheck muna if hindi tumugma yung validators galing sa forms.py
+				Pero since sa initial visit palang sa site siyempre wala ka pa iniinput so since walang invalid inputs, 
+				iskiskip lang yung if statement, diretso tayo sa else which is ishoshow lang yung normal field form.
+				Pero if invalid na, lalabas na yung invalid messages depending sa kung ano yung problem.
+				-->
 				{{ form.username.label() }}
-				{% if form.username.errors %}
-					{% for error in form.username.errors %}
+				{% if form.username.errors %} <!--Checks if may error-->
+					{% for error in form.username.errors %} <!--Kinukuha kung ano yung error-->
 						{{ form.username() }}
-						<span>{{ error }}</span>
+						<span>{{ error }}</span> <!--Pinapakita kung ano yung error-->
 					{% endfor %}
 				{% else %}
 					{{ form.username() }}
 				{% endif %}	
 			</div>
+			<!--Same logic for all input fields below-->
 			<div>
 				{{ form.email.label() }}
 				{% if form.email.errors %}
@@ -56,7 +65,7 @@
 		</fieldset>
 		
 	</form>
-	<div><br>
-		<small><a href={{ url_for("register") }}>Don't have an account?</a></small>
+	<div><br> <!--Redirect to login.html-->
+		<small><a href={{ url_for("login") }}>Already had an account?</a></small>
 	</div>
 {% endblock %}
