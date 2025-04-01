@@ -1,8 +1,9 @@
-from flask import Flask, render_template, url_for, flash, redirect
-from forms import RegistrationForm, LoginForm # import from forms.py
+from flask import render_template, url_for, flash, redirect
+from thforums import app
 
-app = Flask(__name__)
-app.config["SECRET_KEY"] = 'aa56904776ed5bafe4537348b65e1bf5' # Required by certain imports for security reasons daw, ewan
+# it has to be thforums.<module> because we are in a package under the thforums folder
+from thforums.forms import RegistrationForm, LoginForm # import from forms.py
+from thforums.models import User, Post # import from models.py
 
 # mock database kase inaaral pa
 posts = [
@@ -22,6 +23,7 @@ posts = [
         "date_posted": "3/21/2025"
     },
 ]
+
 # website routes
 @app.route("/")
 @app.route("/home")
@@ -32,6 +34,7 @@ def home():
 def about():
     return render_template("about.html", title="About")
 
+# authentication routes
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -50,6 +53,3 @@ def register():
         flash(f"Account created successfully", "success")
         return redirect(url_for("login"))
     return render_template("register.html", title="Register", form=form)
-    
-if __name__ == "__main__": # launch this python file in debug mode para di ka relaunch ng relaunch
-    app.run(debug=True)
