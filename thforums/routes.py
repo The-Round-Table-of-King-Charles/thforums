@@ -1,5 +1,6 @@
-from flask import render_template, url_for, flash, redirect
-from thforums import app
+from flask import render_template, url_for, flash, redirect, request
+from flask_login import login_user, logout_user, current_user, login_required
+from thforums import app, db, bcrypt
 
 # it has to be thforums.<module> because we are in a package under the thforums folder
 from thforums.forms import RegistrationForm, LoginForm # import from forms.py
@@ -33,23 +34,44 @@ def home():
 @app.route("/about")
 def about():
     return render_template("about.html", title="About")
+    
+@app.route("/profile")
+@login_required
+def profile():
+    return render_template("profile.html", title="Profile", posts=posts)
 
-# authentication routes
+# authentication routes, might put this on a seperate file
+@app.route("/register", methods=["GET","POST"])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+    form = RegistrationForm()
+    if form.validate_on_submit(): # validation means if lahat ng entry sa forms is valid after submit
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash(f"Account created successfully! Please log in.", "success")
+        return redirect(url_for("login"))
+    return render_template("register.html", title="Register", form=form)
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
     form = LoginForm()
     if form.validate_on_submit(): # validation means if lahat ng entry sa forms is valid after submit
-        if form.email.data == "charles@gmail.com" and form.password.data == "password":
-            flash(f"Logged in successfully", "success")
-            return redirect(url_for("home"))
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get("next")
+            flash(f"Logged in successfully!", "error")
+            return redirect(next_page) if next_page else redirect(url_for("home"))
         else:
             flash(f"Wrong credentials", "error")
     return render_template("login.html", title="Login", form=form)
     
-@app.route("/register", methods=["GET","POST"])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit(): # validation means if lahat ng entry sa forms is valid after submit
-        flash(f"Account created successfully", "success")
-        return redirect(url_for("login"))
-    return render_template("register.html", title="Register", form=form)
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("home"))

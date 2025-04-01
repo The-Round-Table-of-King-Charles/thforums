@@ -6,13 +6,28 @@
 	<form method="POST" action="" novalidate>
 		{{ form.hidden_tag() }} <!--CSRF protection daw-->
 		<fieldset><legend>Login</legend>
+			<!--Explanation at register.html-->
 			<div>
 				{{ form.email.label() }}
-				{{ form.email() }}
+				{% if form.email.errors %}
+					{% for error in form.email.errors %}
+						{{ form.email() }}
+						<span>{{ error }}</span>
+					{% endfor %}
+				{% else %}
+					{{ form.email() }}
+				{% endif %}	
 			</div>
 			<div>
 				{{ form.password.label() }}
-				{{ form.password() }}
+				{% if form.password.errors %}
+					{% for error in form.password.errors %}
+						{{ form.password() }}
+						<span>{{ error }}</span>
+					{% endfor %}
+				{% else %}
+					{{ form.password() }}
+				{% endif %}	
 			</div>
 			<div>
 				{{ form.remember.label }}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang=en>
 <head>
-	<title>{{title}} - Forums</title>
+	<title>{{title}} - THForums</title>
 </head>
 <body>
 <div>
@@ -9,8 +9,13 @@
 	<b>Tavernhold Forums | </b>
 	<a href={{ url_for("home") }}>Home</a>
 	<a href={{ url_for("about") }}>About</a>
-	<a href={{ url_for("login") }}>Login</a>
-	<a href={{ url_for("register") }}>Register</a>
+	{% if current_user.is_authenticated %}
+			<a href={{ url_for("profile") }}>Profile</a>
+			<a href={{ url_for("logout") }}>Logout</a>
+	{% else %}
+		<a href={{ url_for("login") }}>Login</a>
+		<a href={{ url_for("register") }}>Register</a>
+	{% endif %}
 	<hr>
 </div>
 <div>
