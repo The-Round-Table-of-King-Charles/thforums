@@ -6,7 +6,7 @@ from thforums import app, db, bcrypt
 from thforums.forms import RegistrationForm, LoginForm # import from forms.py
 from thforums.models import User, Post # import from models.py
 
-# mock database kase inaaral pa
+# mock database
 posts = [
     {   "author": "Charles Arvin",
         "title": "Looking for coins",
