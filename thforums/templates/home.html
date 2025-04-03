@@ -2,14 +2,11 @@
 
 {% block content %}
 	{% for post in posts %}
-		<h2>{{post.title}}</h2>
-		<p><i>from {{post.author}} at {{post.date_posted}}</i></p>
-		<p>{{post.content}}</p>
 
-		<div class="container-fluid">
-			<p> 
-				This introduction for the pages
-			</p>
+		<div class="container p-5 my-5 border" >
+			<h2>{{post.title}}</h2>
+			<p><i>from {{post.author}} at {{post.date_posted}}</i></p>
+			<p>{{post.content}}</p>
 		</div>
 
 		
