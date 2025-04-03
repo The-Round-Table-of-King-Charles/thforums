@@ -49,13 +49,15 @@
 			  
 	  </nav>
 
+<!-- show flashed messages -->
 <div>
-	<!-- show flashed messages -->
 	{% with messages = get_flashed_messages(with_categories=true) %}
 		{% if messages %}
-			{% for category, message in messages %}
-				<ul><li>{{ message }}</li></ul>
-			{% endfor %}
+		{% for category, message in messages %}
+			<div class="alert alert-{{ category }}">
+			{{ message }}
+			</div>
+		{% endfor %}
 		{% endif %}
 	{% endwith %}
 </div>
