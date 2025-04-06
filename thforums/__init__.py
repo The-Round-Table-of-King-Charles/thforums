@@ -10,6 +10,6 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
-login_manager.login_message_category = "" # set this to whatever class in bootstrap
+login_manager.login_message_category = "info"  # Set a default flash message category
 
 from thforums import routes

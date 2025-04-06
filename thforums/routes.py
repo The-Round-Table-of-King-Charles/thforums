@@ -6,27 +6,8 @@ from thforums import app, db, bcrypt
 from PIL import Image
 
 # it has to be thforums.<module> because we are in a package under the thforums folder
-from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm
+from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
 from thforums.models import User, Post # import from models.py
-
-# mock database
-posts = [
-    {   "author": "Charles Arvin",
-        "title": "Looking for coins",
-        "content": "I am looking for some coins. Please help!",
-        "date_posted": "3/20/2025"
-    },
-    {   "author": "Carl Melo",
-        "title": "Billie Eillish is awesome, change my mind",
-        "content": "Spoilers, but nothing can change my mind",
-        "date_posted": "3/21/2025"
-    },
-    {   "author": "Charles Arvin",
-        "title": "Found some coins",
-        "content": "Check out these coins I found!",
-        "date_posted": "3/21/2025"
-    },
-]
 
 def save_picture(form_picture):
     random_hex = os.urandom(8).hex()
@@ -60,6 +41,7 @@ def save_picture(form_picture):
 @app.route("/")
 @app.route("/home")
 def home():
+    posts = Post.query.order_by(Post.date_posted.desc()).all()
     return render_template("home.html", title="Home", posts=posts)
     
 @app.route("/about")
@@ -89,6 +71,52 @@ def update_profile():
         form.email.data = current_user.email
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template("update_profile.html", title="Update Profile", image_file=image_file, form=form)
+
+# Route to create a new post (updated to /post)
+@app.route("/post", methods=["GET", "POST"])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash("Your post has been created!", "success")
+        return redirect(url_for("home"))
+    return render_template("create_post.html", title="New Post", form=form)
+
+# Route to edit a post
+@app.route("/post/<int:post_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        flash("You are not authorized to edit this post.", "error")
+        return redirect(url_for("home"))
+    form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash("Your post has been updated!", "success")
+        return redirect(url_for("home"))
+    elif request.method == "GET":
+        form.title.data = post.title
+        form.content.data = post.content
+    return render_template("create_post.html", title="Edit Post", form=form)
+
+# Route to delete a post
+@app.route("/post/<int:post_id>/delete", methods=["POST"])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        flash("You are not authorized to delete this post.", "error")
+        return redirect(url_for("home"))
+    db.session.delete(post)
+    db.session.commit()
+    flash("Your post has been deleted!", "success")
+    return redirect(url_for("home"))
 
 # authentication routes, might put this on a seperate file
 @app.route("/register", methods=["GET","POST"])
@@ -125,3 +153,4 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("home"))
+
