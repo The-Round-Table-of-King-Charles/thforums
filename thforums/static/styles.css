@@ -1,0 +1,40 @@
+/* Profile picture styles */
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.reply-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.thread-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.large-profile-pic {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+}
+
+/* Margin and alignment styles */
+.flex-center {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.thread-list-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <!-- display category name -->
+    <h1>{{ category }}</h1>
+    <div>
+        <!-- link to create a new thread in this category -->
+        <a href="{{ url_for('new_thread', category=category) }}" class="button">Create Thread in {{ category }}</a>
+    </div>
+    <ul>
+        <!-- display threads in the category -->
+        {% for thread in threads.items %}
+            <li class="thread-list-item">
+                <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
+                     alt="Profile Picture" 
+                     class="thread-pic">
+                <div>
+                    <a href="{{ url_for('view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>
+                    <small>by {{ thread.author.username }} on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    <div>
+        <!-- pagination controls -->
+        {% if threads.has_prev %}
+            <a href="{{ url_for('category_threads', category=category, page=threads.prev_num) }}">Previous</a>
+        {% endif %}
+        {% if threads.has_next %}
+            <a href="{{ url_for('category_threads', category=category, page=threads.next_num) }}">Next</a>
+        {% endif %}
+    </div>
+{% endblock %}

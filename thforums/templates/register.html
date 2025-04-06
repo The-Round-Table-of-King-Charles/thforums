@@ -1,31 +1,31 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+    <!-- registration form -->
 	<h1>Register</h1>
 	
 	<form method="POST" action="" novalidate>
-		{{ form.hidden_tag() }} <!--CSRF protection daw-->
+		{{ form.hidden_tag() }} <!-- csrf protection -->
 		<fieldset><legend>Register</legend>
+            <!-- username input field -->
 			<div>
 				<!-- 
-				Short explanation here para di malimutan:
-				
-				May if statement dito, where ichecheck muna if hindi tumugma yung validators galing sa forms.py
-				Pero since sa initial visit palang sa site siyempre wala ka pa iniinput so since walang invalid inputs, 
+				may if statement dito, where ichecheck muna if hindi tumugma yung validators galing sa forms.py.
+				pero since sa initial visit palang sa site siyempre wala ka pa iniinput so since walang invalid inputs, 
 				iskiskip lang yung if statement, diretso tayo sa else which is ishoshow lang yung normal field form.
-				Pero if invalid na, lalabas na yung invalid messages depending sa kung ano yung problem.
+				pero if invalid na, lalabas na yung invalid messages depending sa kung ano yung problem.
 				-->
 				{{ form.username.label() }}
-				{% if form.username.errors %} <!--Checks if may error-->
-					{% for error in form.username.errors %} <!--Kinukuha kung ano yung error-->
+				{% if form.username.errors %} <!-- checks if may error -->
+					{% for error in form.username.errors %} <!-- kinukuha kung ano yung error -->
 						{{ form.username() }}
-						<span>{{ error }}</span> <!--Pinapakita kung ano yung error-->
+						<span>{{ error }}</span> <!-- pinapakita kung ano yung error -->
 					{% endfor %}
 				{% else %}
 					{{ form.username() }}
 				{% endif %}	
 			</div>
-			<!--Same logic for all input fields below-->
+			<!-- email input field -->
 			<div>
 				{{ form.email.label() }}
 				{% if form.email.errors %}
@@ -37,6 +37,7 @@
 					{{ form.email() }}
 				{% endif %}	
 			</div>
+			<!-- password input field -->
 			<div>
 				{{ form.password.label() }}
 				{% if form.password.errors %}
@@ -48,6 +49,7 @@
 					{{ form.password() }}
 				{% endif %}	
 			</div>
+			<!-- confirm password input field -->
 			<div>
 				{{ form.confirm_password.label() }}
 				{% if form.confirm_password.errors %}
@@ -59,13 +61,15 @@
 					{{ form.confirm_password() }}
 				{% endif %}	
 			</div>
+            <!-- submit button -->
 			<div><br>
 				{{ form.submit() }}
 			</div>
 		</fieldset>
 		
 	</form>
-	<div><br> <!--Redirect to login.html-->
+    <!-- link to login page -->
+	<div><br>
 		<small><a href={{ url_for("login") }}>Already had an account?</a></small>
 	</div>
 {% endblock %}

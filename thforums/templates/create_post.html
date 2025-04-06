@@ -8,6 +8,12 @@
         {{ form.title.label }}
         {{ form.title() }}
     </div>
+    {% if not form.category.data %}
+    <div>
+        {{ form.category.label }}
+        {{ form.category() }}
+    </div>
+    {% endif %}
     <div>
         {{ form.content.label }}
         {{ form.content() }}

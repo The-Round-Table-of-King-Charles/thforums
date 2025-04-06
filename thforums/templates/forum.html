@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <!-- forums page content -->
+    <h1>Forums</h1>
+    <ul>
+        <!-- list of forum categories -->
+        {% for category in categories %}
+            <li><a href="{{ url_for('category_threads', category=category) }}">{{ category }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

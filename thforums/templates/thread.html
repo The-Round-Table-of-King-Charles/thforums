@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <!-- display thread details -->
+    <div class="flex-center">
+        <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
+             alt="Profile Picture" 
+             class="profile-pic">
+        <div>
+            <h1>{{ thread.title }}</h1>
+            <p><i>by {{ thread.author.username }} on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</i></p>
+            <p>{{ thread.content }}</p>
+        </div>
+    </div>
+    <hr>
+    <!-- display replies -->
+    <h2>Replies</h2>
+    {% for reply in replies %}
+        <div class="flex-center">
+            <img src="{{ url_for('static', filename='profile_pics/' + reply.author.image_file) }}" 
+                 alt="Profile Picture" 
+                 class="reply-pic">
+            <div>
+                <p><b>{{ reply.author.username }}</b> on {{ reply.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                <p>{{ reply.content }}</p>
+            </div>
+        </div>
+    {% endfor %}
+    <hr>
+    <!-- reply form for authenticated users -->
+    {% if current_user.is_authenticated %}
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.content.label }}
+            {{ form.content() }}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <!-- form to create or edit a thread -->
+    <h1>{{ title }}</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <!-- thread title input field -->
+        <div>
+            {{ form.title.label }}
+            {{ form.title() }}
+        </div>
+        <!-- thread category dropdown -->
+        <div>
+            {{ form.category.label }}
+            {{ form.category() }}
+        </div>
+        <!-- thread content input field -->
+        <div>
+            {{ form.content.label }}
+            {{ form.content() }}
+        </div>
+        <!-- submit button -->
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+{% endblock %}
