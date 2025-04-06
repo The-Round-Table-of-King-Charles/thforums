@@ -119,6 +119,9 @@ def view_thread(thread_id):
     thread = Thread.query.get_or_404(thread_id)  # get the thread or return 404 if not found
     form = ReplyForm()
     if form.validate_on_submit():
+        if not current_user.is_authenticated:
+            flash("You must be logged in to post a reply.", "error")
+            return redirect(url_for("login"))
         # if the form is valid, create a new reply and associate it with the thread
         reply = Reply(content=form.content.data, user_id=current_user.id, thread=thread)  # create a new reply
         db.session.add(reply)
@@ -131,10 +134,24 @@ def view_thread(thread_id):
     return render_template("thread.html", title=thread.title, thread=thread, form=form, replies=replies)
 
 # route to view all forums
-@app.route("/forums")
+@app.route("/forums", methods=["GET", "POST"])
 def forums():
-    categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]  # predefined categories
-    return render_template("forum.html", title="Forums", categories=categories)
+    form = SearchForm()
+    search_query = ""
+    if form.validate_on_submit():  # Handle form submission
+        search_query = form.search.data
+    elif request.method == "GET":  # Handle query parameter for pagination
+        search_query = request.args.get("search", "", type=str)
+    
+    page = request.args.get("page", 1, type=int)  # Get the current page number
+    categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]  # Predefined categories
+    
+    if search_query:
+        threads = Thread.query.filter(Thread.title.ilike(f"%{search_query}%")).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=10)
+    else:
+        threads = None  # No search results to display
+    
+    return render_template("forum.html", title="Forums", categories=categories, form=form, threads=threads, search_query=search_query)
 
 # route to register a new user
 @app.route("/register", methods=["GET", "POST"])
@@ -246,6 +263,9 @@ def delete_reply(reply_id):
     reply = Reply.query.get_or_404(reply_id)
     if reply.author != current_user:
         flash("You are not authorized to delete this reply.", "error")
+        return redirect(url_for("view_thread", thread_id=reply.thread_id))
+    if reply.deleted:
+        flash("Reply is already deleted.", "info")
         return redirect(url_for("view_thread", thread_id=reply.thread_id))
     reply.deleted = True  # mark the reply as deleted
     db.session.commit()

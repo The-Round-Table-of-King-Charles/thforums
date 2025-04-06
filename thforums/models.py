@@ -50,4 +50,4 @@ class Reply(db.Model):
     deleted = db.Column(db.Boolean, default=False)  # flag to indicate if the reply is deleted
 
     def __repr__(self):
-        return f"Reply('{self.content[:20]}', '{self.date_posted}')"
+        return f"Reply('{self.content[:20] if self.content else ''}', '{self.date_posted}')"

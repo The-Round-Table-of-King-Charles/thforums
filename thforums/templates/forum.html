@@ -1,12 +1,52 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <!-- forums page content -->
     <h1>Forums</h1>
-    <ul>
-        <!-- list of forum categories -->
-        {% for category in categories %}
-            <li><a href="{{ url_for('category_threads', category=category) }}">{{ category }}</a></li>
-        {% endfor %}
-    </ul>
+    <!-- Search form -->
+    <form method="POST" action="{{ url_for('forums') }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.search.label }}
+            {{ form.search(size=30) }}
+            {{ form.submit() }}
+        </div>
+    </form>
+    
+    <!-- Display search results if a query is provided -->
+    {% if search_query %}
+        <h2>Search Results for "{{ search_query }}"</h2>
+        {% if threads and threads.items %}
+            <ul>
+                {% for thread in threads.items %}
+                    <li>
+                        <a href="{{ url_for('view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>
+                        <small>by <a href="{{ url_for('user_profile', username=thread.author.username) }}">{{ thread.author.username }}</a> on {{ thread.date_posted.strftime('%Y-%m-%d') }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+            <!-- Pagination controls -->
+            <div class="pagination">
+                {% if threads.pages > 1 %}
+                    {% if threads.has_prev %}
+                        <a href="{{ url_for('forums', page=threads.prev_num, search=search_query) }}">Previous</a>
+                    {% endif %}
+                    {% for page_num in range(1, threads.pages + 1) %}
+                        <a href="{{ url_for('forums', page=page_num, search=search_query) }}" class="{{ 'active' if page_num == threads.page else '' }}">{{ page_num }}</a>
+                    {% endfor %}
+                    {% if threads.has_next %}
+                        <a href="{{ url_for('forums', page=threads.next_num, search=search_query) }}">Next</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% else %}
+            <p>No threads found matching your search query.</p>
+        {% endif %}
+    {% else %}
+        <!-- Display categories if no search query -->
+        <ul>
+            {% for category in categories %}
+                <li><a href="{{ url_for('category_threads', category=category) }}">{{ category }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

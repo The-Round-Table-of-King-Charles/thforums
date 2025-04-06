@@ -7,18 +7,19 @@
              alt="Profile Picture" 
              class="profile-pic">
         <div>
-                <h1>{{ thread.title }}</h1>
-                <p><i>by <a href="{{ url_for('user_profile', username=thread.author.username) }}">{{ thread.author.username }}</a> on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</i></p>
-                {% if thread.edited %}
-                    <p><small><i>(Edited on {{ thread.last_edited.strftime('%Y-%m-%d %H:%M:%S') }})</i></small></p>
-                {% endif %}
-                <p>{{ thread.content }}</p>
-                {% if current_user == thread.author %}
-                    <a href="{{ url_for('edit_thread', thread_id=thread.id) }}">Edit</a>
-                    <form method="POST" action="{{ url_for('delete_thread', thread_id=thread.id) }}" style="display:inline;">
-                        <button type="submit">Delete</button>
-                    </form>
-                {% endif %}
+            <h1>{{ thread.title }}</h1>
+            <p><i>by <a href="{{ url_for('user_profile', username=thread.author.username) }}">{{ thread.author.username }}</a> on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</i></p>
+            {% if thread.edited %}
+                <p><small><i>(Edited on {{ thread.last_edited.strftime('%Y-%m-%d %H:%M:%S') }})</i></small></p>
+            {% endif %}
+            <p>{{ thread.content }}</p>
+            {% if current_user == thread.author %}
+                <form method="GET" action="{{ url_for('edit_thread', thread_id=thread.id) }}" style="display:inline;">
+                    <button type="submit">Edit</button>
+                </form>
+                <form method="POST" action="{{ url_for('delete_thread', thread_id=thread.id) }}" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
             {% endif %}
         </div>
     </div>
@@ -40,7 +41,9 @@
                     {% endif %}
                     <p>{{ reply.content }}</p>
                     {% if current_user == reply.author %}
-                        <a href="{{ url_for('edit_reply', reply_id=reply.id) }}">Edit</a>
+                        <form method="GET" action="{{ url_for('edit_reply', reply_id=reply.id) }}" style="display:inline;">
+                            <button type="submit">Edit</button>
+                        </form>
                         <form method="POST" action="{{ url_for('delete_reply', reply_id=reply.id) }}" style="display:inline;">
                             <button type="submit">Delete</button>
                         </form>

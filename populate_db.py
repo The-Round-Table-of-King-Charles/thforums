@@ -8,13 +8,10 @@ from faker import Faker
 
 fake = Faker()
 
-# Predefined categories
 categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]
 
-# Function to populate the database
 def populate_threads(num_threads=50):
     with app.app_context():
-        # Get a random user to assign as the author
         users = User.query.all()
         if not users:
             print("No users found in the database. Please register a user first.")
@@ -32,6 +29,5 @@ def populate_threads(num_threads=50):
         db.session.commit()
         print(f"Successfully added {num_threads} threads to the database.")
 
-# Run the script
 if __name__ == "__main__":
-    populate_threads(num_threads=50)  # Change the number to add more threads
+    populate_threads(num_threads=50)

@@ -83,5 +83,5 @@ class EditReplyForm(FlaskForm):
     submit = SubmitField("Update Reply")
 
 class SearchForm(FlaskForm):
-    search = StringField("Search Users:", validators=[Optional(), Length(max=50)])
+    search = StringField("Search:", validators=[Optional(), Length(max=50)])
     submit = SubmitField("Search")
