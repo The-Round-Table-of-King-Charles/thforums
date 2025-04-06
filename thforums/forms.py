@@ -2,8 +2,9 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from thforums.models import User
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 from flask_login import current_user
+from wtforms.fields import DateField  # Import DateField from wtforms.fields
 
 # form for user registration
 class RegistrationForm(FlaskForm):
@@ -37,6 +38,9 @@ class UpdateProfileForm(FlaskForm):
     username = StringField("Username:", validators=[DataRequired(), Length(min=2, max=20)])  # username field
     email = StringField("Email:", validators=[DataRequired(), Email()])  # email field
     picture = FileField("Update Profile Picture", validators=[FileAllowed(['jpg', 'png'])])  # profile picture upload
+    gender = SelectField("Gender:", choices=[("", "Select"), ("Male", "Male"), ("Female", "Female"), ("Other", "Other")])
+    birthdate = DateField("Birthdate:", format='%Y-%m-%d', validators=[Optional()])
+    bio = TextAreaField("Bio:", validators=[Length(max=500)])
     submit = SubmitField("Update")  # submit button
 
     # custom validator to check if username is already taken
@@ -68,3 +72,16 @@ class ThreadForm(FlaskForm):
 class ReplyForm(FlaskForm):
     content = TextAreaField("Reply", validators=[DataRequired()])  # reply content field
     submit = SubmitField("Post Reply")  # submit button
+
+class EditThreadForm(FlaskForm):
+    title = StringField("Title", validators=[DataRequired(), Length(min=1, max=100)])
+    content = TextAreaField("Content", validators=[DataRequired()])
+    submit = SubmitField("Update Thread")
+
+class EditReplyForm(FlaskForm):
+    content = TextAreaField("Reply", validators=[DataRequired()])
+    submit = SubmitField("Update Reply")
+
+class SearchForm(FlaskForm):
+    search = StringField("Search Users:", validators=[Optional(), Length(max=50)])
+    submit = SubmitField("Search")

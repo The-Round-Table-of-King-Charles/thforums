@@ -14,6 +14,9 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)  # email must be unique
     image_file = db.Column(db.String(20), nullable=False, default="default.png")  # profile picture
     password = db.Column(db.String(60), nullable=False)  # hashed password
+    gender = db.Column(db.String(10), nullable=True)  # gender field
+    birthdate = db.Column(db.Date, nullable=True)  # birthdate field
+    bio = db.Column(db.Text, nullable=True)  # bio field
     threads = db.relationship("Thread", backref="author", lazy=True)  # relationship to threads created by the user
     replies = db.relationship("Reply", backref="author", lazy=True)  # relationship to replies made by the user
     
@@ -29,6 +32,8 @@ class Thread(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)  # foreign key linking to the user who created the thread
     category = db.Column(db.String(50), nullable=False)  # category of the thread
     replies = db.relationship("Reply", backref="thread", lazy=True)  # relationship to replies in the thread
+    edited = db.Column(db.Boolean, default=False)  # flag to indicate if the thread was edited
+    last_edited = db.Column(db.DateTime)  # timestamp of the last edit
 
     def __repr__(self):
         return f"Thread('{self.title}', '{self.date_posted}')"
@@ -40,6 +45,9 @@ class Reply(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # timestamp of reply creation
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)  # foreign key linking to the user who made the reply
     thread_id = db.Column(db.Integer, db.ForeignKey("thread.id"), nullable=False)  # foreign key linking to the thread being replied to
+    edited = db.Column(db.Boolean, default=False)  # flag to indicate if the reply was edited
+    last_edited = db.Column(db.DateTime)  # timestamp of the last edit
+    deleted = db.Column(db.Boolean, default=False)  # flag to indicate if the reply is deleted
 
     def __repr__(self):
         return f"Reply('{self.content[:20]}', '{self.date_posted}')"

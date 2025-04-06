@@ -4,9 +4,10 @@ from flask import render_template, url_for, flash, redirect, request, current_ap
 from flask_login import login_user, logout_user, current_user, login_required
 from thforums import app, db, bcrypt
 from PIL import Image
+from datetime import datetime
 
 # import forms and models
-from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm
+from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm
 from thforums.models import User, Thread, Reply
 
 # helper function to save profile pictures
@@ -56,7 +57,9 @@ def about():
 @app.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.html", title="Profile")
+    page = request.args.get("page", 1, type=int)  # get the current page number
+    threads = Thread.query.filter_by(author=current_user).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=5)
+    return render_template("profile.html", title="Profile", threads=threads)
 
 # route to update user profile
 @app.route("/profile/update", methods=["GET", "POST"])
@@ -67,15 +70,21 @@ def update_profile():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)  # save the new profile picture
             current_user.image_file = picture_file
-        # if the form is valid, update the user's profile information
+        # Update user's profile information
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.gender = form.gender.data
+        current_user.birthdate = form.birthdate.data
+        current_user.bio = form.bio.data
         db.session.commit()
         flash("Your profile has been updated!", "success")
         return redirect(url_for("profile"))
     elif request.method == "GET":
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.gender.data = current_user.gender
+        form.birthdate.data = current_user.birthdate
+        form.bio.data = current_user.bio
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template("update_profile.html", title="Update Profile", image_file=image_file, form=form)
 
@@ -120,41 +129,6 @@ def view_thread(thread_id):
     page = request.args.get("page", 1, type=int)  # get the current page number
     replies = Reply.query.filter_by(thread_id=thread.id).order_by(Reply.date_posted.asc()).paginate(page=page, per_page=5)
     return render_template("thread.html", title=thread.title, thread=thread, form=form, replies=replies)
-
-# route to edit a thread
-@app.route("/thread/<int:thread_id>/edit", methods=["GET", "POST"])
-@login_required
-def edit_thread(thread_id):
-    thread = Thread.query.get_or_404(thread_id)
-    # ensure only the author of the thread can edit it
-    if thread.author != current_user:  # ensure the current user is the author
-        flash("You are not authorized to edit this thread.", "error")
-        return redirect(url_for("home"))
-    form = ThreadForm()
-    if form.validate_on_submit():
-        thread.title = form.title.data
-        thread.content = form.content.data
-        db.session.commit()
-        flash("Your thread has been updated!", "success")
-        return redirect(url_for("home"))
-    elif request.method == "GET":
-        form.title.data = thread.title
-        form.content.data = thread.content
-    return render_template("create_thread.html", title="Edit Thread", form=form)
-
-# route to delete a thread
-@app.route("/thread/<int:thread_id>/delete", methods=["POST"])
-@login_required
-def delete_thread(thread_id):
-    thread = Thread.query.get_or_404(thread_id)
-    # ensure only the author of the thread can delete it
-    if thread.author != current_user:  # ensure the current user is the author
-        flash("You are not authorized to delete this thread.", "error")
-        return redirect(url_for("home"))
-    db.session.delete(thread)
-    db.session.commit()
-    flash("Your thread has been deleted!", "success")
-    return redirect(url_for("home"))
 
 # route to view all forums
 @app.route("/forums")
@@ -201,6 +175,98 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("home"))
+
+# route to view another user's profile
+@app.route("/user/<string:username>")
+def user_profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    page = request.args.get("page", 1, type=int)  # get the current page number
+    threads = Thread.query.filter_by(author=user).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=5)
+    return render_template("user_profile.html", title=f"{user.username}'s Profile", user=user, threads=threads)
+
+# route to edit a thread
+@app.route("/thread/<int:thread_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_thread(thread_id):
+    thread = Thread.query.get_or_404(thread_id)
+    if thread.author != current_user:
+        flash("You are not authorized to edit this thread.", "error")
+        return redirect(url_for("view_thread", thread_id=thread.id))
+    form = EditThreadForm()
+    if form.validate_on_submit():
+        thread.title = form.title.data
+        thread.content = form.content.data
+        thread.edited = True
+        thread.last_edited = datetime.utcnow()
+        db.session.commit()
+        flash("Thread updated successfully!", "success")
+        return redirect(url_for("view_thread", thread_id=thread.id))
+    elif request.method == "GET":
+        form.title.data = thread.title
+        form.content.data = thread.content
+    return render_template("edit_thread.html", title="Edit Thread", form=form)
+
+# route to delete a thread
+@app.route("/thread/<int:thread_id>/delete", methods=["POST"])
+@login_required
+def delete_thread(thread_id):
+    thread = Thread.query.get_or_404(thread_id)
+    if thread.author != current_user:
+        flash("You are not authorized to delete this thread.", "error")
+        return redirect(url_for("view_thread", thread_id=thread.id))
+    db.session.delete(thread)  # Permanently delete the thread
+    db.session.commit()
+    flash("Thread has been deleted.", "success")
+    return redirect(url_for("forums"))
+
+# route to edit a reply
+@app.route("/reply/<int:reply_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_reply(reply_id):
+    reply = Reply.query.get_or_404(reply_id)
+    if reply.author != current_user:
+        flash("You are not authorized to edit this reply.", "error")
+        return redirect(url_for("view_thread", thread_id=reply.thread_id))
+    form = EditReplyForm()
+    if form.validate_on_submit():
+        reply.content = form.content.data
+        reply.edited = True
+        reply.last_edited = datetime.utcnow()
+        db.session.commit()
+        flash("Reply updated successfully!", "success")
+        return redirect(url_for("view_thread", thread_id=reply.thread_id))
+    elif request.method == "GET":
+        form.content.data = reply.content
+    return render_template("edit_reply.html", title="Edit Reply", form=form)
+
+# route to delete a reply
+@app.route("/reply/<int:reply_id>/delete", methods=["POST"])
+@login_required
+def delete_reply(reply_id):
+    reply = Reply.query.get_or_404(reply_id)
+    if reply.author != current_user:
+        flash("You are not authorized to delete this reply.", "error")
+        return redirect(url_for("view_thread", thread_id=reply.thread_id))
+    reply.deleted = True  # mark the reply as deleted
+    db.session.commit()
+    flash("Reply has been deleted.", "success")
+    return redirect(url_for("view_thread", thread_id=reply.thread_id))
+
+# route to list all users
+@app.route("/users", methods=["GET", "POST"])
+def list_users():
+    form = SearchForm()
+    search_query = ""
+    if form.validate_on_submit():  # Handle form submission
+        search_query = form.search.data
+    elif request.method == "GET":  # Handle query parameter for pagination
+        search_query = request.args.get("search", "", type=str)
+    page = request.args.get("page", 1, type=int)
+    if search_query:
+        users = User.query.filter(User.username.ilike(f"%{search_query}%")).paginate(page=page, per_page=10)
+    else:
+        users = User.query.paginate(page=page, per_page=10)
+    return render_template("list_users.html", title="Users", users=users, form=form, search_query=search_query)
 
 # 404 error page
 @app.errorhandler(404)

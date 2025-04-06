@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>Edit Reply</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.content.label }}
+        {{ form.content() }}
+    </div>
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+{% endblock %}

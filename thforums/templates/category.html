@@ -9,17 +9,21 @@
     </div>
     <ul>
         <!-- display threads in the category -->
-        {% for thread in threads.items %}
-            <li class="thread-list-item">
-                <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
-                     alt="Profile Picture" 
-                     class="thread-pic">
-                <div>
-                    <a href="{{ url_for('view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>
-                    <small>by {{ thread.author.username }} on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-                </div>
-            </li>
-        {% endfor %}
+        {% if threads.items %}
+            {% for thread in threads.items %}
+                <li class="thread-list-item">
+                    <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
+                         alt="Profile Picture" 
+                         class="thread-pic">
+                    <div>
+                        <a href="{{ url_for('view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>
+                        <small>by <a href="{{ url_for('user_profile', username=thread.author.username) }}">{{ thread.author.username }}</a> on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                    </div>
+                </li>
+            {% endfor %}
+        {% else %}
+            <p>No threads available in this category.</p>
+        {% endif %}
     </ul>
     <div class="pagination">
         <!-- pagination controls -->
