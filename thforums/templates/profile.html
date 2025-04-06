@@ -1,5 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-	<h1>{{ current_user.username }}</h1>
+<h1>{{ current_user.username }}'s Profile</h1>
+<div>
+    <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.image_file else 'default.png')) }}" 
+         alt="Profile Picture" 
+         style="width: 125px; height: 125px;">
+</div>
+<div>
+    <p><b>Email:</b> {{ current_user.email }}</p>
+</div>
+<a href="{{ url_for('update_profile') }}">Edit Profile</a>
 {% endblock %}
