@@ -116,7 +116,9 @@ def view_thread(thread_id):
         db.session.commit()
         flash("Your reply has been posted!", "success")
         return redirect(url_for("view_thread", thread_id=thread.id))
-    replies = Reply.query.filter_by(thread_id=thread.id).order_by(Reply.date_posted.asc()).all()
+    
+    page = request.args.get("page", 1, type=int)  # get the current page number
+    replies = Reply.query.filter_by(thread_id=thread.id).order_by(Reply.date_posted.asc()).paginate(page=page, per_page=5)
     return render_template("thread.html", title=thread.title, thread=thread, form=form, replies=replies)
 
 # route to edit a thread

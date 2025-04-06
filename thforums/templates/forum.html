@@ -6,7 +6,7 @@
     <ul>
         <!-- list of forum categories -->
         {% for category in categories %}
-            <li><a href="{{ url_for('category_threads', category=category) }}">{{ category }}</a></li>
+            <li></li><a href="{{ url_for('category_threads', category=category) }}">{{ category }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

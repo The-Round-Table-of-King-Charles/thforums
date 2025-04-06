@@ -38,3 +38,29 @@
     align-items: center;
     margin-bottom: 10px;
 }
+
+/* Pagination styles */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}
+
+.pagination .active {
+    font-weight: bold;
+    color: #000;
+}
+
+.pagination span {
+    margin: 0 5px;
+    color: #6c757d;
+}
