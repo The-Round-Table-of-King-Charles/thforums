@@ -1,46 +1,52 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h1>Users</h1>
-<!-- Search form -->
-<form method="POST" action="{{ url_for('list_users') }}">
+<div class="text-center mb-4">
+    <h1 class="tavern-sign-straight d-inline-block shadow">
+        <i class="fas fa-user-ninja me-2"></i> Users
+    </h1>
+</div>
+<!-- search form for users -->
+<form method="POST" action="{{ url_for('list_users') }}" class="mb-4">
     {{ form.hidden_tag() }}
-    <div>
-        {{ form.search.label }}
-        {{ form.search(size=30) }}
-        {{ form.submit() }}
+    <div class="input-group">
+        {{ form.search(class_="form-control", placeholder="Search users...") }}
+        <button class="btn btn-medieval" type="submit">{{ form.submit.label.text }}</button>
     </div>
 </form>
-
-<!-- User list -->
-<ul>
+<ul class="list-group">
     {% for user in users.items %}
-        <li>
+        <li class="list-group-item d-flex align-items-center">
+            <!-- display user's profile picture -->
             <img src="{{ url_for('static', filename='profile_pics/' + (user.image_file if user.image_file else 'default.png')) }}" 
                  alt="Profile Picture" 
-                 class="profile-pic">
-            <a href="{{ url_for('user_profile', username=user.username) }}">{{ user.username }}</a>
+                 class="profile-pic me-3">
+            <!-- link to user's profile -->
+            <a href="{{ url_for('user_profile', username=user.username) }}" class="text-decoration-none fw-bold text-dark">
+                {{ user.username }}
+            </a>
         </li>
     {% endfor %}
 </ul>
 {% if not users.items %}
-    <p>No users found.</p>
+    <!-- message when no users are found -->
+    <p class="text-center text-muted">No users found.</p>
 {% endif %}
-
-<!-- Pagination -->
-<div class="pagination">
+<div class="pagination mt-4">
     {% if users.pages > 1 %}
         {% if users.has_prev %}
-            <a href="{{ url_for('list_users', page=users.prev_num, search=search_query) }}">Previous</a>
+            <!-- link to the previous page -->
+            <a href="{{ url_for('list_users', page=users.prev_num, search=search_query) }}" class="btn btn-medieval me-2">Previous</a>
         {% endif %}
         {% for page_num in range(1, users.pages + 1) %}
             <a href="{{ url_for('list_users', page=page_num, search=search_query) }}" 
-               class="{{ 'active' if page_num == users.page else '' }}">
+               class="btn btn-sm {{ 'btn-medieval' if page_num == users.page else 'btn-outline-medieval' }} me-1">
                 {{ page_num }}
             </a>
         {% endfor %}
         {% if users.has_next %}
-            <a href="{{ url_for('list_users', page=users.next_num, search=search_query) }}">Next</a>
+            <!-- link to the next page -->
+            <a href="{{ url_for('list_users', page=users.next_num, search=search_query) }}" class="btn btn-medieval ms-2">Next</a>
         {% endif %}
     {% endif %}
 </div>

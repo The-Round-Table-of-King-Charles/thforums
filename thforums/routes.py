@@ -1,10 +1,11 @@
 import os
 
-from flask import render_template, url_for, flash, redirect, request, current_app
+from flask import render_template, url_for, flash, redirect, request, current_app, g
 from flask_login import login_user, logout_user, current_user, login_required
 from thforums import app, db, bcrypt
 from PIL import Image
 from datetime import datetime
+from random import sample
 
 # import forms and models
 from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm
@@ -46,7 +47,8 @@ def home():
     categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]  # predefined categories
     # latest_threads is a dictionary where each category maps to its latest threads
     latest_threads = {category: Thread.query.filter_by(category=category).order_by(Thread.date_posted.desc()).limit(3).all() for category in categories}
-    return render_template("home.html", title="Home", latest_threads=latest_threads)
+    random_users = sample(User.query.all(), min(3, User.query.count()))  # get 3 random users
+    return render_template("home.html", title="Home", latest_threads=latest_threads, random_users=random_users)
     
 # route for the about page
 @app.route("/about")
@@ -109,9 +111,16 @@ def new_thread():
 @app.route("/forums/<string:category>", methods=["GET"])
 def category_threads(category):
     page = request.args.get("page", 1, type=int)  # get the current page number
+    # predefined category descriptions
+    category_descriptions = {
+        "General Discussion": "Talk about anything and everything here.",
+        "Looking for Adventurers": "Find allies for your next quest.",
+        "Commissions and Quest": "Post or find commissions and quests."
+    }
+    description = category_descriptions.get(category, "No description available for this category.")
     # paginate threads to display 10 per page
     threads = Thread.query.filter_by(category=category).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=10)
-    return render_template("category.html", title=category, category=category, threads=threads)
+    return render_template("category.html", title=category, category=category, description=description, threads=threads)
 
 # route to view a specific thread and its replies
 @app.route("/thread/<int:thread_id>", methods=["GET", "POST"])
@@ -287,6 +296,11 @@ def list_users():
     else:
         users = User.query.paginate(page=page, per_page=10)
     return render_template("list_users.html", title="Users", users=users, form=form, search_query=search_query)
+
+@app.context_processor
+def inject_random_users():
+    random_users = sample(User.query.all(), min(3, User.query.count())) if User.query.count() > 0 else []
+    return {'random_users': random_users}
 
 # 404 error page
 @app.errorhandler(404)

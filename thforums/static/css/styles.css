@@ -1,0 +1,431 @@
+/* Variables */
+:root {
+    --background-color: #f5f1e6;
+    --background-image: url('https://media.istockphoto.com/id/1402385345/photo/blank-paper-background-grunge-manuscript-texture-with-empty-space.jpg?s=612x612&w=0&k=20&c=Nv1Y0DFXlDCz2hLt9i2CPEFCQ80eQlh_YrJ4qtlcJLg=');
+    --font-family: 'Cinzel', serif;
+    --text-color: #3a3226;
+    --navbar-bg-color: #3a3226;
+    --navbar-border-color: #8b5a2b;
+    --navbar-text-color: #f5f1e6;
+    --btn-bg-color: #8b5a2b;
+    --btn-hover-bg-color: #6d4a2b;
+    --btn-text-color: #f5f1e6;
+    --card-bg-color: #f9f7f0;
+    --card-border-color: #8b5a2b;
+    --alert-bg-color: #f5e7c6;
+    --alert-border-color: #d4b97a;
+    --alert-text-color: #5c3a21;
+}
+
+/* Base Styles */
+html {
+    height: 100%;
+}
+
+body {
+    background-color: var(--background-color);
+    background-image: var(--background-image);
+    font-family: var(--font-family);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+main {
+    flex: 1;
+}
+
+/* Medieval Alert Styles */
+.medieval-alert {
+    background-color: var(--alert-bg-color);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0.2 0"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.3"/></svg>');
+    border: 1px solid var(--alert-border-color);
+    color: var(--alert-text-color);
+    border-left: 5px solid;
+    font-family: 'Cinzel', serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+}
+
+.medieval-alert i {
+    font-size: 1.2rem;
+}
+
+.medieval-alert .btn-close {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.medieval-alert-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+    font-family: 'MedievalSharp', cursive;
+}
+
+.alert-success {
+    border-left-color: #5c832f;
+}
+
+.alert-error {
+    border-left-color: #8B4513;
+}
+
+.alert-warning {
+    border-left-color: #d4a017;
+}
+
+.alert-info {
+    border-left-color: #3a7ca5;
+}
+
+.medieval-alert .fa-check-circle {
+    color: #5c832f;
+}
+
+.medieval-alert .fa-times-circle {
+    color: #8B4513;
+}
+
+.medieval-alert .fa-exclamation-triangle {
+    color: #d4a017;
+}
+
+.medieval-alert .fa-info-circle {
+    color: #3a7ca5;
+}
+
+.btn-close {
+    filter: invert(30%) sepia(13%) saturate(1195%) hue-rotate(358deg) brightness(94%) contrast(87%);
+}
+
+/* Navbar Styles */
+.navbar-custom {
+    background-color: var(--navbar-bg-color);
+    border-bottom: 3px solid var(--navbar-border-color);
+    font-family: 'MedievalSharp', cursive;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+    color: var(--navbar-text-color);
+    text-shadow: 1px 1px 1px #000;
+}
+
+.navbar-custom .navbar-brand {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+.navbar-custom .nav-link {
+    font-size: 1.1rem;
+    margin: 0 5px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.navbar-custom .nav-link:hover {
+    background-color: var(--navbar-border-color);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Tavern Sign */
+.tavern-sign {
+    display: inline-block;
+    background-color: #8b5a2b;
+    color: #f5d742;
+    padding: 5px 15px;
+    border-radius: 5px;
+    border: 2px solid #3a3226;
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+    transform: rotate(-2deg);
+    margin-right: 10px;
+}
+
+.tavern-sign-straight {
+    display: inline-block;
+    background-color: #3d1f0a;
+    color: #e6c229;
+    padding: 5px 15px;
+    border-radius: 5px;
+    border: 3px groove #5a3a22;
+    box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3);
+    font-family: 'MedievalSharp', cursive;
+    text-align: center;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* Flashed Messages */
+.flashes-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.alert {
+    border-left: 5px solid #8b5a2b;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Buttons */
+.btn-medieval {
+    background-color: var(--btn-bg-color);
+    color: var(--btn-text-color);
+    border: 1px solid var(--navbar-bg-color);
+    font-family: 'MedievalSharp', cursive;
+}
+
+.btn-medieval:hover {
+    background-color: var(--btn-hover-bg-color);
+    color: #fff;
+}
+
+/* Home */
+#fixdoonsaisa {
+    margin-bottom: 0px;
+}
+
+.thread-list-item {
+    transition: all 0.3s ease;
+}
+
+.thread-list-item:hover {
+    background-color: #e8e1d1 !important;
+    transform: translateX(5px);
+}
+
+.thread-pic {
+    transition: all 0.3s ease;
+}
+
+.thread-list-item:hover .thread-pic {
+    transform: scale(1.05);
+    box-shadow: 0 0 5px rgba(139, 90, 43, 0.5);
+}
+
+/* Cards */
+.card {
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--card-bg-color);
+}
+
+.card-header {
+    font-family: 'MedievalSharp', cursive;
+    border-bottom: 2px solid var(--card-border-color) !important;
+}
+
+/* Sidebar Styles */
+aside {
+    background-color: rgba(30, 15, 5, 0.95);
+    border-left: 3px ridge #c9a227;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+    color: #e6d8a8;
+}
+
+.tavern-board {
+    background-color: rgba(40, 20, 10, 0.95);
+    border: 2px solid #5a3a22;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    color: #e6d8a8;
+}
+
+.board-title {
+    font-family: 'Cinzel', serif;
+    color: #d4af37;
+    border-bottom: 1px dashed #c9a227;
+    padding-bottom: 8px;
+    text-align: center;
+}
+
+.event-card, .popular-threads, .tavern-specials {
+    background-color: rgba(20, 10, 2, 0.9);
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 3px;
+    border-left: 3px solid #964800;
+    color: #e6d8a8;
+}
+
+.event-list, .thread-list {
+    list-style: none;
+    padding-left: 0;
+    color: #e6d8a8;
+}
+
+.event-list li, .thread-list li {
+    margin-bottom: 5px;
+}
+
+.event-list li a, .thread-list li a {
+    color: #d4af37;
+    text-decoration: none;
+}
+
+.event-list li a:hover, .thread-list li a:hover {
+    text-decoration: underline;
+}
+
+.user-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.user-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #e6d8a8;
+}
+
+.user-badge img {
+    border: 2px solid #d4af37;
+    padding: 2px;
+    border-radius: 50%;
+}
+
+/* User Profile */
+.large-profile-pic {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+}
+
+.profile-card {
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    color: #6c757d;
+    border-bottom: 2px solid #d1d1d1;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.bio-content {
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+.thread-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.thread-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.thread-title {
+    transition: color 0.2s;
+}
+
+.thread-title:hover {
+    color: #6c757d !important;
+}
+
+.border-medieval {
+    border-color: #6c757d !important;
+}
+
+.bg-medieval {
+    background-color: #6c757d !important;
+    color: white !important;
+}
+
+.text-medieval {
+    color: #6c757d !important;
+}
+
+.btn-outline-medieval {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-outline-medieval:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Others */
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.reply-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.thread-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.large-profile-pic {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+}
+
+.small-profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.thread-list-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}
+
+.pagination .active {
+    font-weight: bold;
+    color: #000;
+}
+
+.pagination span {
+    margin: 0 5px;
+    color: #6c757d;
+}

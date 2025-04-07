@@ -1,42 +1,47 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<!-- form to update user profile -->
-<h1>Update Profile</h1>
-<form method="POST" enctype="multipart/form-data">
+<div class="text-center mb-4">
+    <h1 class="tavern-sign-straight d-inline-block shadow">
+		<i class="fas fa-pen me-2"></i> Update Profile
+    </h1>
+</div>
+<form method="POST" enctype="multipart/form-data" class="card p-4">
     {{ form.hidden_tag() }}
-    <div>
-        <!-- display current profile picture -->
+    <!-- display current profile picture -->
+    <div class="text-center mb-4">
         <img src="{{ image_file or url_for('static', filename='profile_pics/default.png') }}" 
              alt="Profile Picture" 
-             style="width: 125px; height: 125px; border-radius: 50%;">
+             class="large-profile-pic">
     </div>
-    <div>
-        {{ form.username.label }}<br>
-        {{ form.username() }}
+    <!-- input fields for updating profile details -->
+    <div class="mb-3">
+        {{ form.username.label(class="form-label") }}
+        {{ form.username(class="form-control") }}
     </div>
-    <div>
-        {{ form.email.label }}<br>
-        {{ form.email() }}
+    <div class="mb-3">
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(class="form-control") }}
     </div>
-    <div>
-        {{ form.gender.label }}<br>
-        {{ form.gender() }}
+    <div class="mb-3">
+        {{ form.gender.label(class="form-label") }}
+        {{ form.gender(class="form-select") }}
     </div>
-    <div>
-        {{ form.birthdate.label }}<br>
-        {{ form.birthdate() }}
+    <div class="mb-3">
+        {{ form.birthdate.label(class="form-label") }}
+        {{ form.birthdate(class="form-control") }}
     </div>
-    <div>
-        {{ form.bio.label }}<br>
-        {{ form.bio() }}
+    <div class="mb-3">
+        {{ form.bio.label(class="form-label") }}
+        {{ form.bio(class="form-control") }}
     </div>
-    <div>
-        {{ form.picture.label }}<br>
-        {{ form.picture() }}
+    <div class="mb-3">
+        {{ form.picture.label(class="form-label") }}
+        {{ form.picture(class="form-control") }}
     </div>
-    <div>
-        {{ form.submit() }}
+    <!-- submit button -->
+    <div class="text-center">
+        {{ form.submit(class="btn btn-medieval") }}
     </div>
 </form>
 {% endblock %}
