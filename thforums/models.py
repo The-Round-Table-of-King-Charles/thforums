@@ -42,7 +42,7 @@ class Thread(db.Model):
 class Reply(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # unique id for each reply
     content = db.Column(db.Text, nullable=False)  # reply content
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # timestamp of reply creation
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # timestamp of reply creation, deprecated na raw pero pwede na yan gumagana naman
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)  # foreign key linking to the user who made the reply
     thread_id = db.Column(db.Integer, db.ForeignKey("thread.id"), nullable=False)  # foreign key linking to the thread being replied to
     edited = db.Column(db.Boolean, default=False)  # flag to indicate if the reply was edited

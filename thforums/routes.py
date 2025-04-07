@@ -70,7 +70,7 @@ def update_profile():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)  # save the new profile picture
             current_user.image_file = picture_file
-        # Update user's profile information
+        # update user's profile information
         current_user.username = form.username.data
         current_user.email = form.email.data
         current_user.gender = form.gender.data
@@ -138,18 +138,18 @@ def view_thread(thread_id):
 def forums():
     form = SearchForm()
     search_query = ""
-    if form.validate_on_submit():  # Handle form submission
+    if form.validate_on_submit():  # handle form submission
         search_query = form.search.data
-    elif request.method == "GET":  # Handle query parameter for pagination
+    elif request.method == "GET":  # handle query parameter for pagination
         search_query = request.args.get("search", "", type=str)
     
-    page = request.args.get("page", 1, type=int)  # Get the current page number
-    categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]  # Predefined categories
+    page = request.args.get("page", 1, type=int)  # get the current page number
+    categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]  # predefined categories
     
     if search_query:
         threads = Thread.query.filter(Thread.title.ilike(f"%{search_query}%")).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=10)
     else:
-        threads = None  # No search results to display
+        threads = None  # no search results to display
     
     return render_template("forum.html", title="Forums", categories=categories, form=form, threads=threads, search_query=search_query)
 
@@ -231,7 +231,7 @@ def delete_thread(thread_id):
     if thread.author != current_user:
         flash("You are not authorized to delete this thread.", "error")
         return redirect(url_for("view_thread", thread_id=thread.id))
-    db.session.delete(thread)  # Permanently delete the thread
+    db.session.delete(thread)  # permanently delete the thread
     db.session.commit()
     flash("Thread has been deleted.", "success")
     return redirect(url_for("forums"))
@@ -277,9 +277,9 @@ def delete_reply(reply_id):
 def list_users():
     form = SearchForm()
     search_query = ""
-    if form.validate_on_submit():  # Handle form submission
+    if form.validate_on_submit():  # handle form submission
         search_query = form.search.data
-    elif request.method == "GET":  # Handle query parameter for pagination
+    elif request.method == "GET":  # handle query parameter for pagination
         search_query = request.args.get("search", "", type=str)
     page = request.args.get("page", 1, type=int)
     if search_query:
