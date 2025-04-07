@@ -40,6 +40,11 @@ def about():
 def profile():
     return render_template("profile.html", title="Profile", posts=posts)
 
+@app.route("/post")
+@login_required
+def post():
+    return render_template("post.html", title="post", posts=posts)
+
 # authentication routes, might put this on a seperate file
 @app.route("/register", methods=["GET","POST"])
 def register():
