@@ -7,7 +7,7 @@
     {{ form.hidden_tag() }}
     <div>
         {{ form.search.label }}
-        {{ form.search(size=30) }}
+        {{ form.search(size=40) }}
         {{ form.submit() }}
     </div>
 </form>
@@ -15,7 +15,7 @@
 <!-- User list -->
 <ul>
     {% for user in users.items %}
-        <li>
+        <li class="container p-5 border ">
             <img src="{{ url_for('static', filename='profile_pics/' + (user.image_file if user.image_file else 'default.png')) }}" 
                  alt="Profile Picture" 
                  class="profile-pic">

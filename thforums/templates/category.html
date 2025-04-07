@@ -2,16 +2,16 @@
 
 {% block content %}
     <!-- display category name -->
-    <h1>{{ category }}</h1>
+    <h1 class="container-fluid p-5 bg-dark justify-content-middle text-white">{{ category }}</h1>
     <div>
         <!-- link to create a new thread in this category -->
-        <a href="{{ url_for('new_thread', category=category) }}" class="button">Create Thread in {{ category }}</a>
+        <a href="{{ url_for('new_thread', category=category) }}" class="btn btn-outline-secondary">Create Thread in {{ category }}</a>
     </div>
     <ul>
         <!-- display threads in the category -->
         {% if threads.items %}
             {% for thread in threads.items %}
-                <li class="thread-list-item">
+                <li class="thread-list-item ">
                     <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
                          alt="Profile Picture" 
                          class="thread-pic">

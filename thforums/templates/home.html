@@ -10,7 +10,7 @@
     {% for category, threads in latest_threads.items() %}
         <h2>{{ category }}</h2>
         {% if threads %}
-            <ul>
+            <ul class="container p-5 my-5 border">
                 {% for thread in threads %}
                     <li class="thread-list-item">
                         <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
