@@ -1,9 +1,29 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-	{% for post in posts %}
-		<h2>{{post.title}}</h2>
-		<p><i>from {{post.author}} at {{post.date_posted}}</i></p>
-		<p>{{post.content}}</p>
-	{% endfor %}
+    <!-- link to create a new thread -->
+    <div>
+        <a href="{{ url_for('new_thread') }}" class="button">Create Thread</a>
+    </div>
+    <!-- display latest threads for each category -->
+    {% for category, threads in latest_threads.items() %}
+        <h2>{{ category }}</h2>
+        {% if threads %}
+            <ul>
+                {% for thread in threads %}
+                    <li class="thread-list-item">
+                        <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
+                                alt="Profile Picture" 
+                                class="thread-pic">
+                        <div>
+                            <a href="{{ url_for('view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>
+                            <small><a href="{{ url_for('user_profile', username=thread.author.username) }}">{{ thread.author.username }}</a> - {{ thread.date_posted.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No threads available in this category.</p>
+        {% endif %}
+    {% endfor %}
 {% endblock %}

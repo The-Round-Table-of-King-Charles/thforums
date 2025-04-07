@@ -1,4 +1,5 @@
 from thforums import app
 
+# entry point for running the flask application
 if __name__ == "__main__": 
-    app.run(debug=True) # launch this python file in debug mode para di ka relaunch ng relaunch
+    app.run(debug=True)  # run the app in debug mode for easier development

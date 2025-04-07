@@ -1,5 +1,46 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-	<h1>{{ current_user.username }}</h1>
+<!-- display user's profile information -->
+<h1>Your Profile</h1>
+<div>
+    <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.image_file else 'default.png')) }}" 
+         alt="Profile Picture" 
+         class="large-profile-pic">
+</div>
+<div>
+    <p><b>Username:</b> {{ current_user.username }}</p>
+    <p><b>Email:</b> {{ current_user.email }}</p>
+    <p><b>Gender:</b> {{ current_user.gender or "Not specified" }}</p>
+    <p><b>Birthdate:</b> {{ current_user.birthdate.strftime('%Y-%m-%d') if current_user.birthdate else "Not specified" }}</p>
+    <p><b>Bio:</b> {{ current_user.bio or "No bio available" }}</p>
+</div>
+<!-- link to update profile -->
+<a href="{{ url_for('update_profile') }}">Edit Profile</a>
+
+<!-- display user's threads -->
+<div>
+    <h2>Your Threads</h2>
+    <ul>
+        {% for thread in threads.items %}
+            <li><a href="{{ url_for('view_thread', thread_id=thread.id) }}">{{ thread.title }}</a> - {{ thread.date_posted.strftime('%Y-%m-%d') }}</li>
+        {% endfor %}
+    </ul>
+    {% if not threads.items %}
+        <p>You haven't created any threads yet.</p>
+    {% endif %}
+</div>
+<div class="pagination">
+    {% if threads.pages > 1 %}
+        {% if threads.has_prev %}
+            <a href="{{ url_for('profile', page=threads.prev_num) }}">Previous</a>
+        {% endif %}
+        {% for page_num in range(1, threads.pages + 1) %}
+            <a href="{{ url_for('profile', page=page_num) }}" class="{{ 'active' if page_num == threads.page else '' }}">{{ page_num }}</a>
+        {% endfor %}
+        {% if threads.has_next %}
+            <a href="{{ url_for('profile', page=threads.next_num) }}">Next</a>
+        {% endif %}
+    {% endif %}
+</div>
 {% endblock %}

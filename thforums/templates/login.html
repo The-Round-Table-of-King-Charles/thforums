@@ -1,45 +1,51 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+    <!-- login form -->
 	<h1>Login</h1>
 	
 	<form method="POST" action="" novalidate>
 		{{ form.hidden_tag() }} <!--CSRF protection daw-->
 		<fieldset><legend>Login</legend>
-			<!--Explanation at register.html-->
+			<!--this part has an explanation at register.html-->
+			<!-- email input field -->
 			<div>
 				{{ form.email.label() }}
 				{% if form.email.errors %}
 					{% for error in form.email.errors %}
 						{{ form.email() }}
-						<span>{{ error }}</span>
+						<span>{{ error }}</span> <!-- display validation error -->
 					{% endfor %}
 				{% else %}
 					{{ form.email() }}
 				{% endif %}	
 			</div>
+			<!-- password input field -->
 			<div>
 				{{ form.password.label() }}
 				{% if form.password.errors %}
 					{% for error in form.password.errors %}
 						{{ form.password() }}
-						<span>{{ error }}</span>
+						<span>{{ error }}</span> <!-- display validation error -->
 					{% endfor %}
 				{% else %}
 					{{ form.password() }}
 				{% endif %}	
 			</div>
+			<!-- remember me checkbox -->
 			<div>
 				{{ form.remember.label }}
 				{{ form.remember() }}
 			</div>
+			<!-- submit button -->
 			<div><br>
 				{{ form.submit() }}
 			</div>
 		</fieldset>
 		
 	</form>
-	<div><br> <!--Redirect to register.html-->
+	<!-- link to registration page -->
+	<div><br>
 		<small><a href={{ url_for("register") }}>Don't have an account?</a></small>
 	</div>
 	

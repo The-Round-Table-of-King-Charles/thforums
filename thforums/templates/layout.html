@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang=en>
+<html lang="en">
 <head>
+	<meta charset="UTF-8"> 
 	<title>{{title}} - THForums</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
 <div>
-	<!-- navigation bar, fix this later -->
+	<!-- navigation bar -->
 	<b>Tavernhold Forums | </b>
 	<a href={{ url_for("home") }}>Home</a>
 	<a href={{ url_for("about") }}>About</a>
+	<a href={{ url_for("forums") }}>Forums</a>
+	<a href={{ url_for("list_users") }}>Users</a>
 	{% if current_user.is_authenticated %}
 			<a href={{ url_for("profile") }}>Profile</a>
 			<a href={{ url_for("logout") }}>Logout</a>
@@ -19,7 +23,7 @@
 	<hr>
 </div>
 <div>
-	<!-- show flashed messages -->
+	<!-- display flashed messages -->
 	{% with messages = get_flashed_messages(with_categories=true) %}
 		{% if messages %}
 			{% for category, message in messages %}
@@ -28,6 +32,6 @@
 		{% endif %}
 	{% endwith %}
 </div>
-	{% block content %}<!-- Dito mapupunta mga contents ng pages from othe html files -->{% endblock %}
+	{% block content %}<!-- content from other templates will be inserted here -->{% endblock %}
 </body>
 </html>

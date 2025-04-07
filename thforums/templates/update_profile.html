@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<!-- form to update user profile -->
+<h1>Update Profile</h1>
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div>
+        <!-- display current profile picture -->
+        <img src="{{ image_file or url_for('static', filename='profile_pics/default.png') }}" 
+             alt="Profile Picture" 
+             style="width: 125px; height: 125px; border-radius: 50%;">
+    </div>
+    <div>
+        {{ form.username.label }}<br>
+        {{ form.username() }}
+    </div>
+    <div>
+        {{ form.email.label }}<br>
+        {{ form.email() }}
+    </div>
+    <div>
+        {{ form.gender.label }}<br>
+        {{ form.gender() }}
+    </div>
+    <div>
+        {{ form.birthdate.label }}<br>
+        {{ form.birthdate() }}
+    </div>
+    <div>
+        {{ form.bio.label }}<br>
+        {{ form.bio() }}
+    </div>
+    <div>
+        {{ form.picture.label }}<br>
+        {{ form.picture() }}
+    </div>
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+{% endblock %}
