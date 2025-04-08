@@ -64,3 +64,8 @@
     margin: 0 5px;
     color: #6c757d;
 }
+
+
+.bg_image {
+    background-image: url("Bg/Profile_bg.jpg");
+}
