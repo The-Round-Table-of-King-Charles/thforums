@@ -7,6 +7,10 @@ from flask_login import UserMixin
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
+# create Guild Table
+# Add exp attribute to users
+
 # user model represents a registered user in the database
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)  # unique id for each user
