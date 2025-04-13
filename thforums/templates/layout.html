@@ -18,10 +18,13 @@
 
 </head>
 
-<!-- Fix Forum Layout -->
- <!-- Polish Web Design -->
+<!--
+    To-do List for this Website:
+    - Fix Forum Layout
+    - Polish Web Design 
+-->
+ 
 <body>
-    <!-- aDD OffCanvas -->
     <!-- navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
         <div class="container">
@@ -113,65 +116,55 @@
     <!-- main content -->
     <main class="container my-4">
         <div class="row">
-            <div class="col-md-9">
-                {% block content %}{% endblock %}
+            <div class="col-md-12">
+                {% block content %}{% endblock %} <!-- inherited templates will be placed here -->
             </div>
+            
             <!-- Offcanvas Sidebar -->
-<div class="offcanvas offcanvas-start tavern-board" id="demo">
-    <div class="offcanvas-header tavern-board">
-      <h4 class="board-title text-center mb-3">
-        <i class="fas fa-scroll me-2"></i>Tavern Notices
-    </h4>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
-    </div>
-    <!-- notice board -->
-    <div class="offcanvas-body">
-        <aside>
+            <div class="offcanvas offcanvas-start tavern-board" id="demo">
+                <div class="offcanvas-header tavern-board">
+                  <h4 class="board-title text-center mb-3">
+                    <i class="fas fa-scroll me-2"></i>Tavern Notices
+                </h4>
+                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <!-- notice board -->
+                <div class="offcanvas-body">
             
-                <!-- current events -->
-                <div class="event-card mb-3">
-                    <h5><i class="fas fa-flag me-2"></i>Current Events</h5>
-                    <ul class="event-list">
-                        <li><a href="#">Midsummer Festival</a> - Jun 20-25</li>
-                        <li><a href="#">Bard's Competition</a> - Every Friday</li>
-                        <li><a href="#">Monster Hunt</a> - Sign up now!</li>
-                    </ul>
-                </div>
-                <!-- popular threads -->
-                <div class="popular-threads mb-3">
-                    <h5><i class="fas fa-fire me-2"></i>Hot Topics</h5>
-                    <ol class="thread-list">
-                        <li><a href="#">Dragon spotted near Blackmarsh!</a></li>
-                        <li><a href="#">Best potion recipes?</a></li>
-                        <li><a href="#">Kingsroad bandits warning</a></li>
-                    </ol>
-                </div>
-                <!-- tavern specials -->
-                <div class="tavern-specials">
-                    <h5><i class="fas fa-beer me-2"></i>Today's Specials</h5>
-                    <div class="special-item">
-                        <strong>Dwarven Stout</strong> - 5 copper
+                    <!-- current events -->
+                    <div class="event-card mb-3">
+                        <h5><i class="fas fa-flag me-2"></i>Current Events</h5>
+                        <ul class="event-list">
+                            <li><a href="#">Midsummer Festival</a> - Jun 20-25</li>
+                            <li><a href="#">Bard's Competition</a> - Every Friday</li>
+                            <li><a href="#">Monster Hunt</a> - Sign up now!</li>
+                        </ul>
                     </div>
-                    <div class="special-item">
-                        <strong>Elven Wine</strong> - 8 silver
+                    
+                    <!-- popular threads -->
+                    <div class="popular-threads mb-3">
+                        <h5><i class="fas fa-fire me-2"></i>Hot Topics</h5>
+                        <ol class="thread-list">
+                            <li><a href="#">Dragon spotted near Blackmarsh!</a></li>
+                            <li><a href="#">Best potion recipes?</a></li>
+                            <li><a href="#">Kingsroad bandits warning</a></li>
+                        </ol>
                     </div>
-                    <div class="special-item">
-                        <strong>Orcish Mead</strong> - 3 copper (strong!)
+                    
+                    <!-- tavern specials -->
+                    <div class="tavern-specials">
+                        <h5><i class="fas fa-beer me-2"></i>Today's Specials</h5>
+                        <div class="special-item">
+                            <strong>Dwarven Stout</strong> - 5 copper
+                        </div>
+                        <div class="special-item">
+                            <strong>Elven Wine</strong> - 8 silver
+                        </div>
+                        <div class="special-item">
+                            <strong>Orcish Mead</strong> - 3 copper (strong!)
+                        </div>
                     </div>
-                </div>
-            </div>
-      <p>Some text lorem ipsum.</p>
-      <p>Some text lorem ipsum.</p>
-      <button class="btn btn-secondary" type="button">A Button</button>
-    </div>
-  </div>
-  
-  <!-- Button to open the offcanvas sidebar -->
-  <button class="btn btn-primary " type="button" data-bs-toggle="offcanvas" data-bs-target="#demo">
-    Open Offcanvas Sidebar
-  </button>
-            <!-- sidebar -->
-            
+                    
                     <!-- active adventurers -->
                     <div class="active-users p-3">
                         <h5 class="text-center mb-3">
@@ -187,9 +180,15 @@
                             {% endfor %}
                         </div>
                     </div>
-                </aside>
+                </div>
+                <button class="btn btn-secondary" type="button">A Button</button>
             </div>
         </div>
+  
+        <!-- Button to open the offcanvas sidebar -->
+        <button class="btn btn-primary " type="button" data-bs-toggle="offcanvas" data-bs-target="#demo">
+        Open Offcanvas Sidebar
+        </button>
     </main>
 
     <!-- footer -->
