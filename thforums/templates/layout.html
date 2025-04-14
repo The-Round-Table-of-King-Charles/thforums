@@ -22,13 +22,22 @@
     To-do List for this Website:
     - Fix Forum Layout
     - Polish Web Design 
+    - Add 3d light effect to containers
+    - Fix bg repeating
+    -fix attachment on bg
+    -add glow when hover on logo
+    -add effects on border
+    -add shadow on Category preview
 -->
  
 <body>
     <!-- navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
         <div class="container">
-            <i class="fas fa-bars" type></i>
+            <!-- Button to open the offcanvas sidebar -->
+            <a class="bg-transparent text-light position-absolute top-0 start-0 my-4 ms-4" data-bs-toggle="offcanvas" href="#offcanvas" role="button" aria-controls="offcanvasExample">
+                <i class="fas fa-bars fs-3 w-100 hover-shadow"></i>
+              </a>
             <!-- brand logo and name -->
             <a class="navbar-brand" href="{{ url_for('home') }}">
                 <span class="tavern-sign">
@@ -121,7 +130,7 @@
             </div>
             
             <!-- Offcanvas Sidebar -->
-            <div class="offcanvas offcanvas-start tavern-board" id="offcanvas">
+            <div class="offcanvas offcanvas-start tavern-board py-4" id="offcanvas" >
                 <div class="offcanvas-header tavern-board">
                   <h4 class="board-title text-center mb-3">
                     <i class="fas fa-scroll me-2"></i>Tavern Notices
@@ -185,12 +194,6 @@
                 </div>
             </div>
         </div>
-  
-        <!-- Button to open the offcanvas sidebar -->
-        <button class="btn btn-sm btn-medieval" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas">
-        Open Offcanvas Sidebar
-        </button>
-        
     </main>
 
     <!-- footer -->

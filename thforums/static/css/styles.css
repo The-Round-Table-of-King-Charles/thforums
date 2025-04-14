@@ -1,7 +1,10 @@
 /* Variables */
 :root {
     --background-color: #f5f1e6;
-    --background-image: url('https://media.istockphoto.com/id/1402385345/photo/blank-paper-background-grunge-manuscript-texture-with-empty-space.jpg?s=612x612&w=0&k=20&c=Nv1Y0DFXlDCz2hLt9i2CPEFCQ80eQlh_YrJ4qtlcJLg=');
+    --background-image: url('https://i.pinimg.com/736x/b9/69/e1/b969e18f60defad33dd623985b8af591.jpg');
+    --background-repeat: no-repeat;
+    --background-size: 100% 100%;
+    --background-attachment: fixed;
     --font-family: 'Cinzel', serif;
     --text-color: #3a3226;
     --navbar-bg-color: #3a3226;
@@ -31,10 +34,14 @@ body {
     flex-direction: column;
     min-height: 100%;
 }
+.home{
+    background-image: url(home.jpg);
 
+}
 main {
     flex: 1;
 }
+
 
 /* Medieval Alert Styles */
 .medieval-alert {
