@@ -28,6 +28,9 @@ html {
 body {
     background-color: var(--background-color);
     background-image: var(--background-image);
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-attachment: fixed;
     font-family: var(--font-family);
     color: var(--text-color);
     display: flex;
@@ -153,6 +156,13 @@ main {
     margin-right: 10px;
 }
 
+.tavern-sign:hover{
+    transform: translateY(-2px);
+    text-shadow: 0 0 5px #f4d437,
+              0 0 10px #f4d437,
+              0 0 15px #f4d437;
+
+}
 .tavern-sign-straight {
     display: inline-block;
     background-color: #3d1f0a;
