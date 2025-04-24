@@ -158,9 +158,9 @@ main {
 
 .tavern-sign:hover{
     transform: translateY(-2px);
-    text-shadow: 0 0 5px #f4d437,
-              0 0 10px #f4d437,
-              0 0 15px #f4d437;
+    text-shadow: 0 0 5px #fee257,
+              0 0 10px #fee257,
+              0 0 15px #fee257;
 
 }
 .tavern-sign-straight {
@@ -214,7 +214,7 @@ main {
 
 .thread-list-item:hover {
     background-color: #e8e1d1 !important;
-    transform: translateX(5px);
+    transform: translateX(2px);
 }
 
 .thread-pic {

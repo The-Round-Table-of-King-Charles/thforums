@@ -15,7 +15,7 @@ const buttons = document.querySelectorAll(".soundBtn");
 const sound = document.getElementById("btnSound");
 
 buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('mouseover', () => {
       sound.currentTime = 0;
       sound.play();
     });

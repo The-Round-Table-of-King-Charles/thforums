@@ -59,8 +59,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('forums') }}"><i class="fas fa-comments soundBtn"></i> Forums</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item">   
                         <a class="nav-link" href="{{ url_for('list_users') }}"><i class="fas fa-users soundBtn"></i> Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('create_guild') }}"><i class="fas fa-shield-halved soundBtn"></i> Guild</a>
                     </li>
                 </ul>
                 <!-- right-side user authentication links -->
@@ -210,6 +213,8 @@
     <!-- custom javascript -->
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
     <!-- sound effect -->
-     <audio id="btnSound" src="{{ url_for('static', filename='Hover.mp3') }}" preload="auto" controls> </audio>
+     <audiop  controls>
+        <source id="btnSound" src="{{ url_for('static', filename='Hover.mp3') }}" typer="audio/mpeg" reload="auto">
+     </audio>
 </body>
 </html>
