@@ -23,6 +23,7 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text, nullable=True)  # bio field
     threads = db.relationship("Thread", backref="author", lazy=True)  # relationship to threads created by the user
     replies = db.relationship("Reply", backref="author", lazy=True)  # relationship to replies made by the user
+    exp = db.Column(db.Integer, nullable=True) #exp for user
     
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
@@ -55,3 +56,6 @@ class Reply(db.Model):
 
     def __repr__(self):
         return f"Reply('{self.content[:20] if self.content else ''}', '{self.date_posted}')"
+    
+class Guild():
+     id = db.Column(db.Integer, primary_key=True)

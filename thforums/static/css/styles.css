@@ -1,7 +1,10 @@
 /* Variables */
 :root {
     --background-color: #f5f1e6;
-    --background-image: url('https://media.istockphoto.com/id/1402385345/photo/blank-paper-background-grunge-manuscript-texture-with-empty-space.jpg?s=612x612&w=0&k=20&c=Nv1Y0DFXlDCz2hLt9i2CPEFCQ80eQlh_YrJ4qtlcJLg=');
+    --background-image: url('https://i.pinimg.com/736x/b9/69/e1/b969e18f60defad33dd623985b8af591.jpg');
+    --background-repeat: no-repeat;
+    --background-size: 100% 100%;
+    --background-attachment: fixed;
     --font-family: 'Cinzel', serif;
     --text-color: #3a3226;
     --navbar-bg-color: #3a3226;
@@ -25,16 +28,23 @@ html {
 body {
     background-color: var(--background-color);
     background-image: var(--background-image);
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-attachment: fixed;
     font-family: var(--font-family);
     color: var(--text-color);
     display: flex;
     flex-direction: column;
     min-height: 100%;
 }
+.home{
+    background-image: url(home.jpg);
 
+}
 main {
     flex: 1;
 }
+
 
 /* Medieval Alert Styles */
 .medieval-alert {
@@ -146,6 +156,13 @@ main {
     margin-right: 10px;
 }
 
+.tavern-sign:hover{
+    transform: translateY(-2px);
+    text-shadow: 0 0 5px #fee257,
+              0 0 10px #fee257,
+              0 0 15px #fee257;
+
+}
 .tavern-sign-straight {
     display: inline-block;
     background-color: #3d1f0a;
@@ -197,7 +214,7 @@ main {
 
 .thread-list-item:hover {
     background-color: #e8e1d1 !important;
-    transform: translateX(5px);
+    transform: translateX(2px);
 }
 
 .thread-pic {

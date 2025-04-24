@@ -312,3 +312,7 @@ def page_not_found(e):
 def internal_server_error(e):
     return render_template('500.html', title="Server Error"), 500
 
+@app.route("/create_guild")
+@login_required
+def create_guild():
+    return render_template("create_guild.html", title="create_guild")

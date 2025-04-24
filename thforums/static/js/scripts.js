@@ -8,3 +8,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 5000);
     console.log('Tavernhold Forums scripts loaded');
 });
+
+
+//sound effects
+const buttons = document.querySelectorAll(".soundBtn");
+const sound = document.getElementById("btnSound");
+
+buttons.forEach(btn => {
+    btn.addEventListener('mouseover', () => {
+      sound.currentTime = 0;
+      sound.play();
+    });
+  })
