@@ -543,3 +543,42 @@ aside {
     margin: 0 5px;
     color: #6c757d;
 }
+
+/* Showcase backgrounds */
+.showcase-bg {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+.showcase-forums {
+    background: rgba(248,249,250,0.88);
+}
+
+.showcase-users {
+    background: rgba(245,231,198,0.88);
+}
+
+.showcase-about {
+    background: rgba(255,251,231,0.88);
+}
+
+.showcase-guilds {
+    background: rgba(249,247,240,0.88);
+}
+
+.showcase-join {
+    background: rgba(60, 40, 20, 0.65); /* warm dark, semi-transparent */
+}
+
+.logo-desc-bg {
+    background: rgba(60, 40, 20, 0.85);
+    border: 2px solid #bfa14a;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(139,90,43,0.10);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
