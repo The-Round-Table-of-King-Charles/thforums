@@ -102,8 +102,8 @@ def new_thread():
     if form.validate_on_submit():
         thread = Thread(title=form.title.data, content=form.content.data, category=form.category.data, author=current_user)
         db.session.add(thread)
-        # Award EXP for creating a thread
-        leveled_up = current_user.add_exp(20)  # e.g., 20 EXP per thread
+        # award exp for creating a thread
+        leveled_up = current_user.add_exp(20)
         db.session.commit()
         flash("Your thread has been created!", "success")
         if leveled_up:
@@ -115,16 +115,8 @@ def new_thread():
 @app.route("/forums/<string:category>", methods=["GET"])
 def category_threads(category):
     page = request.args.get("page", 1, type=int)  # get the current page number
-    # predefined category descriptions
-    category_descriptions = {
-        "General Discussion": "Talk about anything and everything here.",
-        "Looking for Adventurers": "Find allies for your next quest.",
-        "Commissions and Quest": "Post or find commissions and quests."
-    }
-    description = category_descriptions.get(category, "No description available for this category.")
-    # paginate threads to display 10 per page
     threads = Thread.query.filter_by(category=category).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=10)
-    return render_template("category.html", title=category, category=category, description=description, threads=threads)
+    return render_template("category.html", title=category, category=category, threads=threads)
 
 # route to view a specific thread and its replies
 @app.route("/thread/<int:thread_id>", methods=["GET", "POST"])
@@ -135,11 +127,11 @@ def view_thread(thread_id):
         if not current_user.is_authenticated:
             flash("You must be logged in to post a reply.", "error")
             return redirect(url_for("login"))
-        # if the form is valid, create a new reply and associate it with the thread
+        # if the form is valid, create  a new reply and associate it with the thread
         reply = Reply(content=form.content.data, user_id=current_user.id, thread=thread)
         db.session.add(reply)
-        # Award EXP for replying
-        leveled_up = current_user.add_exp(5)  # e.g., 5 EXP per reply
+        # award exp for replying
+        leveled_up = current_user.add_exp(5)
         db.session.commit()
         flash("Your reply has been posted!", "success")
         if leveled_up:
