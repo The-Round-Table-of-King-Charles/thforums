@@ -1,37 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8"> 
-	<title>{{title}} - THForums</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Tavernhold</title>
+    <!-- bootstrap css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- font awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- google fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <!-- custom css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- web icon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
 </head>
+
+<!--
+    To-do List for this Website:
+    - Fix Forum Layout
+    - Polish Web Design 
+    - Add 3d light effect to containers
+
+
+    -add effects on border
+    -add shadow on Category preview
+-->
+ 
 <body>
-<div>
-	<!-- navigation bar -->
-	<b>Tavernhold Forums | </b>
-	<a href={{ url_for("home") }}>Home</a>
-	<a href={{ url_for("about") }}>About</a>
-	<a href={{ url_for("forums") }}>Forums</a>
-	<a href={{ url_for("list_users") }}>Users</a>
-	{% if current_user.is_authenticated %}
-			<a href={{ url_for("profile") }}>Profile</a>
-			<a href={{ url_for("logout") }}>Logout</a>
-	{% else %}
-		<a href={{ url_for("login") }}>Login</a>
-		<a href={{ url_for("register") }}>Register</a>
-	{% endif %}
-	<hr>
-</div>
-<div>
-	<!-- display flashed messages -->
-	{% with messages = get_flashed_messages(with_categories=true) %}
-		{% if messages %}
-			{% for category, message in messages %}
-				<ul><li>{{ message }}</li></ul>
-			{% endfor %}
-		{% endif %}
-	{% endwith %}
-</div>
-	{% block content %}<!-- content from other templates will be inserted here -->{% endblock %}
+    <!-- navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container">
+            <!-- Button to open the offcanvas sidebar -->
+            <a class="bg-transparent text-light position-absolute top-0 start-0 my-4 ms-4" data-bs-toggle="offcanvas" href="#offcanvas" role="button" aria-controls="offcanvasExample">
+                <i class="fas fa-bars fs-3 w-100 hover-shadow soundBtn"></i>
+              </a>
+            <!-- brand logo and name -->
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <span class="tavern-sign">
+                    <i class="fas fa-beer soundBtn"></i> Tavernhold
+                </span>
+            </a>
+            <!-- navbar toggle button for mobile view -->
+            <button class="navbar-toggler soundBtn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- left-side navigation links -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}"><i class="fas fa-home soundBtn"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}"><i class="fas fa-scroll soundBtn"></i> About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('forums') }}"><i class="fas fa-comments soundBtn"></i> Forums</a>
+                    </li>
+                    <li class="nav-item">   
+                        <a class="nav-link" href="{{ url_for('list_users') }}"><i class="fas fa-users soundBtn"></i> Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('create_guild') }}"><i class="fas fa-shield-halved soundBtn"></i> Guild</a>
+                    </li>
+                </ul>
+                <!-- right-side user authentication links -->
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('profile') }}"><i class="fas fa-user soundBtn"></i> Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt soundBtn"></i> Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt soundBtn"></i> Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('register') }}"><i class="fas fa-user-plus soundBtn"></i> Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- flash messages -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="medieval-alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        <div class="d-flex align-items-center">
+                            <!-- icon based on message category -->
+                            {% if category == 'success' %}
+                                <i class="fas fa-check-circle me-2"></i>
+                            {% elif category == 'error' %}
+                                <i class="fas fa-times-circle me-2"></i>
+                            {% elif category == 'warning' %}
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle me-2"></i>
+                            {% endif %}
+                            <span class="me-2">
+                                <strong>
+                                    <!-- medieval-style message prefix -->
+                                    {% if category == 'success' %}huzzah!
+                                    {% elif category == 'error' %}forsooth!
+                                    {% elif category == 'warning' %}beware!
+                                    {% else %}hear ye!{% endif %}
+                                </strong>
+                            </span>
+                            {{ message }}
+                            <!-- close button for alert -->
+                            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- main content -->
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-md-12">
+                {% block content %}{% endblock %} <!-- inherited templates will be placed here -->
+            </div>
+            
+            <!-- Offcanvas Sidebar -->
+            <div class="offcanvas offcanvas-start tavern-board py-4" id="offcanvas" >
+                <div class="offcanvas-header tavern-board">
+                  <h4 class="board-title text-center mb-3">
+                    <i class="fas fa-scroll me-2"></i>Tavern Notices
+                </h4>
+                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+                </div>
+                
+                <!-- notice board -->
+                <div class="offcanvas-body">
+                    <aside>
+                        <!-- current events -->
+                        <div class="event-card mb-3">
+                            <h5><i class="fas fa-flag me-2"></i>Current Events</h5>
+                            <ul class="event-list">
+                                <li><a href="#">Midsummer Festival</a> - Jun 20-25</li>
+                                <li><a href="#">Bard's Competition</a> - Every Friday</li>
+                                <li><a href="#">Monster Hunt</a> - Sign up now!</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- popular threads -->
+                        <div class="popular-threads mb-3">
+                            <h5><i class="fas fa-fire me-2"></i>Hot Topics</h5>
+                            <ol class="thread-list">
+                                <li><a href="#">Dragon spotted near Blackmarsh!</a></li>
+                                <li><a href="#">Best potion recipes?</a></li>
+                                <li><a href="#">Kingsroad bandits warning</a></li>
+                            </ol>
+                        </div>
+                        
+                        <!-- tavern specials -->
+                        <div class="tavern-specials">
+                            <h5><i class="fas fa-beer me-2"></i>Today's Specials</h5>
+                            <div class="special-item">
+                                <strong>Dwarven Stout</strong> - 5 copper
+                            </div>
+                            <div class="special-item">
+                                <strong>Elven Wine</strong> - 8 silver
+                            </div>
+                            <div class="special-item">
+                                <strong>Orcish Mead</strong> - 3 copper (strong!)
+                            </div>
+                        </div>
+                        
+                        <!-- active adventurers -->
+                        <div class="active-users p-3">
+                            <h5 class="text-center mb-3">
+                                <i class="fas fa-users me-2"></i>In the Tavern Now
+                            </h5>
+                            <div class="user-grid">
+                                {% for user in random_users %}
+                                <div class="user-badge">
+                                    <img src="{{ url_for('static', filename='profile_pics/' + (user.image_file if user.image_file else 'default.png')) }}" 
+                                         class="rounded-circle small-profile-pic" alt="User">
+                                    <span>{{ user.username }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">
+                <i class="fas fa-shield-alt"></i> Tavernhold Forums - Gather, Discuss, and Quest
+            </p>
+            <small>© 2025 The Round Table of King Charles. All rights reserved.</small>
+        </div>
+    </footer>
+
+    <!-- bootstrap js bundle with popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- custom javascript -->
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <!-- sound effect -->
+     <audiop  controls>
+        <source id="btnSound" src="{{ url_for('static', filename='Hover.mp3') }}" typer="audio/mpeg" reload="auto">
+     </audio>
 </body>
 </html>

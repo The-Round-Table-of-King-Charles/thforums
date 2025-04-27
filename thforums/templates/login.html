@@ -1,53 +1,45 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <!-- login form -->
-	<h1>Login</h1>
-	
-	<form method="POST" action="" novalidate>
-		{{ form.hidden_tag() }} <!--CSRF protection daw-->
-		<fieldset><legend>Login</legend>
-			<!--this part has an explanation at register.html-->
-			<!-- email input field -->
-			<div>
-				{{ form.email.label() }}
-				{% if form.email.errors %}
-					{% for error in form.email.errors %}
-						{{ form.email() }}
-						<span>{{ error }}</span> <!-- display validation error -->
-					{% endfor %}
-				{% else %}
-					{{ form.email() }}
-				{% endif %}	
-			</div>
-			<!-- password input field -->
-			<div>
-				{{ form.password.label() }}
-				{% if form.password.errors %}
-					{% for error in form.password.errors %}
-						{{ form.password() }}
-						<span>{{ error }}</span> <!-- display validation error -->
-					{% endfor %}
-				{% else %}
-					{{ form.password() }}
-				{% endif %}	
-			</div>
-			<!-- remember me checkbox -->
-			<div>
-				{{ form.remember.label }}
-				{{ form.remember() }}
-			</div>
-			<!-- submit button -->
-			<div><br>
-				{{ form.submit() }}
-			</div>
-		</fieldset>
-		
-	</form>
-	<!-- link to registration page -->
-	<div><br>
-		<small><a href={{ url_for("register") }}>Don't have an account?</a></small>
-	</div>
-	
-	
+<div class="text-center mb-4">
+    <h1 class="tavern-sign-straight d-inline-block shadow">
+		<i class="fas fa-pen me-2"></i> Login
+    </h1>
+</div>
+<form method="POST" action="" novalidate class="card p-4">
+    {{ form.hidden_tag() }}
+    <fieldset>
+        <legend class="text-left mb-4"><b>Log to your account</b></legend>
+        <!-- input for email -->
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            {% for error in form.email.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <!-- input for password -->
+        <div class="mb-3">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
+            {% for error in form.password.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <!-- remember me checkbox -->
+        <div class="form-check mb-3">
+            {{ form.remember(class="form-check-input") }}
+            {{ form.remember.label(class="form-check-label") }}
+        </div>
+        <!-- submit button -->
+        <div class="text-center">
+            {{ form.submit(class="btn btn-medieval") }}
+        </div>
+    </fieldset>
+    <div class="text-center mt-3">
+        <small><a href="{{ url_for('register') }}" class="text-decoration-none">Don't have an account?</a></small>
+    </div>
+</form>
+<!-- link to register page -->
+
 {% endblock %}

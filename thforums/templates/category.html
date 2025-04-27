@@ -1,54 +1,65 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <!-- display category name -->
-    <h1>{{ category }}</h1>
-    <div>
-        <!-- link to create a new thread in this category -->
-        <a href="{{ url_for('new_thread', category=category) }}" class="button">Create Thread in {{ category }}</a>
-    </div>
-    <ul>
-        <!-- display threads in the category -->
-        {% if threads.items %}
-            {% for thread in threads.items %}
-                <li class="thread-list-item">
+<div class="text-center mb-4">
+    <h1 class="tavern-sign-straight d-inline-block shadow">
+		<i class="fas fa-pen me-2"></i> {{ category }}
+    </h1>
+    <!-- display category description -->
+    <p class="text-muted"><b>{{ description }}</b></p>
+</div>
+<!-- button to create a new thread in the current category -->
+<div class="text-end mb-4">
+    <a href="{{ url_for('new_thread', category=category) }}" class="btn btn-medieval">Create Thread in {{ category }}</a>
+</div>
+<ul class="list-group">
+    {% if threads.items %}
+        {% for thread in threads.items %}
+            <li class="list-group-item thread-list-item">
+                <div class="d-flex align-items-center">
+                    <!-- display thread author's profile picture -->
                     <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
                          alt="Profile Picture" 
-                         class="thread-pic">
-                    <div>
-                        <a href="{{ url_for('view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>
-                        <small>by <a href="{{ url_for('user_profile', username=thread.author.username) }}">{{ thread.author.username }}</a> on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                         class="thread-pic me-3">
+                    <div class="flex-grow-1">
+                        <!-- link to the thread -->
+                        <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
+                           class="text-decoration-none fw-bold text-dark">
+                            {{ thread.title }}
+                        </a>
+                        <!-- display thread author and date -->
+                        <div class="text-muted small">
+                            By <a href="{{ url_for('user_profile', username=thread.author.username) }}" 
+                                 class="text-decoration-none text-dark">
+                                {{ thread.author.username }}
+                            </a> 
+                            on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </div>
                     </div>
-                </li>
-            {% endfor %}
-        {% else %}
-            <p>No threads available in this category.</p>
+                </div>
+            </li>
+        {% endfor %}
+    {% else %}
+        <!-- message when no threads are available -->
+        <p class="text-center text-muted">No threads available in this category.</p>
+    {% endif %}
+</ul>
+<div class="pagination mt-4">
+    {% if threads.pages > 1 %}
+        {% if threads.has_prev %}
+            <!-- link to the previous page -->
+            <a href="{{ url_for('category_threads', category=category, page=threads.prev_num) }}" class="btn btn-medieval me-2">Previous</a>
         {% endif %}
-    </ul>
-    <div class="pagination">
-        <!-- pagination controls -->
-        {% if threads.pages > 1 %}
-            <!-- previous link -->
-            {% if threads.has_prev %}
-                <a href="{{ url_for('category_threads', category=category, page=threads.prev_num) }}">Previous</a>
-            {% endif %}
-
-            <!-- page numbers with ellipses -->
-            {% for page_num in range(1, threads.pages + 1) %}
-                {% if page_num == 1 or page_num == threads.pages or (page_num >= threads.page - 1 and page_num <= threads.page + 1) %}
-                    <a href="{{ url_for('category_threads', category=category, page=page_num) }}" 
-                       class="{{ 'active' if page_num == threads.page else '' }}">
-                        {{ page_num }}
-                    </a>
-                {% elif page_num == threads.page - 2 or page_num == threads.page + 2 %}
-                    <span>...</span>
-                {% endif %}
-            {% endfor %}
-
-            <!-- next link -->
-            {% if threads.has_next %}
-                <a href="{{ url_for('category_threads', category=category, page=threads.next_num) }}">Next</a>
-            {% endif %}
+        {% for page_num in range(1, threads.pages + 1) %}
+            <a href="{{ url_for('category_threads', category=category, page=page_num) }}" 
+               class="btn btn-sm {{ 'btn-medieval' if page_num == threads.page else 'btn-outline-medieval' }} me-1">
+                {{ page_num }}
+            </a>
+        {% endfor %}
+        {% if threads.has_next %}
+            <!-- link to the next page -->
+            <a href="{{ url_for('category_threads', category=category, page=threads.next_num) }}" class="btn btn-medieval ms-2">Next</a>
         {% endif %}
-    </div>
+    {% endif %}
+</div>
 {% endblock %}

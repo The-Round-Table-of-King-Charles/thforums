@@ -1,29 +1,75 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <!-- link to create a new thread -->
-    <div>
-        <a href="{{ url_for('new_thread') }}" class="button">Create Thread</a>
-    </div>
-    <!-- display latest threads for each category -->
-    {% for category, threads in latest_threads.items() %}
-        <h2>{{ category }}</h2>
-        {% if threads %}
-            <ul>
-                {% for thread in threads %}
-                    <li class="thread-list-item">
-                        <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
-                                alt="Profile Picture" 
-                                class="thread-pic">
-                        <div>
-                            <a href="{{ url_for('view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>
-                            <small><a href="{{ url_for('user_profile', username=thread.author.username) }}">{{ thread.author.username }}</a> - {{ thread.date_posted.strftime('%Y-%m-%d') }}</small>
+<div class="home">
+    <div class="container">
+        <!-- button to create a new thread -->
+        <div class="mb-4 text-end">
+            <a href="{{ url_for('new_thread') }}" class="btn btn-medieval">
+                <i class="fas fa-plus"></i> Create Thread
+            </a>
+        </div>
+        {% for category, threads in latest_threads.items() %}
+            <div class="card mb-4 border-0 shadow-sm" style="background-color: var(--card-bg-color);">
+                <div class="card-header text-light" style="background-color: var(--navbar-bg-color); border-bottom: 2px solid var(--card-border-color);">
+                    <!-- display category name -->
+                    <h2 class="mb-0">
+                        <i class="fas fa-folder-open me-2"></i>{{ category }}
+                    </h2>
+                </div>
+                <div class="card-body p-0">
+                    {% if threads %}
+                        <ul class="list-group list-group-flush">
+                            {% for thread in threads %}
+                                <li class="list-group-item thread-list-item mb-0" style="background-color: var(--background-color);">
+                                    <div class="d-flex align-items-center w-100">
+                                        <!-- display thread author's profile picture -->
+                                        <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
+                                             alt="Profile Picture" 
+                                             class="thread-pic me-3">
+                                        <div class="flex-grow-1">
+                                            <!-- link to the thread -->
+                                            <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
+                                               class="text-decoration-none fw-bold text-dark">
+                                                {{ thread.title }}
+                                            </a>
+                                            <!-- display thread author and date -->
+                                            <div class="text-muted small">
+                                                By <a href="{{ url_for('user_profile', username=thread.author.username) }}" 
+                                                     class="text-decoration-none text-dark">
+                                                    {{ thread.author.username }}
+                                                </a> 
+                                                on {{ thread.date_posted.strftime('%Y-%m-%d') }}
+                                            </div>
+                                        </div>
+                                        <!-- link to view the thread -->
+                                        <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
+                                           class="btn btn-sm btn-medieval" 
+                                           style="margin-left: auto;">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <!-- message when no threads are available -->
+                        <div class="p-4 text-center text-muted">
+                            <i class="fas fa-comment-slash fa-2x mb-2"></i>
+                            <p class="mb-0">No threads available in this category.</p>
                         </div>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No threads available in this category.</p>
-        {% endif %}
-    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="card-footer text-end" style="background-color: var(--alert-bg-color);">
+                    <!-- link to view all threads in the category -->
+                    <a href="{{ url_for('category_threads', category=category) }}" 
+                       class="btn btn-sm btn-medieval">
+                        View All <i class="fas fa-chevron-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
 {% endblock %}

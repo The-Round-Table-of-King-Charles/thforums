@@ -1,52 +1,86 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <h1>Forums</h1>
-    <!-- Search form -->
-    <form method="POST" action="{{ url_for('forums') }}">
+    <div class="text-center mb-4">
+        <h1 class="tavern-sign-straight d-inline-block shadow">
+            <i class="fas fa-comments me-2"></i> Forums
+        </h1>
+    </div>
+    
+    <!-- search form -->
+    <form method="POST" action="{{ url_for('forums') }}" class="mb-4">
         {{ form.hidden_tag() }}
-        <div>
-            {{ form.search.label }}
-            {{ form.search(size=30) }}
-            {{ form.submit() }}
+        <div class="input-group">
+            {{ form.search(size=30, class_="form-control", placeholder="Search threads...") }}
+            <button class="btn btn-medieval" type="submit">{{ form.submit.label.text }}</button>
         </div>
     </form>
     
-    <!-- Display search results if a query is provided -->
+    <!-- display search results if a query is provided -->
     {% if search_query %}
-        <h2>Search Results for "{{ search_query }}"</h2>
+        <h2 class="mb-4">Search Results for "{{ search_query }}"</h2>
         {% if threads and threads.items %}
-            <ul>
+            <ul class="list-group">
                 {% for thread in threads.items %}
-                    <li>
-                        <a href="{{ url_for('view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>
-                        <small>by <a href="{{ url_for('user_profile', username=thread.author.username) }}">{{ thread.author.username }}</a> on {{ thread.date_posted.strftime('%Y-%m-%d') }}</small>
+                    <li class="list-group-item thread-list-item">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
+                                   class="text-decoration-none fw-bold text-dark">
+                                    {{ thread.title }}
+                                </a>
+                                <div class="text-muted small">
+                                    By <a href="{{ url_for('user_profile', username=thread.author.username) }}" 
+                                         class="text-decoration-none text-dark">
+                                        {{ thread.author.username }}
+                                    </a> 
+                                    on {{ thread.date_posted.strftime('%Y-%m-%d') }}
+                                </div>
+                            </div>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
-            <!-- Pagination controls -->
-            <div class="pagination">
+            <!-- pagination controls -->
+            <div class="pagination mt-4">
                 {% if threads.pages > 1 %}
                     {% if threads.has_prev %}
-                        <a href="{{ url_for('forums', page=threads.prev_num, search=search_query) }}">Previous</a>
+                        <a href="{{ url_for('forums', page=threads.prev_num, search=search_query) }}" class="btn btn-medieval me-2">Previous</a>
                     {% endif %}
                     {% for page_num in range(1, threads.pages + 1) %}
-                        <a href="{{ url_for('forums', page=page_num, search=search_query) }}" class="{{ 'active' if page_num == threads.page else '' }}">{{ page_num }}</a>
+                        <a href="{{ url_for('forums', page=page_num, search=search_query) }}" 
+                           class="btn btn-sm {{ 'btn-medieval' if page_num == threads.page else 'btn-outline-medieval' }} me-1">
+                            {{ page_num }}
+                        </a>
                     {% endfor %}
                     {% if threads.has_next %}
-                        <a href="{{ url_for('forums', page=threads.next_num, search=search_query) }}">Next</a>
+                        <a href="{{ url_for('forums', page=threads.next_num, search=search_query) }}" class="btn btn-medieval ms-2">Next</a>
                     {% endif %}
                 {% endif %}
             </div>
         {% else %}
-            <p>No threads found matching your search query.</p>
+            <p class="text-center text-muted">No threads found matching your search query.</p>
         {% endif %}
     {% else %}
-        <!-- Display categories if no search query -->
-        <ul>
+        <!-- display categories if no search query -->
+        <div class="d-flex flex-column">
             {% for category in categories %}
-                <li><a href="{{ url_for('category_threads', category=category) }}">{{ category }}</a></li>
+            <div class="card mb-3">
+                <div class="card-header bg-dark text-light">
+                <h3 class="mb-0">
+                    <i class="fas fa-folder-open me-2"></i>{{ category }}
+                </h3>
+                </div>
+                <div class="card-body d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <p class="mb-0 text-muted">Explore threads in the {{ category }} category.</p>
+                </div>
+                <a href="{{ url_for('category_threads', category=category) }}" class="btn btn-medieval">
+                    View Threads
+                </a>
+                </div>
+            </div>
             {% endfor %}
-        </ul>
+        </div>
     {% endif %}
 {% endblock %}

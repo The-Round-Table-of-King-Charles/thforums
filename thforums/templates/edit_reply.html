@@ -1,15 +1,21 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h1>Edit Reply</h1>
-<form method="POST">
+<div class="text-center mb-4">
+    <h1 class="tavern-sign-straight d-inline-block shadow">
+		<i class="fas fa-pen me-2"></i> Edit Reply
+    </h1>
+</div>
+<form method="POST" class="card p-4">
     {{ form.hidden_tag() }}
-    <div>
-        {{ form.content.label }}
-        {{ form.content() }}
+    <!-- input for reply content -->
+    <div class="mb-3">
+        {{ form.content.label(class="form-label") }}
+        {{ form.content(class="form-control") }}
     </div>
-    <div>
-        {{ form.submit() }}
+    <!-- submit button -->
+    <div class="text-center">
+        {{ form.submit(class="btn btn-medieval") }}
     </div>
 </form>
 {% endblock %}

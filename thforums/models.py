@@ -7,6 +7,10 @@ from flask_login import UserMixin
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
+# create Guild Table
+# Add exp attribute to users
+
 # user model represents a registered user in the database
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)  # unique id for each user
@@ -19,6 +23,7 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text, nullable=True)  # bio field
     threads = db.relationship("Thread", backref="author", lazy=True)  # relationship to threads created by the user
     replies = db.relationship("Reply", backref="author", lazy=True)  # relationship to replies made by the user
+    exp = db.Column(db.Integer, nullable=True) #exp for user
     
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
@@ -42,7 +47,7 @@ class Thread(db.Model):
 class Reply(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # unique id for each reply
     content = db.Column(db.Text, nullable=False)  # reply content
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # timestamp of reply creation, deprecated na raw pero pwede na yan gumagana naman
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # timestamp of reply creation
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)  # foreign key linking to the user who made the reply
     thread_id = db.Column(db.Integer, db.ForeignKey("thread.id"), nullable=False)  # foreign key linking to the thread being replied to
     edited = db.Column(db.Boolean, default=False)  # flag to indicate if the reply was edited
@@ -51,3 +56,6 @@ class Reply(db.Model):
 
     def __repr__(self):
         return f"Reply('{self.content[:20] if self.content else ''}', '{self.date_posted}')"
+    
+class Guild():
+     id = db.Column(db.Integer, primary_key=True)

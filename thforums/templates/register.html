@@ -1,75 +1,55 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <!-- registration form -->
-	<h1>Register</h1>
-	
-	<form method="POST" action="" novalidate>
-		{{ form.hidden_tag() }} <!-- csrf protection -->
-		<fieldset><legend>Register</legend>
-            <!-- username input field -->
-			<div>
-				<!-- 
-				may if statement dito, where ichecheck muna if hindi tumugma yung validators galing sa forms.py.
-				pero since sa initial visit palang sa site siyempre wala ka pa iniinput so since walang invalid inputs, 
-				iskiskip lang yung if statement, diretso tayo sa else which is ishoshow lang yung normal field form.
-				pero if invalid na, lalabas na yung invalid messages depending sa kung ano yung problem.
-				-->
-				{{ form.username.label() }}
-				{% if form.username.errors %} <!-- checks if may error -->
-					{% for error in form.username.errors %} <!-- kinukuha kung ano yung error -->
-						{{ form.username() }}
-						<span>{{ error }}</span> <!-- pinapakita kung ano yung error -->
-					{% endfor %}
-				{% else %}
-					{{ form.username() }}
-				{% endif %}	
-			</div>
-			<!-- email input field -->
-			<div>
-				{{ form.email.label() }}
-				{% if form.email.errors %}
-					{% for error in form.email.errors %}
-						{{ form.email() }}
-						<span>{{ error }}</span>
-					{% endfor %}
-				{% else %}
-					{{ form.email() }}
-				{% endif %}	
-			</div>
-			<!-- password input field -->
-			<div>
-				{{ form.password.label() }}
-				{% if form.password.errors %}
-					{% for error in form.password.errors %}
-						{{ form.password() }}
-						<span>{{ error }}</span>
-					{% endfor %}
-				{% else %}
-					{{ form.password() }}
-				{% endif %}	
-			</div>
-			<!-- confirm password input field -->
-			<div>
-				{{ form.confirm_password.label() }}
-				{% if form.confirm_password.errors %}
-					{% for error in form.confirm_password.errors %}
-						{{ form.confirm_password() }}
-						<span>{{ error }}</span>
-					{% endfor %}
-				{% else %}
-					{{ form.confirm_password() }}
-				{% endif %}	
-			</div>
-            <!-- submit button -->
-			<div><br>
-				{{ form.submit() }}
-			</div>
-		</fieldset>
-		
-	</form>
-    <!-- link to login page -->
-	<div><br>
-		<small><a href={{ url_for("login") }}>Already had an account?</a></small>
-	</div>
+<div class="text-center mb-4">
+    <h1 class="tavern-sign-straight d-inline-block shadow">
+        <i class="fas fa-book me-2"></i> Register
+    </h1>
+</div>
+<form method="POST" action="" novalidate class="card p-4">
+    {{ form.hidden_tag() }}
+    <fieldset>
+        <legend class="text-left mb-4"><b>Join us Today!</b></legend>
+        <!-- input for username -->
+        <div class="mb-3">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control") }}
+            {% for error in form.username.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <!-- input for email -->
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            {% for error in form.email.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <!-- input for password -->
+        <div class="mb-3">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
+            {% for error in form.password.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <!-- input for confirm password -->
+        <div class="mb-3">
+            {{ form.confirm_password.label(class="form-label") }}
+            {{ form.confirm_password(class="form-control") }}
+            {% for error in form.confirm_password.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <!-- submit button -->
+        <div class="text-center">
+            {{ form.submit(class="btn btn-medieval") }}
+        </div>
+    </fieldset>
+</form>
+<!-- link to login page -->
+<div class="text-center mt-3">
+    <small><a href="{{ url_for('login') }}" class="text-decoration-none">Already have an account?</a></small>
+</div>
 {% endblock %}

@@ -1,28 +1,31 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <!-- form to create a thread -->
-    <h1>{{ title }}</h1>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <!-- thread title input field -->
-        <div>
-            {{ form.title.label }}
-            {{ form.title() }}
-        </div>
-        <!-- thread category dropdown -->
-        <div>
-            {{ form.category.label }}
-            {{ form.category() }}
-        </div>
-        <!-- thread content input field -->
-        <div>
-            {{ form.content.label }}
-            {{ form.content() }}
-        </div>
-        <!-- submit button -->
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
+<div class="text-center mb-4">
+    <h1 class="tavern-sign-straight d-inline-block shadow">
+		{{ title }}
+    </h1>
+</div>
+<form method="POST" class="card p-4">
+    {{ form.hidden_tag() }}
+    <!-- input for the thread title -->
+    <div class="mb-3">
+        {{ form.title.label(class="form-label") }}
+        {{ form.title(class="form-control") }}
+    </div>
+    <!-- dropdown for selecting a category -->
+    <div class="mb-3">
+        {{ form.category.label(class="form-label") }}
+        {{ form.category(class="form-select") }}
+    </div>
+    <!-- input for the thread content -->
+    <div class="mb-3">
+        {{ form.content.label(class="form-label") }}
+        {{ form.content(class="form-control") }}
+    </div>
+    <!-- submit button -->
+    <div class="text-center">
+        {{ form.submit(class="btn btn-medieval") }}
+    </div>
+</form>
 {% endblock %}

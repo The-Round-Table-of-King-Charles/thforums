@@ -1,8 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<!-- contents for 500 error -->
-<h1>500 - Internal Server Error</h1>
-<p>Oops! Something went wrong on our end. Please try again later.</p>
-<a href="{{ url_for('home') }}">Return to Home</a>
+<div class="text-center mt-5">
+    <!-- display 500 error message -->
+    <h1 class="display-4 text-danger">500 - Internal Server Error</h1>
+    <p class="text-muted">Oops! Something went wrong on our end. Please try again later.</p>
+    <!-- link to return to the home page -->
+    <a href="{{ url_for('home') }}" class="btn btn-medieval mt-3">Return to Home</a>
+</div>
 {% endblock %}
