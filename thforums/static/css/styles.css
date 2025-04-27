@@ -154,26 +154,26 @@ main {
     box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
     transform: rotate(-2deg);
     margin-right: 10px;
+    transition: 
+        transform 0.3s cubic-bezier(.68,-0.55,.27,1.55),
+        box-shadow 0.3s,
+        text-shadow 0.3s;
 }
 
-.tavern-sign:hover{
-    transform: translateY(-2px);
-    text-shadow: 0 0 5px #fee257,
-              0 0 10px #fee257,
-              0 0 15px #fee257;
-
+.tavern-sign:hover {
+    animation: swing-subtle 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    box-shadow: 0 0 8px 2px #fee257, 0 0 16px 4px #8b5a2b22;
+    text-shadow: 0 0 4px #fee257, 0 0 8px #fee257;
+    transform: scale(1.03) rotate(-2deg);
 }
-.tavern-sign-straight {
-    display: inline-block;
-    background-color: #3d1f0a;
-    color: #e6c229;
-    padding: 5px 15px;
-    border-radius: 5px;
-    border: 3px groove #5a3a22;
-    box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3);
-    font-family: 'MedievalSharp', cursive;
-    text-align: center;
-    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
+
+@keyframes swing-subtle {
+    15% { transform: rotate(-4deg) scale(1.03);}
+    30% { transform: rotate(3deg) scale(1.03);}
+    45% { transform: rotate(-2deg) scale(1.03);}
+    60% { transform: rotate(1deg) scale(1.03);}
+    75% { transform: rotate(-1deg) scale(1.03);}
+    100% { transform: rotate(-2deg) scale(1.03);}
 }
 
 /* Flashed Messages */
