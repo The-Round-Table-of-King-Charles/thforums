@@ -23,13 +23,29 @@
                             <img src="{{ url_for('static', filename='profile_pics/' + (user.image_file if user.image_file else 'default.png')) }}" 
                                  alt="profile picture" 
                                  class="large-profile-pic rounded-circle border border-3 border-medieval shadow">
+                            <!-- commend -->
+                            <div class="mt-3 d-flex justify-content-center align-items-center">
+                                <span class="me-2">
+                                    <i class="fas fa-medal text-warning"></i>
+                                    <b>{{ user.commend_count() }}</b> Commends
+                                </span>
+                                {% if current_user.is_authenticated and current_user.id != user.id %}
+                                    <button 
+                                        class="btn btn-commend-user ms-3 {% if user.is_commended_by(current_user) %}commended{% endif %}"
+                                        data-user-id="{{ user.id }}"
+                                        {% if not current_user.is_authenticated %}disabled title="Log in to commend"{% endif %}>
+                                        <i class="fas fa-medal"></i>
+                                        <span class="commend-label">{% if user.is_commended_by(current_user) %}Commended{% else %}Commend{% endif %}</span>
+                                    </button>
+                                {% endif %}
+                            </div>
                         </div>
                         
                         <!-- profile details -->
                         <div class="col-md-8">
                             <div class="profile-details">
                                 <h2 class="mb-4">{{ user.username }}</h2>
-                                
+
                                 <!-- user email -->
                                 <div class="mb-3">
                                     <div class="d-flex align-items-center mb-2">

@@ -47,9 +47,11 @@
             {{ form.submit(class="btn btn-medieval") }}
         </div>
     </fieldset>
-</form>
-<!-- link to login page -->
-<div class="text-center mt-3">
-    <small><a href="{{ url_for('login') }}" class="text-decoration-none">Already have an account?</a></small>
-</div>
+
+    <!-- link to login page -->
+    <div class="text-center mt-3">
+        <small><a href="{{ url_for('login') }}" class="text-decoration-none">Already have an account?</a></small>
+    </div>
+
+    </form>
 {% endblock %}

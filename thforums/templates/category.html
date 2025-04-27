@@ -36,6 +36,16 @@
                             on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}
                         </div>
                     </div>
+                    <!-- commend button and count on the right -->
+                    <button 
+                        class="btn btn-commend-thread ms-2 {% if current_user.is_authenticated and thread.is_commended_by(current_user) %}commended{% endif %}" 
+                        data-thread-id="{{ thread.id }}"
+                        style="font-size:0.95em; padding:2px 10px;"
+                        {% if not current_user.is_authenticated %}disabled title="Log in to commend"{% endif %}>
+                        <i class="fas fa-medal"></i>
+                        <span class="commend-label d-none">{% if current_user.is_authenticated and thread.is_commended_by(current_user) %}Commended{% else %}Commend{% endif %}</span>
+                        <span class="commend-count">{{ thread.commend_count() }}</span>
+                    </button>
                 </div>
             </li>
         {% endfor %}

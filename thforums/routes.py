@@ -1,15 +1,15 @@
 import os
 
-from flask import render_template, url_for, flash, redirect, request, current_app, g
+from flask import render_template, url_for, flash, redirect, request, current_app, g, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 from thforums import app, db, bcrypt
 from PIL import Image
 from datetime import datetime
 from random import sample
+from thforums.models import User, Thread, Reply, Commend
 
 # import forms and models
 from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm
-from thforums.models import User, Thread, Reply
 
 # helper function to save profile pictures
 def save_picture(form_picture):
@@ -151,16 +151,26 @@ def forums():
         search_query = form.search.data
     elif request.method == "GET":  # handle query parameter for pagination
         search_query = request.args.get("search", "", type=str)
-    
+
     page = request.args.get("page", 1, type=int)  # get the current page number
     categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]  # predefined categories
-    
+
     if search_query:
         threads = Thread.query.filter(Thread.title.ilike(f"%{search_query}%")).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=10)
+        latest_threads = None
     else:
-        threads = None  # no search results to display
-    
-    return render_template("forum.html", title="Forums", categories=categories, form=form, threads=threads, search_query=search_query)
+        threads = None
+        latest_threads = {category: Thread.query.filter_by(category=category).order_by(Thread.date_posted.desc()).limit(5).all() for category in categories}
+
+    return render_template(
+        "forum.html",
+        title="Forums",
+        categories=categories,
+        form=form,
+        threads=threads,
+        search_query=search_query,
+        latest_threads=latest_threads
+    )
 
 # route to register a new user
 @app.route("/register", methods=["GET", "POST"])
@@ -185,7 +195,7 @@ def login():
         return redirect(url_for("home"))
     form = LoginForm()
     if form.validate_on_submit():  # validate form inputs
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(username=form.username.data).first()
         # check if the user's credentials are valid
         if user and bcrypt.check_password_hash(user.password, form.password.data):  # check credentials
             login_user(user, remember=form.remember.data)
@@ -195,7 +205,7 @@ def login():
         else:
             flash(f"Wrong credentials", "error")
     return render_template("login.html", title="Login", form=form)
-    
+
 # route to log out a user
 @app.route("/logout")
 def logout():
@@ -316,3 +326,50 @@ def internal_server_error(e):
 @login_required
 def create_guild():
     return render_template("create_guild.html", title="create_guild")
+
+@app.route("/commend/thread/<int:thread_id>", methods=["POST"])
+@login_required
+def commend_thread(thread_id):
+    thread = Thread.query.get_or_404(thread_id)
+    commend = Commend.query.filter_by(user_id=current_user.id, thread_id=thread_id).first()
+    if commend:
+        db.session.delete(commend)
+        db.session.commit()
+        return jsonify({"commended": False, "count": thread.commend_count()})
+    else:
+        new_commend = Commend(user_id=current_user.id, thread_id=thread_id)
+        db.session.add(new_commend)
+        db.session.commit()
+        return jsonify({"commended": True, "count": thread.commend_count()})
+
+@app.route("/commend/reply/<int:reply_id>", methods=["POST"])
+@login_required
+def commend_reply(reply_id):
+    reply = Reply.query.get_or_404(reply_id)
+    commend = Commend.query.filter_by(user_id=current_user.id, reply_id=reply_id).first()
+    if commend:
+        db.session.delete(commend)
+        db.session.commit()
+        return jsonify({"commended": False, "count": reply.commend_count()})
+    else:
+        new_commend = Commend(user_id=current_user.id, reply_id=reply_id)
+        db.session.add(new_commend)
+        db.session.commit()
+        return jsonify({"commended": True, "count": reply.commend_count()})
+
+@app.route("/commend/user/<int:user_id>", methods=["POST"])
+@login_required
+def commend_user(user_id):
+    if user_id == current_user.id:
+        return jsonify({"error": "You cannot commend yourself."}), 400
+    user = User.query.get_or_404(user_id)
+    commend = Commend.query.filter_by(user_id=current_user.id, user_id_target=user_id).first()
+    if commend:
+        db.session.delete(commend)
+        db.session.commit()
+        return jsonify({"commended": False, "count": user.commend_count()})
+    else:
+        new_commend = Commend(user_id=current_user.id, user_id_target=user_id)
+        db.session.add(new_commend)
+        db.session.commit()
+        return jsonify({"commended": True, "count": user.commend_count()})

@@ -24,10 +24,17 @@ class User(db.Model, UserMixin):
     threads = db.relationship("Thread", backref="author", lazy=True)  # relationship to threads created by the user
     replies = db.relationship("Reply", backref="author", lazy=True)  # relationship to replies made by the user
     exp = db.Column(db.Integer, nullable=True) #exp for user
-    
+    commends_received = db.relationship("Commend", backref="user_target", lazy=True, primaryjoin="User.id==Commend.user_id_target")
+
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
-        
+
+    def commend_count(self):
+        return len([c for c in self.commends_received if c.user_id_target == self.id])
+
+    def is_commended_by(self, user):
+        return any(c.user_id == user.id for c in self.commends_received if c.user_id_target == self.id)
+
 # thread model represents a forum thread
 class Thread(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # unique id for each thread
@@ -39,9 +46,16 @@ class Thread(db.Model):
     replies = db.relationship("Reply", backref="thread", lazy=True)  # relationship to replies in the thread
     edited = db.Column(db.Boolean, default=False)  # flag to indicate if the thread was edited
     last_edited = db.Column(db.DateTime)  # timestamp of the last edit
+    commends = db.relationship("Commend", backref="thread", lazy=True, primaryjoin="Thread.id==Commend.thread_id")
 
     def __repr__(self):
         return f"Thread('{self.title}', '{self.date_posted}')"
+
+    def commend_count(self):
+        return len([c for c in self.commends if c.thread_id == self.id])
+
+    def is_commended_by(self, user):
+        return any(c.user_id == user.id for c in self.commends if c.thread_id == self.id)
 
 # reply model represents a reply to a thread
 class Reply(db.Model):
@@ -53,9 +67,29 @@ class Reply(db.Model):
     edited = db.Column(db.Boolean, default=False)  # flag to indicate if the reply was edited
     last_edited = db.Column(db.DateTime)  # timestamp of the last edit
     deleted = db.Column(db.Boolean, default=False)  # flag to indicate if the reply is deleted
+    commends = db.relationship("Commend", backref="reply", lazy=True, primaryjoin="Reply.id==Commend.reply_id")
 
     def __repr__(self):
         return f"Reply('{self.content[:20] if self.content else ''}', '{self.date_posted}')"
-    
+
+    def commend_count(self):
+        return len([c for c in self.commends if c.reply_id == self.id])
+
+    def is_commended_by(self, user):
+        return any(c.user_id == user.id for c in self.commends if c.reply_id == self.id)
+
+class Commend(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    thread_id = db.Column(db.Integer, db.ForeignKey("thread.id"), nullable=True)
+    reply_id = db.Column(db.Integer, db.ForeignKey("reply.id"), nullable=True)
+    user_id_target = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)  # for user-to-user commend
+
+    __table_args__ = (
+        db.UniqueConstraint('user_id', 'thread_id', name='unique_user_thread_commend'),
+        db.UniqueConstraint('user_id', 'reply_id', name='unique_user_reply_commend'),
+        db.UniqueConstraint('user_id', 'user_id_target', name='unique_user_user_commend'),
+    )
+
 class Guild():
      id = db.Column(db.Integer, primary_key=True)

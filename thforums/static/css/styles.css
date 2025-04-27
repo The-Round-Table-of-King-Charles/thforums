@@ -426,6 +426,38 @@ aside {
     color: white;
 }
 
+.btn-commend-thread, .btn-commend-reply {
+    background-color: #e6d8a8;
+    color: #8b5a2b;
+    border: 1.5px solid #d4af37;
+    font-family: 'MedievalSharp', cursive;
+    transition: box-shadow 0.2s, background 0.2s, color 0.2s;
+    box-shadow: 0 2px 6px rgba(212,175,55,0.08);
+}
+.btn-commend-thread .fa-medal, .btn-commend-reply .fa-medal {
+    margin-right: 4px;
+    transition: color 0.2s, text-shadow 0.2s;
+}
+.btn-commend-thread.commended, .btn-commend-reply.commended {
+    background-color: #ffe066;
+    color: #b8860b;
+    border-color: #ffd700;
+    box-shadow: 0 0 12px 2px #ffe066;
+}
+.btn-commend-thread.commended .fa-medal, .btn-commend-reply.commended .fa-medal {
+    color: #ffd700;
+    text-shadow: 0 0 8px #ffe066, 0 0 16px #ffd700;
+}
+.btn-commend-thread:disabled, .btn-commend-reply:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+.btn-commend-thread .commend-count, .btn-commend-reply .commend-count {
+    margin-left: 6px;
+    font-weight: bold;
+    color: #b8860b;
+}
+
 /* Others */
 .profile-pic {
     width: 50px;

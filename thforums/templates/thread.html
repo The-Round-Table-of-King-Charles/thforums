@@ -20,6 +20,17 @@
         </div>
         <!-- thread content -->
         <p>{{ thread.content }}</p>
+        <div class="d-flex align-items-center mb-2">
+            <!-- Commend button for thread -->
+            <button 
+                class="btn btn-commend-thread me-2 {% if current_user.is_authenticated and thread.is_commended_by(current_user) %}commended{% endif %}" 
+                data-thread-id="{{ thread.id }}"
+                {% if not current_user.is_authenticated %}disabled title="Log in to commend"{% endif %}>
+                <i class="fas fa-medal"></i>
+                <span class="commend-label">{% if current_user.is_authenticated and thread.is_commended_by(current_user) %}Commended{% else %}Commend{% endif %}</span>
+                <span class="commend-count">{{ thread.commend_count() }}</span>
+            </button>
+        </div>
         {% if current_user == thread.author %}
             <!-- edit and delete options for thread author -->
             <div class="mt-3">
@@ -51,6 +62,17 @@
                     {% endif %}
                     <!-- reply content -->
                     <p>{{ reply.content }}</p>
+                    <div class="d-flex align-items-center mb-2">
+                        <!-- Commend button for reply -->
+                        <button 
+                            class="btn btn-commend-reply me-2 {% if current_user.is_authenticated and reply.is_commended_by(current_user) %}commended{% endif %}" 
+                            data-reply-id="{{ reply.id }}"
+                            {% if not current_user.is_authenticated %}disabled title="Log in to commend"{% endif %}>
+                            <i class="fas fa-medal"></i>
+                            <span class="commend-label">{% if current_user.is_authenticated and reply.is_commended_by(current_user) %}Commended{% else %}Commend{% endif %}</span>
+                            <span class="commend-count">{{ reply.commend_count() }}</span>
+                        </button>
+                    </div>
                     {% if current_user == reply.author %}
                         <!-- edit and delete options for reply author -->
                         <div class="mt-2">
