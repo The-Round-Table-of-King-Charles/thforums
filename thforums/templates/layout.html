@@ -131,7 +131,7 @@
                 {% block content %}{% endblock %} <!-- inherited templates will be placed here -->
             </div>
             
-            <!-- Offcanvas Sidebar -->
+            <!-- offcanvas sidebar -->
             <div class="offcanvas offcanvas-start tavern-board py-4" id="offcanvas" >
                 <div class="offcanvas-header tavern-board">
                   <h4 class="board-title text-center">
@@ -142,61 +142,46 @@
                 
                 <!-- notice board -->
                 <div class="offcanvas-body">
-                    <!-- exp and level -->
-                    {% if current_user.is_authenticated %}
-                    <div class="sidebar-exp-level mb-3 p-3 rounded" style="background: #2d2212; border: 2px solid #3a3226;">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-star" style="color:#ffd700;"></i>
-                            <span style="color:#ffd700; font-weight:bold; margin-left:8px;">
-                                Your Level: <span style="color:#fffbe7;">{{ sidebar_level }}</span>
-                            </span>
-                        </div>
-                        <div class="progress medieval-exp-bar" style="height: 16px; background:#4a3a1a;">
-                            <div class="progress-bar medieval-exp-progress" role="progressbar"
-                                style="width: {{ (sidebar_exp / sidebar_exp_required * 100) | round(0) }}%; background: linear-gradient(90deg,#ffe066,#ffd700 80%,#bfa14a); color:#3a3226;"
-                                aria-valuenow="{{ sidebar_exp }}"
-                                aria-valuemin="0"
-                                aria-valuemax="{{ sidebar_exp_required }}">
-                                <span style="color:#3a3226; font-weight:bold;">{{ sidebar_exp }}/{{ sidebar_exp_required }} EXP</span>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
                     <aside>
-                        <!-- current events -->
-                        <div class="event-card mb-3">
-                            <h5><i class="fas fa-flag me-2"></i>Current Events</h5>
-                            <ul class="event-list">
-                                <li><a href="#">Midsummer Festival</a> - Jun 20-25</li>
-                                <li><a href="#">Bard's Competition</a> - Every Friday</li>
-                                <li><a href="#">Monster Hunt</a> - Sign up now!</li>
-                            </ul>
+                        <!-- user profile preview -->
+                        <div class="user-profile-preview mb-3 p-3 rounded text-center" style="background: #2d2212; border: 2px solid #3a3226;">
+                            <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.is_authenticated and current_user.image_file else 'default.png')) }}"
+                                 class="rounded-circle mb-2" alt="User" style="width: 72px; height: 72px; object-fit: cover; border: 2px solid #ffd700;">
+                            <h5 class="mt-2 mb-1" style="color:#ffd700;">
+                                {% if current_user.is_authenticated %}
+                                    {{ current_user.username }}
+                                {% else %}
+                                    Guest
+                                {% endif %}
+                            </h5>
+                            {% if current_user.is_authenticated %}
+                                <div class="mb-2" style="color:#fffbe7;">
+                                    <i class="fas fa-star" style="color:#ffd700;"></i>
+                                    Level {{ sidebar_level }}
+                                </div>
+                                <div class="sidebar-exp-level mb-2 p-2 rounded">
+                                    <div class="progress medieval-exp-bar" style="height: 16px; background:#4a3a1a;">
+                                        <div class="progress-bar medieval-exp-progress" role="progressbar"
+                                            style="width: {{ (sidebar_exp / sidebar_exp_required * 100) | round(0) }}%; background: linear-gradient(90deg,#ffe066,#ffd700 80%,#bfa14a); color:#3a3226;"
+                                            aria-valuenow="{{ sidebar_exp }}"
+                                            aria-valuemin="0"
+                                            aria-valuemax="{{ sidebar_exp_required }}">
+                                            <span style="color:#3a3226; font-weight:bold;">{{ sidebar_exp }}/{{ sidebar_exp_required }} EXP</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-warning mt-2">
+                                    <i class="fas fa-user"></i> View Profile
+                                </a>
+                            {% else %}
+                                <div class="mb-2" style="color:#fffbe7;">
+                                    <i class="fas fa-sign-in-alt"></i> Please log in
+                                </div>
+                                <a href="{{ url_for('login') }}" class="btn btn-sm btn-outline-light mt-2">
+                                    <i class="fas fa-sign-in-alt"></i> Login
+                                </a>
+                            {% endif %}
                         </div>
-                        
-                        <!-- popular threads -->
-                        <div class="popular-threads mb-3">
-                            <h5><i class="fas fa-fire me-2"></i>Hot Topics</h5>
-                            <ol class="thread-list">
-                                <li><a href="#">Dragon spotted near Blackmarsh!</a></li>
-                                <li><a href="#">Best potion recipes?</a></li>
-                                <li><a href="#">Kingsroad bandits warning</a></li>
-                            </ol>
-                        </div>
-                        
-                        <!-- tavern specials -->
-                        <div class="tavern-specials">
-                            <h5><i class="fas fa-beer me-2"></i>Today's Specials</h5>
-                            <div class="special-item">
-                                <strong>Dwarven Stout</strong> - 5 copper
-                            </div>
-                            <div class="special-item">
-                                <strong>Elven Wine</strong> - 8 silver
-                            </div>
-                            <div class="special-item">
-                                <strong>Orcish Mead</strong> - 3 copper (strong!)
-                            </div>
-                        </div>
-                        
                         <!-- active adventurers -->
                         <div class="active-users p-3">
                             <h5 class="text-center mb-3">
