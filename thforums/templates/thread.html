@@ -27,7 +27,6 @@
                 data-thread-id="{{ thread.id }}"
                 {% if not current_user.is_authenticated %}disabled title="Log in to commend"{% endif %}>
                 <i class="fas fa-medal"></i>
-                <span class="commend-label">{% if current_user.is_authenticated and thread.is_commended_by(current_user) %}Commended{% else %}Commend{% endif %}</span>
                 <span class="commend-count">{{ thread.commend_count() }}</span>
             </button>
         </div>
@@ -69,7 +68,6 @@
                             data-reply-id="{{ reply.id }}"
                             {% if not current_user.is_authenticated %}disabled title="Log in to commend"{% endif %}>
                             <i class="fas fa-medal"></i>
-                            <span class="commend-label">{% if current_user.is_authenticated and reply.is_commended_by(current_user) %}Commended{% else %}Commend{% endif %}</span>
                             <span class="commend-count">{{ reply.commend_count() }}</span>
                         </button>
                     </div>

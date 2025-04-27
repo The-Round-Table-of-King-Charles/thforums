@@ -23,8 +23,26 @@
                             <img src="{{ url_for('static', filename='profile_pics/' + (user.image_file if user.image_file else 'default.png')) }}" 
                                  alt="profile picture" 
                                  class="large-profile-pic rounded-circle border border-3 border-medieval shadow">
-                            <!-- commend -->
-                            <div class="mt-3 d-flex justify-content-center align-items-center">
+                            <!-- EXP and Level -->
+                            <div class="mt-3 mb-2">
+                                <span class="badge bg-medieval" style="font-size:1.1em;">
+                                    <i class="fas fa-star text-warning"></i> Level {{ user.level }}
+                                </span>
+                                <div class="exp-bar mt-2" style="width:100%; max-width:140px; margin:0 auto;">
+                                    <div class="progress medieval-exp-bar" style="height: 18px;">
+                                        <div class="progress-bar medieval-exp-progress" role="progressbar"
+                                            style="width: {{ (user.exp / user.required_exp_for_next_level() * 100) | round(0) }}%;"
+                                            aria-valuenow="{{ user.exp }}"
+                                            aria-valuemin="0"
+                                            aria-valuemax="{{ user.required_exp_for_next_level() }}">
+                                        </div>
+                                    </div>
+                                    <div class="exp-value mt-1" style="font-size:0.95em; color:#bfa14a; font-weight:bold;">
+                                        {{ user.exp }}/{{ user.required_exp_for_next_level() }} EXP
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 d-flex justify-content-center align-items-center">
                                 <span class="me-2">
                                     <i class="fas fa-medal text-warning"></i>
                                     <b>{{ user.commend_count() }}</b> Commends
@@ -66,6 +84,7 @@
                                     </div>
                                 </div>
                                 
+
                                 <!-- user bio -->
                                 <div class="bio-section mt-4">
                                     <h5 class="section-title"><i class="fas fa-scroll me-2"></i>about</h5>

@@ -134,7 +134,7 @@
             <!-- Offcanvas Sidebar -->
             <div class="offcanvas offcanvas-start tavern-board py-4" id="offcanvas" >
                 <div class="offcanvas-header tavern-board">
-                  <h4 class="board-title text-center mb-3">
+                  <h4 class="board-title text-center">
                     <i class="fas fa-scroll me-2"></i>Tavern Notices
                 </h4>
                   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
@@ -142,6 +142,26 @@
                 
                 <!-- notice board -->
                 <div class="offcanvas-body">
+                    <!-- exp and level -->
+                    {% if current_user.is_authenticated %}
+                    <div class="sidebar-exp-level mb-3 p-3 rounded" style="background: #2d2212; border: 2px solid #3a3226;">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-star" style="color:#ffd700;"></i>
+                            <span style="color:#ffd700; font-weight:bold; margin-left:8px;">
+                                Your Level: <span style="color:#fffbe7;">{{ sidebar_level }}</span>
+                            </span>
+                        </div>
+                        <div class="progress medieval-exp-bar" style="height: 16px; background:#4a3a1a;">
+                            <div class="progress-bar medieval-exp-progress" role="progressbar"
+                                style="width: {{ (sidebar_exp / sidebar_exp_required * 100) | round(0) }}%; background: linear-gradient(90deg,#ffe066,#ffd700 80%,#bfa14a); color:#3a3226;"
+                                aria-valuenow="{{ sidebar_exp }}"
+                                aria-valuemin="0"
+                                aria-valuemax="{{ sidebar_exp_required }}">
+                                <span style="color:#3a3226; font-weight:bold;">{{ sidebar_exp }}/{{ sidebar_exp_required }} EXP</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                     <aside>
                         <!-- current events -->
                         <div class="event-card mb-3">

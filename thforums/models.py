@@ -23,7 +23,8 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text, nullable=True)  # bio field
     threads = db.relationship("Thread", backref="author", lazy=True)  # relationship to threads created by the user
     replies = db.relationship("Reply", backref="author", lazy=True)  # relationship to replies made by the user
-    exp = db.Column(db.Integer, nullable=True) #exp for user
+    exp = db.Column(db.Integer, nullable=False, default=0)  # exp for user, default 0
+    level = db.Column(db.Integer, nullable=False, default=1)  # user level, default 1
     commends_received = db.relationship("Commend", backref="user_target", lazy=True, primaryjoin="User.id==Commend.user_id_target")
 
     def __repr__(self):
@@ -34,6 +35,23 @@ class User(db.Model, UserMixin):
 
     def is_commended_by(self, user):
         return any(c.user_id == user.id for c in self.commends_received if c.user_id_target == self.id)
+
+    def required_exp_for_next_level(self):
+        # Example: 100 * current level
+        return 100 * self.level
+
+    def add_exp(self, amount):
+        self.exp += amount
+        leveled_up = False
+        while self.exp >= self.required_exp_for_next_level():
+            self.exp -= self.required_exp_for_next_level()
+            self.level += 1
+            leveled_up = True
+        return leveled_up
+
+    def exp_progress(self):
+        # returns (current_exp, required_exp) for progress bar
+        return self.exp, self.required_exp_for_next_level()
 
 # thread model represents a forum thread
 class Thread(db.Model):

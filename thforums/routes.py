@@ -102,8 +102,12 @@ def new_thread():
     if form.validate_on_submit():
         thread = Thread(title=form.title.data, content=form.content.data, category=form.category.data, author=current_user)
         db.session.add(thread)
+        # Award EXP for creating a thread
+        leveled_up = current_user.add_exp(20)  # e.g., 20 EXP per thread
         db.session.commit()
         flash("Your thread has been created!", "success")
+        if leveled_up:
+            flash(f"You leveled up! You are now level {current_user.level}.", "success")
         return redirect(url_for("category_threads", category=form.category.data))
     return render_template("create_thread.html", title="New Thread", form=form)
 
@@ -132,10 +136,14 @@ def view_thread(thread_id):
             flash("You must be logged in to post a reply.", "error")
             return redirect(url_for("login"))
         # if the form is valid, create a new reply and associate it with the thread
-        reply = Reply(content=form.content.data, user_id=current_user.id, thread=thread)  # create a new reply
+        reply = Reply(content=form.content.data, user_id=current_user.id, thread=thread)
         db.session.add(reply)
+        # Award EXP for replying
+        leveled_up = current_user.add_exp(5)  # e.g., 5 EXP per reply
         db.session.commit()
         flash("Your reply has been posted!", "success")
+        if leveled_up:
+            flash(f"You leveled up! You are now level {current_user.level}.", "success")
         return redirect(url_for("view_thread", thread_id=thread.id))
     
     page = request.args.get("page", 1, type=int)  # get the current page number
@@ -310,7 +318,20 @@ def list_users():
 @app.context_processor
 def inject_random_users():
     random_users = sample(User.query.all(), min(3, User.query.count())) if User.query.count() > 0 else []
-    return {'random_users': random_users}
+    # Add current user's exp/level for sidebar
+    sidebar_exp = None
+    sidebar_level = None
+    sidebar_exp_required = None
+    if current_user.is_authenticated:
+        sidebar_exp = current_user.exp
+        sidebar_level = current_user.level
+        sidebar_exp_required = current_user.required_exp_for_next_level()
+    return {
+        'random_users': random_users,
+        'sidebar_exp': sidebar_exp,
+        'sidebar_level': sidebar_level,
+        'sidebar_exp_required': sidebar_exp_required
+    }
 
 # 404 error page
 @app.errorhandler(404)

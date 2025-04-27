@@ -458,6 +458,21 @@ aside {
     color: #b8860b;
 }
 
+.medieval-exp-bar {
+    background: #e6d8a8 !important;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(212,175,55,0.08);
+}
+
+.medieval-exp-progress {
+    background: linear-gradient(90deg,#ffe066,#ffd700 80%,#bfa14a) !important;
+    color: #3a3226 !important;
+    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    text-shadow: 0 1px 0 #fffbe7;
+    border-radius: 8px;
+}
+
 /* Others */
 .profile-pic {
     width: 50px;
