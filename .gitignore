@@ -1,3 +1,4 @@
 /venv
 /thforums/__pycache__
 instance/database.db
+/thforums/static/profile_pics
