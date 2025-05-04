@@ -60,48 +60,55 @@
     </div>
 </form>
 
-<!-- paginated user list cards -->
-<div class="row">
-    {% for user in users.items %}
-    <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card border-medieval shadow-sm h-100" style="background: #fffbe7;">
-            <div class="card-body text-center">
-                <img src="{{ url_for('static', filename='profile_pics/' + (user.image_file if user.image_file else 'default.png')) }}" 
-                     alt="Profile Picture" 
-                     class="rounded-circle mb-2" style="width: 64px; height: 64px; object-fit: cover; border: 2px solid #bfa14a;">
-                <h5 class="mt-2 mb-1" style="color:#5a4633; font-weight: bold;">
-                    <a href="{{ url_for('user_profile', username=user.username) }}" class="text-decoration-none text-medieval fw-bold">
-                        {{ user.username }}
+<!-- horizontal user list -->
+<div class="user-list-horizontal mb-4">
+    {% if users.items %}
+        <div class="list-group list-group-flush">
+            {% for user in users.items %}
+                <div class="list-group-item d-flex align-items-center justify-content-between py-3 px-2 user-list-row" style="background: #fffbe7; border-bottom: 1px solid #e0cfa0;">
+                    <div class="d-flex align-items-center flex-grow-1">
+                        <img src="{{ url_for('static', filename='profile_pics/' + (user.image_file if user.image_file else 'default.png')) }}"
+                             alt="Profile Picture"
+                             class="rounded-circle me-3"
+                             style="width: 56px; height: 56px; object-fit: cover; border: 2px solid #bfa14a;">
+                        <div>
+                            <div>
+                                <a href="{{ url_for('user_profile', username=user.username) }}"
+                                   class="fw-bold text-medieval text-decoration-none" style="font-size:1.2em;">
+                                    {{ user.username }}
+                                </a>
+                                <span class="badge bg-medieval ms-2" style="font-size:0.95em;">
+                                    <i class="fas fa-star text-warning"></i> Lv {{ user.level }}
+                                </span>
+                            </div>
+                            <div class="text-muted small" style="max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {{ user.bio or "This user hasn't written a bio yet." }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-none d-md-flex flex-column align-items-end me-3">
+                        <span style="color:#bfa14a; font-size:1.1em;">
+                            <i class="fas fa-bolt" style="color:#ffd700;"></i>
+                            <b>{{ user.exp }}</b> EXP
+                        </span>
+                    </div>
+                    <a href="{{ url_for('user_profile', username=user.username) }}"
+                       class="btn btn-sm btn-outline-medieval ms-2">
+                        <i class="fas fa-user"></i> View Profile
                     </a>
-                </h5>
-                <!-- user bio under name -->
-                <div class="mb-2 text-muted small" style="min-height:2.5em;">
-                    {{ user.bio or "This user hasn't written a bio yet." }}
                 </div>
-                <div class="mb-1" style="color:#bfa14a; font-size:1.1em;">
-                    <i class="fas fa-star" style="color:#ffd700;"></i>
-                    Level <b>{{ user.level }}</b>
-                </div>
-                <div class="mb-2" style="color:#8b5a2b;">
-                    <i class="fas fa-bolt" style="color:#ffd700;"></i>
-                    <b>{{ user.exp }}</b> EXP
-                </div>
-                <a href="{{ url_for('user_profile', username=user.username) }}" class="btn btn-sm btn-outline-medieval mt-2">
-                    <i class="fas fa-user"></i> View Profile
-                </a>
-            </div>
+            {% endfor %}
         </div>
-    </div>
-    {% endfor %}
+    {% else %}
+        <!-- message when no users are found -->
+        <p class="text-center text-muted">No users found.</p>
+    {% endif %}
 </div>
-{% if not users.items %}
-    <!-- message when no users are found -->
-    <p class="text-center text-muted">No users found.</p>
-{% endif %}
+
+<!-- pagination -->
 <div class="pagination mt-4">
     {% if users.pages > 1 %}
         {% if users.has_prev %}
-            <!-- link to the previous page -->
             <a href="{{ url_for('list_users', page=users.prev_num, search=search_query) }}" class="btn btn-medieval me-2">Previous</a>
         {% endif %}
         {% for page_num in range(1, users.pages + 1) %}
@@ -111,9 +118,9 @@
             </a>
         {% endfor %}
         {% if users.has_next %}
-            <!-- link to the next page -->
             <a href="{{ url_for('list_users', page=users.next_num, search=search_query) }}" class="btn btn-medieval ms-2">Next</a>
         {% endif %}
     {% endif %}
 </div>
+
 {% endblock %}

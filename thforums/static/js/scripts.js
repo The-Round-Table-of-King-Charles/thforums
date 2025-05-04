@@ -28,8 +28,72 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
 
+    // Mark notifications as read when notification offcanvas is opened
+    const notifOffcanvasElem = document.getElementById('notificationOffcanvas');
+    if (notifOffcanvasElem) {
+        notifOffcanvasElem.addEventListener('show.bs.offcanvas', function() {
+            // Send AJAX request to mark notifications as read
+            fetch('/notifications/mark_read', {method: 'POST', headers: {'X-Requested-With': 'XMLHttpRequest'}})
+                .then(() => {
+                    // Optionally update badge or UI
+                    const badge = document.querySelector('#notificationBell .badge');
+                    if (badge) badge.style.display = 'none';
+                    // Remove bold, add greyed-out style
+                    document.querySelectorAll('#notificationOffcanvas .list-group-item.fw-bold').forEach(el => {
+                        el.classList.remove('fw-bold');
+                        el.classList.add('notification-read');
+                    });
+                });
+        });
+
+        // Mark all as read button
+        const markAllReadBtn = document.getElementById('markAllReadBtn');
+        if (markAllReadBtn) {
+            markAllReadBtn.addEventListener('click', function() {
+                fetch('/notifications/mark_read', {method: 'POST', headers: {'X-Requested-With': 'XMLHttpRequest'}})
+                    .then(() => {
+                        // Remove bold from notifications
+                        document.querySelectorAll('#notificationOffcanvas .list-group-item.fw-bold').forEach(el => {
+                            el.classList.remove('fw-bold');
+                            el.classList.add('notification-read');
+                        });
+                        // Hide badge
+                        const badge = document.querySelector('#notificationBell .badge');
+                        if (badge) badge.style.display = 'none';
+                    });
+            });
+        }
+
+        // Delete all notifications button
+        const deleteAllNotifBtn = document.getElementById('deleteAllNotifBtn');
+        if (deleteAllNotifBtn) {
+            deleteAllNotifBtn.addEventListener('click', function() {
+                if (!confirm('Are you sure you want to delete all notifications?')) return;
+                fetch('/notifications/delete_all', {method: 'POST', headers: {'X-Requested-With': 'XMLHttpRequest'}})
+                    .then(() => {
+                        // Remove all notifications from the list
+                        const notifList = document.querySelector('#notificationOffcanvas .list-group');
+                        if (notifList) notifList.innerHTML = '';
+                        // Show "No notifications yet."
+                        const aside = document.querySelector('#notificationOffcanvas aside');
+                        if (aside) {
+                            let emptyMsg = aside.querySelector('.text-center.text-white');
+                            if (!emptyMsg) {
+                                emptyMsg = document.createElement('div');
+                                emptyMsg.className = 'text-center text-white';
+                                emptyMsg.textContent = 'No notifications yet.';
+                                aside.appendChild(emptyMsg);
+                            }
+                        }
+                        // Hide badge
+                        const badge = document.querySelector('#notificationBell .badge');
+                        if (badge) badge.style.display = 'none';
+                    });
+            });
+        }
+    }
+});
 
 //sound effects
 const buttons = document.querySelectorAll(".soundBtn");

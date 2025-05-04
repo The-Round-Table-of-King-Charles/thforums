@@ -92,51 +92,63 @@
                 </div>
             </div>
 
-            <!-- users's thread section -->
+            <!-- user's thread section -->
             <div class="threads-section">
                 <div class="brown-bg d-flex justify-content-between align-items-center p-3 mb-4">
                     <h2 class="mb-0" style="font-size:2em; color: #bfa14a;">
-                        <i class="fas fa-scroll me-2" ></i>Your Threads
+                        <i class="fas fa-scroll me-2"></i>Your Threads
                     </h2>
                     <span class="badge bg-medieval">{{ threads.total }} total</span>
                 </div>
 
                 {% if threads.items %}
-                    <div class="thread-list">
+                    <ul class="list-group">
                         {% for thread in threads.items %}
-                            <div class="card thread-card mb-3 border-medieval">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
-                                               class="thread-title text-decoration-none fw-bold text-dark">
-                                                {{ thread.title }}
-                                            </a>
-                                            <div class="thread-meta text-muted small mt-1">
-                                                <i class="far fa-clock"></i> Posted on {{ thread.date_posted.strftime('%Y-%m-%d at %H:%M') }}
+                            <li class="list-group-item thread-list-item py-3 px-3" style="background: #fffbe7; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(191,161,74,0.06); border: 1.5px solid #e0cfa0;">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.image_file else 'default.png')) }}" 
+                                         alt="Profile Picture" 
+                                         class="thread-pic me-3 border border-2 border-medieval shadow-sm" style="background:#fff;">
+                                    <div class="flex-grow-1">
+                                        <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
+                                           class="text-decoration-none fw-bold text-dark" style="font-size:1.15em;">
+                                            {{ thread.title }}
+                                        </a>
+                                        {% if thread.tags %}
+                                            <div class="mb-1 mt-1">
+                                                {% for tag in thread.tags %}
+                                                    <a href="{{ url_for('threads_by_tag', tag_name=tag.name) }}" class="badge bg-secondary me-1">{{ tag.name }}</a>
+                                                {% endfor %}
                                             </div>
-                                        </div>
-                                        <div class="thread-actions btn-group">
-                                            <a href="{{ url_for('edit_thread', thread_id=thread.id) }}" 
-                                               class="btn btn-sm btn-outline-medieval" 
-                                               title="Edit thread">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form method="POST" action="{{ url_for('delete_thread', thread_id=thread.id) }}" 
-                                                  class="d-inline">
-                                                <button type="submit" 
-                                                        class="btn btn-sm btn-outline-danger" 
-                                                        title="Delete thread"
-                                                        onclick="return confirm('Are you sure you want to delete this thread?');">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </form>
+                                        {% endif %}
+                                        <div class="text-muted small mt-1">
+                                            <span>
+                                                Posted on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M') }}
+                                            </span>
+                                            {% if thread.edited %}
+                                                <span class="ms-2">(Edited)</span>
+                                            {% endif %}
                                         </div>
                                     </div>
+                                    <div class="thread-actions btn-group ms-2">
+                                        <a href="{{ url_for('edit_thread', thread_id=thread.id) }}" 
+                                           class="btn btn-sm btn-outline-medieval" 
+                                           title="Edit thread">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form method="POST" action="{{ url_for('delete_thread', thread_id=thread.id) }}" class="d-inline">
+                                            <button type="submit" 
+                                                    class="btn btn-sm btn-outline-danger" 
+                                                    title="Delete thread"
+                                                    onclick="return confirm('Are you sure you want to delete this thread?');">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
+                            </li>
                         {% endfor %}
-                    </div>
+                    </ul>
                 {% else %}
                     <div class="empty-state text-center py-5">
                         <i class="fas fa-scroll fa-3x text-muted mb-3"></i>
@@ -159,7 +171,6 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            
                             {% for page_num in threads.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
                                 {% if page_num %}
                                     <li class="page-item {% if page_num == threads.page %}active{% endif %}">
@@ -174,7 +185,6 @@
                                     </li>
                                 {% endif %}
                             {% endfor %}
-                            
                             {% if threads.has_next %}
                                 <li class="page-item">
                                     <a class="page-link text-medieval" 

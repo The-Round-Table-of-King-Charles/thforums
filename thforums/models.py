@@ -113,6 +113,7 @@ class Reply(db.Model):
     def is_commended_by(self, user):
         return any(c.user_id == user.id for c in self.commends if c.reply_id == self.id)
 
+# commend model for well, commending a.k.a liking system
 class Commend(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -126,5 +127,17 @@ class Commend(db.Model):
         db.UniqueConstraint('user_id', 'user_id_target', name='unique_user_user_commend'),
     )
 
+# guild model
 class Guild():
      id = db.Column(db.Integer, primary_key=True)
+
+# notification model
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    type = db.Column(db.String(32), nullable=False)  # e.g., 'reply', 'commend', 'mention'
+    message = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    read = db.Column(db.Boolean, default=False)
+
+    user = db.relationship('User', backref=db.backref('notifications', lazy='dynamic'))

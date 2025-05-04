@@ -23,6 +23,7 @@
 /* Base Styles */
 html {
     height: 100%;
+    font-size: 120%; 
 }
 
 body {
@@ -143,6 +144,17 @@ main {
     transform: translateY(-2px);
 }
 
+/* Notification Bell Badge */
+.navbar-nav .fa-bell {
+    font-size: 1.3rem;
+}
+.navbar-nav .badge {
+    font-size: 0.7em;
+    padding: 0.3em 0.5em;
+    border: 1.5px solid #fff;
+    box-shadow: 0 0 3px #000;
+}
+
 /* Tavern Sign */
 .tavern-sign {
     display: inline-block;
@@ -256,6 +268,27 @@ main {
 /* Home */
 #fixdoonsaisa {
     margin-bottom: 0px;
+}
+
+.thread-list-item {
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    background: #fffbe7;
+    border: 1.5px solid #e0cfa0;
+    box-shadow: 0 2px 8px rgba(191,161,74,0.06);
+}
+
+.thread-list-item:hover {
+    background-color: #f5ecd6 !important;
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 4px 16px rgba(191,161,74,0.12);
+}
+
+.thread-list-item .thread-pic {
+    border: 2px solid #bfa14a;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(191,161,74,0.08);
 }
 
 .thread-list-item {
@@ -588,4 +621,97 @@ aside {
     box-shadow: 0 2px 12px rgba(139,90,43,0.10);
     margin-top: 1rem;
     margin-bottom: 1rem;
+}
+
+/* Notification Offcanvas */
+#notificationOffcanvas .offcanvas-header,
+#notificationOffcanvas .offcanvas-body {
+    background-color: rgba(40, 20, 10, 0.95);
+    color: #e6d8a8;
+}
+#notificationOffcanvas .board-title {
+    color: #ffd700;
+}
+#notificationOffcanvas .list-group-item {
+    border: none;
+    border-bottom: 1px solid #5a3a22;
+    background: transparent !important;
+    color: #fff !important;
+}
+
+#notificationOffcanvas .list-group-item a {
+    color: #ffd700 !important;
+    text-decoration: underline;
+    word-break: break-all;
+}
+
+#notificationOffcanvas .list-group-item a:hover {
+    color: #fffbe7 !important;
+    text-shadow: 0 0 4px #ffd700;
+}
+
+#notificationOffcanvas .list-group-item:last-child {
+    border-bottom: none;
+}
+#notificationOffcanvas .fa-reply,
+#notificationOffcanvas .fa-thumbs-up,
+#notificationOffcanvas .fa-at,
+#notificationOffcanvas .fa-info-circle {
+    font-size: 1.1rem;
+}
+#notificationOffcanvas .list-group-item .small.text-muted {
+    color: #fff !important;
+}
+
+#notificationOffcanvas .notification-read {
+    color: #b0a98f !important;
+    background: transparent !important;
+    opacity: 0.7;
+    font-weight: normal !important;
+}
+
+#notificationOffcanvas .notification-read .small.text-muted {
+    color: #b0a98f !important;
+}
+
+/* Horizontal User List */
+.user-list-horizontal {
+    border: 1px solid #e0cfa0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.user-list-horizontal .user-list-row {
+    border-bottom: 1px solid #e0cfa0;
+}
+
+.user-list-horizontal .user-list-row:last-child {
+    border-bottom: none;
+}
+
+.user-list-horizontal .user-list-row:hover {
+    background: #f5ecd6;
+    box-shadow: 0 2px 8px rgba(191,161,74,0.08);
+    transition: background 0.2s;
+}
+.user-list-horizontal .user-list-row .btn-outline-medieval {
+    border-color: #bfa14a;
+    color: #8b5a2b;
+}
+.user-list-horizontal .user-list-row .btn-outline-medieval:hover {
+    background: #bfa14a;
+    color: #fffbe7;
+}
+.user-list-horizontal .user-list-row:hover {
+    background: #f5ecd6;
+    box-shadow: 0 2px 8px rgba(191,161,74,0.08);
+    transition: background 0.2s;
+}
+.user-list-horizontal .user-list-row .btn-outline-medieval {
+    border-color: #bfa14a;
+    color: #8b5a2b;
+}
+.user-list-horizontal .user-list-row .btn-outline-medieval:hover {
+    background: #bfa14a;
+    color: #fffbe7;
 }

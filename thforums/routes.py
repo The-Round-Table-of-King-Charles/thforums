@@ -6,7 +6,7 @@ from thforums import app, db, bcrypt
 from PIL import Image
 from datetime import datetime
 from random import sample
-from thforums.models import User, Thread, Reply, Commend, Tag
+from thforums.models import User, Thread, Reply, Commend, Tag, Notification
 
 # import forms and models
 from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm
@@ -155,6 +155,7 @@ def view_thread(thread_id):
         flash("Your reply has been posted!", "success")
         if leveled_up:
             flash(f"You leveled up! You are now level {current_user.level}.", "success")
+        create_reply_notification(reply)
         return redirect(url_for("view_thread", thread_id=thread.id))
     
     page = request.args.get("page", 1, type=int)  # get the current page number
@@ -341,7 +342,7 @@ def list_users():
         users = User.query.filter(User.username.ilike(f"%{search_query}%")).paginate(page=page, per_page=10)
     else:
         users = User.query.paginate(page=page, per_page=10)
-    # Get top 10 users by level, then exp
+    # get top 10 users by level, then exp
     top_users = User.query.order_by(User.level.desc(), User.exp.desc()).limit(10).all()
     return render_template(
         "list_users.html",
@@ -352,10 +353,11 @@ def list_users():
         top_users=top_users
     )
 
+# sidebar
 @app.context_processor
 def inject_random_users():
     random_users = sample(User.query.all(), min(3, User.query.count())) if User.query.count() > 0 else []
-    # Add current user's exp/level for sidebar
+    # add current user's exp/level for sidebar
     sidebar_exp = None
     sidebar_level = None
     sidebar_exp_required = None
@@ -380,11 +382,13 @@ def page_not_found(e):
 def internal_server_error(e):
     return render_template('500.html', title="Server Error"), 500
 
+# guild route
 @app.route("/create_guild")
 @login_required
 def create_guild():
-    return render_template("create_guild.html", title="create_guild")
+        return render_template("create_guild.html", title="create_guild")
 
+# commend or uncommend a thread
 @app.route("/commend/thread/<int:thread_id>", methods=["POST"])
 @login_required
 def commend_thread(thread_id):
@@ -398,8 +402,10 @@ def commend_thread(thread_id):
         new_commend = Commend(user_id=current_user.id, thread_id=thread_id)
         db.session.add(new_commend)
         db.session.commit()
+        create_thread_commend_notification(thread, current_user)
         return jsonify({"commended": True, "count": thread.commend_count()})
 
+# commend or uncommend a reply
 @app.route("/commend/reply/<int:reply_id>", methods=["POST"])
 @login_required
 def commend_reply(reply_id):
@@ -415,9 +421,11 @@ def commend_reply(reply_id):
         db.session.commit()
         return jsonify({"commended": True, "count": reply.commend_count()})
 
+# commend or uncommend a user
 @app.route("/commend/user/<int:user_id>", methods=["POST"])
 @login_required
 def commend_user(user_id):
+    """Commend or uncommend a user. Returns JSON with new commend state and count."""
     if user_id == current_user.id:
         return jsonify({"error": "You cannot commend yourself."}), 400
     user = User.query.get_or_404(user_id)
@@ -432,9 +440,49 @@ def commend_user(user_id):
         db.session.commit()
         return jsonify({"commended": True, "count": user.commend_count()})
 
+# view threads by tag
 @app.route("/tag/<string:tag_name>")
 def threads_by_tag(tag_name):
+    """Display threads associated with a specific tag."""
     tag = Tag.query.filter_by(name=tag_name.lower()).first_or_404()
     page = request.args.get("page", 1, type=int)
     threads = Thread.query.filter(Thread.tags.contains(tag)).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=10)
     return render_template("tag_threads.html", title=f"Tag: {tag.name}", tag=tag, threads=threads)
+
+# mark all notifications as read
+@app.route('/notifications/mark_read', methods=['POST'])
+@login_required
+def mark_notifications_read():
+    Notification.query.filter_by(user_id=current_user.id, read=False).update({'read': True})
+    db.session.commit()
+    return jsonify({'status': 'ok'})
+
+@app.route('/notifications/delete_all', methods=['POST'])
+@login_required
+def delete_all_notifications():
+    Notification.query.filter_by(user_id=current_user.id).delete()
+    db.session.commit()
+    # Optionally return JSON for AJAX
+    return jsonify({'success': True})
+
+# notification helper functions
+def create_reply_notification(reply):
+    thread = Thread.query.get(reply.thread_id)
+    if thread and thread.user_id != reply.user_id:
+        notif = Notification(
+            user_id=thread.user_id,
+            type='reply',
+            message=f'<a href="{url_for("view_thread", thread_id=thread.id)}">Your thread</a> received a new reply.',
+        )
+        db.session.add(notif)
+        db.session.commit()
+
+def create_thread_commend_notification(thread, commender):
+    if thread.user_id != commender.id:
+        notif = Notification(
+            user_id=thread.user_id,
+            type='commend',
+            message=f'<a href="{url_for("profile", user_id=commender.id)}">{commender.username}</a> commended your thread "<a href="{url_for("view_thread", thread_id=thread.id)}">{thread.title}</a>".',
+        )
+        db.session.add(notif)
+        db.session.commit()

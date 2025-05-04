@@ -69,10 +69,27 @@
                     {% endif %}
                 </ul>
                 <!-- right-side user authentication links -->
-                <ul class="navbar-nav">
+                <ul class="navbar-nav align-items-center">
                     {% if current_user.is_authenticated %}
+                        <!-- notification bell icon -->
+                        <li class="nav-item me-2">
+                            <a class="nav-link position-relative" href="#" id="notificationBell" data-bs-toggle="offcanvas" data-bs-target="#notificationOffcanvas" aria-controls="notificationOffcanvas">
+                                <i class="fas fa-bell soundBtn"></i>
+                                {% if unread_notifications|length > 0 %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ unread_notifications|length }}
+                                </span>
+                                {% endif %}
+                            </a>
+                        </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('profile') }}"><i class="fas fa-user soundBtn"></i> Profile</a>
+                            <a class="nav-link d-flex align-items-center" href="{{ url_for('profile') }}">
+                                <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.image_file else 'default.png')) }}"
+                                     alt="Profile Picture"
+                                     class="rounded-circle"
+                                     style="width: 32px; height: 32px; object-fit: cover; border: 2px solid #ffd700; margin-right: 8px;">
+                                <span style="font-weight: 500;">{{ current_user.username }}</span>
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt soundBtn"></i> Logout</a>
@@ -206,6 +223,53 @@
             </div>
         </div>
     </main>
+
+    <!--notification offcanvas -->
+    <div class="offcanvas offcanvas-end tavern-board py-4" tabindex="-1" id="notificationOffcanvas" aria-labelledby="notificationOffcanvasLabel">
+        <div class="offcanvas-header tavern-board">
+            <h4 class="board-title text-center">
+                <i class="fas fa-bell me-2"></i>Notifications
+            </h4>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <aside>
+                <!-- Notification actions -->
+                <div class="d-flex justify-content-end mb-3 gap-2">
+                    <button id="markAllReadBtn" class="btn btn-sm btn-outline-warning">
+                        <i class="fas fa-envelope-open-text"></i> Mark all as read
+                    </button>
+                    <button id="deleteAllNotifBtn" class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-trash"></i> Delete all
+                    </button>
+                </div>
+                {% if notifications %}
+                    <ul class="list-group list-group-flush">
+                        {% for notif in notifications %}
+                        <li class="list-group-item bg-transparent text-light d-flex align-items-start
+                            {% if not notif.read %}fw-bold{% else %}notification-read{% endif %}">
+                            <span class="me-2">
+                                {% if notif.type == 'reply' %}
+                                    <i class="fas fa-reply text-info"></i>
+                                {% elif notif.type == 'commend' %}
+                                    <i class="fas fa-thumbs-up text-success"></i>
+                                {% else %}
+                                    <i class="fas fa-info-circle text-secondary"></i>
+                                {% endif %}
+                            </span>
+                            <div>
+                                {{ notif.message|safe }}
+                                <div class="small text-muted">{{ notif.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="text-center text-white">No notifications yet.</div>
+                {% endif %}
+            </aside>
+        </div>
+    </div>
 
     <!-- footer -->
     <footer class="bg-dark text-light py-4 m-0">
