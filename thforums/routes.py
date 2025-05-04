@@ -6,7 +6,7 @@ from thforums import app, db, bcrypt
 from PIL import Image
 from datetime import datetime
 from random import sample
-from thforums.models import User, Thread, Reply, Commend
+from thforums.models import User, Thread, Reply, Commend, Tag
 
 # import forms and models
 from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm
@@ -39,6 +39,17 @@ def save_picture(form_picture):
 
     # return the filename
     return picture_fn
+
+def get_or_create_tags(tag_string):
+    tag_names = [t.strip().lower() for t in tag_string.split(',') if t.strip()]
+    tags = []
+    for name in tag_names:
+        tag = Tag.query.filter_by(name=name).first()
+        if not tag:
+            tag = Tag(name=name)
+            db.session.add(tag)
+        tags.append(tag)
+    return tags
 
 # route for the home page
 @app.route("/")
@@ -100,7 +111,15 @@ def new_thread():
         form.category.data = category  # pre-fill the category if provided
     # if a category is provided in the query parameter, pre-fill the form's category field
     if form.validate_on_submit():
-        thread = Thread(title=form.title.data, content=form.content.data, category=form.category.data, author=current_user)
+        thread = Thread(
+            title=form.title.data,
+            content=form.content.data,
+            category=form.category.data,
+            author=current_user
+        )
+        # handle tags
+        if form.tags.data:
+            thread.tags = get_or_create_tags(form.tags.data)
         db.session.add(thread)
         # award exp for creating a thread
         leveled_up = current_user.add_exp(20)
@@ -147,16 +166,30 @@ def view_thread(thread_id):
 def forums():
     form = SearchForm()
     search_query = ""
-    if form.validate_on_submit():  # handle form submission
+    tag_search = request.args.get("tag", "", type=str)
+    if form.validate_on_submit():
         search_query = form.search.data
-    elif request.method == "GET":  # handle query parameter for pagination
+    elif request.method == "GET":
         search_query = request.args.get("search", "", type=str)
 
-    page = request.args.get("page", 1, type=int)  # get the current page number
-    categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]  # predefined categories
+    page = request.args.get("page", 1, type=int)
+    categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]
 
-    if search_query:
-        threads = Thread.query.filter(Thread.title.ilike(f"%{search_query}%")).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=10)
+    threads = None
+    latest_threads = None
+
+    if tag_search:
+        tag = Tag.query.filter_by(name=tag_search.lower()).first()
+        if tag:
+            threads = Thread.query.filter(Thread.tags.contains(tag)).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=10)
+        else:
+            threads = None
+        search_query = ""
+    elif search_query:
+        threads = Thread.query.filter(
+            (Thread.title.ilike(f"%{search_query}%")) |
+            (Thread.tags.any(Tag.name.ilike(f"%{search_query.lower()}%")))
+        ).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=10)
         latest_threads = None
     else:
         threads = None
@@ -234,12 +267,15 @@ def edit_thread(thread_id):
         thread.content = form.content.data
         thread.edited = True
         thread.last_edited = datetime.utcnow()
+        # update tags
+        thread.tags = get_or_create_tags(form.tags.data) if form.tags.data else []
         db.session.commit()
         flash("Thread updated successfully!", "success")
         return redirect(url_for("view_thread", thread_id=thread.id))
     elif request.method == "GET":
         form.title.data = thread.title
         form.content.data = thread.content
+        form.tags.data = ', '.join([tag.name for tag in thread.tags])
     return render_template("edit_thread.html", title="Edit Thread", form=form)
 
 # route to delete a thread
@@ -386,3 +422,10 @@ def commend_user(user_id):
         db.session.add(new_commend)
         db.session.commit()
         return jsonify({"commended": True, "count": user.commend_count()})
+
+@app.route("/tag/<string:tag_name>")
+def threads_by_tag(tag_name):
+    tag = Tag.query.filter_by(name=tag_name.lower()).first_or_404()
+    page = request.args.get("page", 1, type=int)
+    threads = Thread.query.filter(Thread.tags.contains(tag)).order_by(Thread.date_posted.desc()).paginate(page=page, per_page=10)
+    return render_template("tag_threads.html", title=f"Tag: {tag.name}", tag=tag, threads=threads)

@@ -66,6 +66,7 @@ class ThreadForm(FlaskForm):
         ("Commissions and Quest", "Commissions and Quest")
     ], validators=[DataRequired()])  # category dropdown
     content = TextAreaField("Content", validators=[DataRequired()])  # thread content field
+    tags = StringField("Tags (comma-separated)", validators=[Optional(), Length(max=128)])
     submit = SubmitField("Create Thread")  # submit button
 
 # form for replying to a thread
@@ -76,6 +77,7 @@ class ReplyForm(FlaskForm):
 class EditThreadForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired(), Length(min=1, max=100)])
     content = TextAreaField("Content", validators=[DataRequired()])
+    tags = StringField("Tags (comma-separated)", validators=[Optional(), Length(max=128)])
     submit = SubmitField("Update Thread")
 
 class EditReplyForm(FlaskForm):

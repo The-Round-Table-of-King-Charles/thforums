@@ -53,6 +53,22 @@ class User(db.Model, UserMixin):
         # returns (current_exp, required_exp) for progress bar
         return self.exp, self.required_exp_for_next_level()
 
+# association table for many-to-many relationship between Thread and Tag
+thread_tags = db.Table(
+    'thread_tags',
+    db.Column('thread_id', db.Integer, db.ForeignKey('thread.id'), primary_key=True),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True)
+)
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), unique=True, nullable=False)
+    threads = db.relationship('Thread', secondary=thread_tags, back_populates='tags')
+
+    def __repr__(self):
+        return f"Tag('{self.name}')"
+
+
 # thread model represents a forum thread
 class Thread(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # unique id for each thread
@@ -65,6 +81,7 @@ class Thread(db.Model):
     edited = db.Column(db.Boolean, default=False)  # flag to indicate if the thread was edited
     last_edited = db.Column(db.DateTime)  # timestamp of the last edit
     commends = db.relationship("Commend", backref="thread", lazy=True, primaryjoin="Thread.id==Commend.thread_id")
+    tags = db.relationship('Tag', secondary=thread_tags, back_populates='threads')
 
     def __repr__(self):
         return f"Thread('{self.title}', '{self.date_posted}')"

@@ -6,7 +6,7 @@
 		{{ title }}
     </h1>
 </div>
-<form method="POST" class="card p-4">
+<form method="POST" class="card p-4 mb-4">
     {{ form.hidden_tag() }}
     <!-- input for the thread title -->
     <div class="mb-3">
@@ -22,6 +22,12 @@
     <div class="mb-3">
         {{ form.content.label(class="form-label") }}
         {{ form.content(class="form-control") }}
+    </div>
+    <!-- input for tags -->
+    <div class="mb-3">
+        {{ form.tags.label(class="form-label") }}
+        {{ form.tags(class="form-control", placeholder="e.g. magic, quest, help") }}
+        <small class="text-muted">Separate tags with commas.</small>
     </div>
     <!-- submit button -->
     <div class="text-center">

@@ -287,6 +287,12 @@ main {
     border-bottom: 2px solid var(--card-border-color) !important;
 }
 
+.card.search-results {
+    background: rgba(255, 251, 231, 0.96);
+    border: 2px solid #bfa14a;
+    box-shadow: 0 2px 12px rgba(191,161,74,0.08);
+}
+
 /* Sidebar Styles */
 aside {
     background-color: rgba(30, 15, 5, 0.95);

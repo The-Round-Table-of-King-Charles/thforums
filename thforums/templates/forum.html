@@ -17,67 +17,79 @@
 </form>
 
 {% if search_query %}
-    <h2 class="mb-4">Search Results for "{{ search_query }}"</h2>
-    {% if threads and threads.items %}
-        <ul class="list-group">
-            {% for thread in threads.items %}
-                <li class="list-group-item thread-list-item">
-                    <div class="d-flex align-items-center w-100">
-                        <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
-                             alt="Profile Picture" 
-                             class="thread-pic me-3">
-                        <div class="flex-grow-1">
-                            <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
-                               class="text-decoration-none fw-bold text-dark">
-                                {{ thread.title }}
-                            </a>
-                            <div class="text-muted small">
-                                By <a href="{{ url_for('user_profile', username=thread.author.username) }}" 
-                                     class="text-decoration-none text-dark">
-                                    {{ thread.author.username }}
-                                </a> 
-                                on {{ thread.date_posted.strftime('%Y-%m-%d') }}
+    <div class="card mb-4 shadow-sm bg-light border-0">
+        <div class="card-body">
+            <h2 class="mb-4">Search Results for "{{ search_query }}"</h2>
+            {% if threads and threads.items %}
+                <ul class="list-group">
+                    {% for thread in threads.items %}
+                        <li class="list-group-item thread-list-item">
+                            <div class="d-flex align-items-center w-100">
+                                <img src="{{ url_for('static', filename='profile_pics/' + thread.author.image_file) }}" 
+                                     alt="Profile Picture" 
+                                     class="thread-pic me-3">
+                                <div class="flex-grow-1">
+                                    <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
+                                       class="text-decoration-none fw-bold text-dark">
+                                        {{ thread.title }}
+                                    </a>
+                                    <!-- tags under title -->
+                                    {% if thread.tags %}
+                                        <div class="mb-1">
+                                            {% for tag in thread.tags %}
+                                                <a href="{{ url_for('threads_by_tag', tag_name=tag.name) }}" class="badge bg-secondary me-1">{{ tag.name }}</a>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="text-muted small">
+                                        By <a href="{{ url_for('user_profile', username=thread.author.username) }}" 
+                                             class="text-decoration-none text-dark">
+                                            {{ thread.author.username }}
+                                        </a> 
+                                        on {{ thread.date_posted.strftime('%Y-%m-%d') }}
+                                    </div>
+                                </div>
+                                <!-- commend button and count on the right -->
+                                <button 
+                                    class="btn btn-commend-thread ms-2 {% if current_user.is_authenticated and thread.is_commended_by(current_user) %}commended{% endif %}" 
+                                    data-thread-id="{{ thread.id }}"
+                                    style="font-size:0.95em; padding:2px 10px;"
+                                    {% if not current_user.is_authenticated %}disabled title="Log in to commend"{% endif %}>
+                                    <i class="fas fa-medal"></i>
+                                    <span class="commend-label d-none">{% if current_user.is_authenticated and thread.is_commended_by(current_user) %}Commended{% else %}Commend{% endif %}</span>
+                                    <span class="commend-count">{{ thread.commend_count() }}</span>
+                                </button>
+                                <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
+                                   class="btn btn-sm btn-medieval ms-2">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
                             </div>
-                        </div>
-                        <!-- Commend button and count on the right -->
-                        <button 
-                            class="btn btn-commend-thread ms-2 {% if current_user.is_authenticated and thread.is_commended_by(current_user) %}commended{% endif %}" 
-                            data-thread-id="{{ thread.id }}"
-                            style="font-size:0.95em; padding:2px 10px;"
-                            {% if not current_user.is_authenticated %}disabled title="Log in to commend"{% endif %}>
-                            <i class="fas fa-medal"></i>
-                            <span class="commend-label d-none">{% if current_user.is_authenticated and thread.is_commended_by(current_user) %}Commended{% else %}Commend{% endif %}</span>
-                            <span class="commend-count">{{ thread.commend_count() }}</span>
-                        </button>
-                        <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
-                           class="btn btn-sm btn-medieval ms-2">
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-        <div class="pagination mt-4">
-            {% if threads.pages > 1 %}
-                {% if threads.has_prev %}
-                    <a href="{{ url_for('forums', page=threads.prev_num, search=search_query) }}" class="btn btn-medieval me-2">Previous</a>
-                {% endif %}
-                {% for page_num in range(1, threads.pages + 1) %}
-                    <a href="{{ url_for('forums', page=page_num, search=search_query) }}" 
-                       class="btn btn-sm {{ 'btn-medieval' if page_num == threads.page else 'btn-outline-medieval' }} me-1">
-                        {{ page_num }}
-                    </a>
-                {% endfor %}
-                {% if threads.has_next %}
-                    <a href="{{ url_for('forums', page=threads.next_num, search=search_query) }}" class="btn btn-medieval ms-2">Next</a>
-                {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="pagination mt-4">
+                    {% if threads.pages > 1 %}
+                        {% if threads.has_prev %}
+                            <a href="{{ url_for('forums', page=threads.prev_num, search=search_query) }}" class="btn btn-medieval me-2">Previous</a>
+                        {% endif %}
+                        {% for page_num in range(1, threads.pages + 1) %}
+                            <a href="{{ url_for('forums', page=page_num, search=search_query) }}" 
+                               class="btn btn-sm {{ 'btn-medieval' if page_num == threads.page else 'btn-outline-medieval' }} me-1">
+                                {{ page_num }}
+                            </a>
+                        {% endfor %}
+                        {% if threads.has_next %}
+                            <a href="{{ url_for('forums', page=threads.next_num, search=search_query) }}" class="btn btn-medieval ms-2">Next</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% else %}
+                <p class="text-center text-muted">No threads found matching your search query.</p>
             {% endif %}
         </div>
-    {% else %}
-        <p class="text-center text-muted">No threads found matching your search query.</p>
-    {% endif %}
+    </div>
 {% else %}
-    <!-- Show categories and recent threads like home page -->
+    <!-- show categories and recent threads like home page -->
     <div class="container">
         {% for category, threads in latest_threads.items() %}
             <div class="card mb-4 border-0 shadow-sm" style="background-color: var(--card-bg-color);">
@@ -100,6 +112,14 @@
                                                class="text-decoration-none fw-bold text-dark">
                                                 {{ thread.title }}
                                             </a>
+                                            <!-- tags under title -->
+                                            {% if thread.tags %}
+                                                <div class="mb-1">
+                                                    {% for tag in thread.tags %}
+                                                        <a href="{{ url_for('threads_by_tag', tag_name=tag.name) }}" class="badge bg-secondary me-1">{{ tag.name }}</a>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                             <div class="text-muted small">
                                                 By <a href="{{ url_for('user_profile', username=thread.author.username) }}" 
                                                      class="text-decoration-none text-dark">
@@ -108,7 +128,7 @@
                                                 on {{ thread.date_posted.strftime('%Y-%m-%d') }}
                                             </div>
                                         </div>
-                                        <!-- Commend button and count on the right -->
+                                        <!-- commend button and count on the right -->
                                         <button 
                                             class="btn btn-commend-thread ms-2 {% if current_user.is_authenticated and thread.is_commended_by(current_user) %}commended{% endif %}" 
                                             data-thread-id="{{ thread.id }}"

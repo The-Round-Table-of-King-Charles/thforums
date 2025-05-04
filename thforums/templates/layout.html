@@ -34,7 +34,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
         <div class="container">
             <!-- button to open the offcanvas sidebar -->
-            <a class="bg-transparent text-light position-absolute top-0 start-0 my-4 ms-5 offcanvas-btn" data-bs-toggle="offcanvas" href="#offcanvas" role="button" aria-controls="offcanvasExample">
+            <a id="offcanvasToggle" class="bg-transparent text-light position-absolute top-0 start-0 my-4 ms-5 offcanvas-btn" data-bs-toggle="offcanvas" href="#offcanvas" role="button" aria-controls="offcanvas">
                 <i class="fas fa-bars fs-3 w-100 hover-shadow soundBtn"></i>
             </a>
             <!-- brand logo and name -->
@@ -168,8 +168,10 @@
                                             aria-valuenow="{{ sidebar_exp }}"
                                             aria-valuemin="0"
                                             aria-valuemax="{{ sidebar_exp_required }}">
-                                            <span style="color:#3a3226; font-weight:bold;">{{ sidebar_exp }}/{{ sidebar_exp_required }} EXP</span>
                                         </div>
+                                    </div>
+                                    <div class="exp-value mt-1" style="font-size:0.95em; color:#bfa14a; font-weight:bold;">
+                                        {{ sidebar_exp }}/{{ sidebar_exp_required }} EXP
                                     </div>
                                 </div>
                                 <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-warning mt-2">
