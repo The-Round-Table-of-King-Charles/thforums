@@ -1,11 +1,15 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="text-center mt-5">
-    <!-- display 500 error message -->
-    <h1 class="display-4 text-danger">500 - Internal Server Error</h1>
-    <p class="text-muted">Oops! Something went wrong on our end. Please try again later.</p>
-    <!-- link to return to the home page -->
-    <a href="{{ url_for('home') }}" class="btn btn-medieval mt-3">Return to Home</a>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="card p-5 shadow-lg" style="background: rgba(255,251,231,0.96); border: 2px solid #bfa14a; max-width: 480px;">
+        <div class="text-center">
+            <!-- display 500 error message -->
+            <h1 class="display-4 text-danger">500 - Internal Server Error</h1>
+            <p class="text-muted">Oops! Something went wrong on our end. Please try again later.</p>
+            <!-- link to return to the home page -->
+            <a href="{{ url_for('home') }}" class="btn btn-medieval mt-3">Return to Home</a>
+        </div>
+    </div>
 </div>
 {% endblock %}
