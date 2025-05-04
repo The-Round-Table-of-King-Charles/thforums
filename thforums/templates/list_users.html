@@ -6,6 +6,51 @@
         <i class="fas fa-users me-2"></i> Adventurers
     </h1>
 </div>
+
+<!-- top 10 users section -->
+<div class="mb-5">
+    <div class="d-flex justify-content-center">
+        <div class="brown-bg rounded shadow-sm py-3 px-4 mb-4" style="border: 2px solid #bfa14a; min-width: 320px;">
+            <h3 class="mb-0 text-center" style="color:#ffd700; letter-spacing:1px; text-shadow: 1px 1px 4px #3a3226;">
+                <i class="fas fa-crown me-2"></i>Top Adventurers
+            </h3>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        {% for user in top_users %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card border-medieval shadow-sm h-100" style="background: #fffbe7;">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='profile_pics/' + (user.image_file if user.image_file else 'default.png')) }}"
+                         class="rounded-circle mb-2" alt="User"
+                         style="width: 72px; height: 72px; object-fit: cover; border: 2px solid #ffd700;">
+                    <h5 class="mt-2 mb-1" style="color:#5a4633; font-weight: bold;">
+                        <a href="{{ url_for('user_profile', username=user.username) }}" class="text-decoration-none text-medieval fw-bold">
+                            {{ user.username }}
+                        </a>
+                    </h5>
+                    <!-- user bio under name -->
+                    <div class="mb-2 text-muted small" style="min-height:2.5em;">
+                        {{ user.bio or "This user hasn't written a bio yet." }}
+                    </div>
+                    <div class="mb-1" style="color:#bfa14a; font-size:1.1em;">
+                        <i class="fas fa-star" style="color:#ffd700;"></i>
+                        Level <b>{{ user.level }}</b>
+                    </div>
+                    <div class="mb-2" style="color:#8b5a2b;">
+                        <i class="fas fa-bolt" style="color:#ffd700;"></i>
+                        <b>{{ user.exp }}</b> EXP
+                    </div>
+                    <a href="{{ url_for('user_profile', username=user.username) }}" class="btn btn-sm btn-outline-medieval mt-2">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 <!-- search form for users -->
 <form method="POST" action="{{ url_for('list_users') }}" class="mb-4">
     {{ form.hidden_tag() }}
@@ -14,20 +59,41 @@
         <button class="btn btn-medieval" type="submit">{{ form.submit.label.text }}</button>
     </div>
 </form>
-<ul class="list-group">
+
+<!-- paginated user list cards -->
+<div class="row">
     {% for user in users.items %}
-        <li class="list-group-item d-flex align-items-center">
-            <!-- display user's profile picture -->
-            <img src="{{ url_for('static', filename='profile_pics/' + (user.image_file if user.image_file else 'default.png')) }}" 
-                 alt="Profile Picture" 
-                 class="profile-pic me-3">
-            <!-- link to user's profile -->
-            <a href="{{ url_for('user_profile', username=user.username) }}" class="text-decoration-none fw-bold text-dark">
-                {{ user.username }}
-            </a>
-        </li>
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card border-medieval shadow-sm h-100" style="background: #fffbe7;">
+            <div class="card-body text-center">
+                <img src="{{ url_for('static', filename='profile_pics/' + (user.image_file if user.image_file else 'default.png')) }}" 
+                     alt="Profile Picture" 
+                     class="rounded-circle mb-2" style="width: 64px; height: 64px; object-fit: cover; border: 2px solid #bfa14a;">
+                <h5 class="mt-2 mb-1" style="color:#5a4633; font-weight: bold;">
+                    <a href="{{ url_for('user_profile', username=user.username) }}" class="text-decoration-none text-medieval fw-bold">
+                        {{ user.username }}
+                    </a>
+                </h5>
+                <!-- user bio under name -->
+                <div class="mb-2 text-muted small" style="min-height:2.5em;">
+                    {{ user.bio or "This user hasn't written a bio yet." }}
+                </div>
+                <div class="mb-1" style="color:#bfa14a; font-size:1.1em;">
+                    <i class="fas fa-star" style="color:#ffd700;"></i>
+                    Level <b>{{ user.level }}</b>
+                </div>
+                <div class="mb-2" style="color:#8b5a2b;">
+                    <i class="fas fa-bolt" style="color:#ffd700;"></i>
+                    <b>{{ user.exp }}</b> EXP
+                </div>
+                <a href="{{ url_for('user_profile', username=user.username) }}" class="btn btn-sm btn-outline-medieval mt-2">
+                    <i class="fas fa-user"></i> View Profile
+                </a>
+            </div>
+        </div>
+    </div>
     {% endfor %}
-</ul>
+</div>
 {% if not users.items %}
     <!-- message when no users are found -->
     <p class="text-center text-muted">No users found.</p>

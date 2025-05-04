@@ -341,7 +341,16 @@ def list_users():
         users = User.query.filter(User.username.ilike(f"%{search_query}%")).paginate(page=page, per_page=10)
     else:
         users = User.query.paginate(page=page, per_page=10)
-    return render_template("list_users.html", title="Users", users=users, form=form, search_query=search_query)
+    # Get top 10 users by level, then exp
+    top_users = User.query.order_by(User.level.desc(), User.exp.desc()).limit(10).all()
+    return render_template(
+        "list_users.html",
+        title="Users",
+        users=users,
+        form=form,
+        search_query=search_query,
+        top_users=top_users
+    )
 
 @app.context_processor
 def inject_random_users():
