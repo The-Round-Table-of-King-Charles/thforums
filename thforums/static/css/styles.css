@@ -1,4 +1,6 @@
-/* Variables */
+/* =========================
+   Variables & Base Styles
+   ========================= */
 :root {
     --background-color: #f5f1e6;
     --background-image: url('https://i.pinimg.com/736x/b9/69/e1/b969e18f60defad33dd623985b8af591.jpg');
@@ -20,10 +22,9 @@
     --alert-text-color: #5c3a21;
 }
 
-/* Base Styles */
 html {
     height: 100%;
-    font-size: 120%; 
+    font-size: 100%; 
 }
 
 body {
@@ -38,16 +39,144 @@ body {
     flex-direction: column;
     min-height: 100%;
 }
-.home{
-    background-image: url(home.jpg);
 
-}
 main {
     flex: 1;
 }
 
+.home{
+    background-image: url(home.jpg);
+}
 
-/* Medieval Alert Styles */
+/* =========================
+   Navbar & Navigation
+   ========================= */
+.navbar-custom {
+    background-color: var(--navbar-bg-color);
+    border-bottom: 3px solid var(--navbar-border-color);
+    font-family: 'MedievalSharp', cursive;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+    color: var(--navbar-text-color);
+    text-shadow: 1px 1px 1px #000;
+}
+
+.navbar-custom .navbar-brand {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+.navbar-custom .nav-link {
+    font-size: 1.1rem;
+    margin: 0 5px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.navbar-custom .nav-link:hover {
+    background-color: var(--navbar-border-color);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Notification Bell Badge */
+.navbar-nav .fa-bell {
+    font-size: 1.3rem;
+}
+.navbar-nav .badge {
+    font-size: 0.7em;
+    padding: 0.3em 0.5em;
+    border: 1.5px solid #fff;
+    box-shadow: 0 0 3px #000;
+}
+
+/* Tavern Sign */
+.tavern-sign {
+    display: inline-block;
+    background-color: #8b5a2b;
+    color: #f5d742;
+    padding: 5px 15px;
+    border-radius: 5px;
+    border: 2px solid #3a3226;
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+    transform: rotate(-2deg);
+    margin-right: 10px;
+}
+
+.tavern-sign:hover{
+    transform: translateY(-2px);
+    text-shadow: 0 0 5px #fee257,
+              0 0 10px #fee257,
+              0 0 15px #fee257;
+}
+
+.tavern-sign-straight {
+    display: inline-block;
+    background-color: #3d1f0a;
+    color: #e6c229;
+    padding: 5px 15px;
+    border-radius: 5px;
+    border: 3px groove #5a3a22;
+    box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3);
+    font-family: 'MedievalSharp', cursive;
+    text-align: center;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
+}
+
+@keyframes swing-subtle {
+    0%   { transform: rotate(-2deg);}
+    20%  { transform: rotate(2deg);}
+    40%  { transform: rotate(-1.5deg);}
+    60%  { transform: rotate(1deg);}
+    80%  { transform: rotate(-0.5deg);}
+    100% { transform: rotate(0deg);}
+}
+
+/* Offcanvas button hover animation */
+.offcanvas-btn {
+    transition: transform 0.2s cubic-bezier(.4,2,.6,1), box-shadow 0.2s;
+}
+.offcanvas-btn:hover {
+    transform: scale(1.12) rotate(-4deg);
+    text-shadow: 0 0 8px #fee257;
+}
+.offcanvas-btn:active {
+    transform: scale(0.98) rotate(0deg);
+}
+
+/* Tavernhold logo hover animation */
+.tavern-logo {
+    display: inline-block;
+    transition: filter 0.3s cubic-bezier(.4,1,.6,1), transform 0.3s cubic-bezier(.4,1,.6,1);
+}
+.tavern-logo .tavern-sign {
+    /* Start inclined, end straight */
+    transform: rotate(-2deg) translateY(0);
+    transform-origin: 50% 60%;
+    transition: transform 0.2s;
+}
+.tavern-logo:hover .tavern-sign {
+    animation: swing-straight 0.7s cubic-bezier(.4,1,.6,1) 1 forwards;
+    filter: drop-shadow(0 0 4px #fee257) drop-shadow(0 0 8px #f5d742);
+    background-color: #a97c50;
+    color: #fffbe7;
+    transition: background-color 0.3s, color 0.3s, filter 0.3s;
+}
+@keyframes swing-straight {
+    0%   { transform: rotate(-2deg) translateY(0);}
+    20%  { transform: rotate(2deg) translateY(0);}
+    40%  { transform: rotate(-1.5deg) translateY(0);}
+    60%  { transform: rotate(1deg) translateY(0);}
+    80%  { transform: rotate(-0.5deg) translateY(0);}
+    100% { transform: rotate(0deg) translateY(0);}
+}
+
+/* =========================
+   Alerts & Flashed Messages
+   ========================= */
 .medieval-alert {
     background-color: var(--alert-bg-color);
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0.2 0"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.3"/></svg>');
@@ -112,133 +241,6 @@ main {
     filter: invert(30%) sepia(13%) saturate(1195%) hue-rotate(358deg) brightness(94%) contrast(87%);
 }
 
-/* Navbar Styles */
-.navbar-custom {
-    background-color: var(--navbar-bg-color);
-    border-bottom: 3px solid var(--navbar-border-color);
-    font-family: 'MedievalSharp', cursive;
-}
-
-.navbar-custom .navbar-brand,
-.navbar-custom .nav-link {
-    color: var(--navbar-text-color);
-    text-shadow: 1px 1px 1px #000;
-}
-
-.navbar-custom .navbar-brand {
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-}
-
-.navbar-custom .nav-link {
-    font-size: 1.1rem;
-    margin: 0 5px;
-    padding: 8px 15px;
-    border-radius: 5px;
-    transition: all 0.3s;
-}
-
-.navbar-custom .nav-link:hover {
-    background-color: var(--navbar-border-color);
-    color: #fff;
-    transform: translateY(-2px);
-}
-
-/* Notification Bell Badge */
-.navbar-nav .fa-bell {
-    font-size: 1.3rem;
-}
-.navbar-nav .badge {
-    font-size: 0.7em;
-    padding: 0.3em 0.5em;
-    border: 1.5px solid #fff;
-    box-shadow: 0 0 3px #000;
-}
-
-/* Tavern Sign */
-.tavern-sign {
-    display: inline-block;
-    background-color: #8b5a2b;
-    color: #f5d742;
-    padding: 5px 15px;
-    border-radius: 5px;
-    border: 2px solid #3a3226;
-    box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
-    transform: rotate(-2deg);
-    margin-right: 10px;
-}
-
-.tavern-sign:hover{
-    transform: translateY(-2px);
-    text-shadow: 0 0 5px #fee257,
-              0 0 10px #fee257,
-              0 0 15px #fee257;
-
-}
-.tavern-sign-straight {
-    display: inline-block;
-    background-color: #3d1f0a;
-    color: #e6c229;
-    padding: 5px 15px;
-    border-radius: 5px;
-    border: 3px groove #5a3a22;
-    box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3);
-    font-family: 'MedievalSharp', cursive;
-    text-align: center;
-    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
-}
-
-@keyframes swing-subtle {
-    0%   { transform: rotate(-2deg);}
-    20%  { transform: rotate(2deg);}
-    40%  { transform: rotate(-1.5deg);}
-    60%  { transform: rotate(1deg);}
-    80%  { transform: rotate(-0.5deg);}
-    100% { transform: rotate(0deg);}
-}
-
-/* Offcanvas button hover animation */
-.offcanvas-btn {
-    transition: transform 0.2s cubic-bezier(.4,2,.6,1), box-shadow 0.2s;
-}
-.offcanvas-btn:hover {
-    transform: scale(1.12) rotate(-4deg);
-    box-shadow: 0 4px 16px rgba(139,90,43,0.25);
-    background-color: rgba(139,90,43,0.08);
-    text-shadow: 0 0 8px #fee257;
-}
-.offcanvas-btn:active {
-    transform: scale(0.98) rotate(0deg);
-}
-
-/* Tavernhold logo hover animation */
-.tavern-logo {
-    display: inline-block;
-    transition: filter 0.3s cubic-bezier(.4,1,.6,1), transform 0.3s cubic-bezier(.4,1,.6,1);
-}
-.tavern-logo .tavern-sign {
-    /* Start inclined, end straight */
-    transform: rotate(-2deg) translateY(0);
-    transform-origin: 50% 60%;
-    transition: transform 0.2s;
-}
-.tavern-logo:hover .tavern-sign {
-    animation: swing-straight 0.7s cubic-bezier(.4,1,.6,1) 1 forwards;
-    filter: drop-shadow(0 0 4px #fee257) drop-shadow(0 0 8px #f5d742);
-    background-color: #a97c50;
-    color: #fffbe7;
-    transition: background-color 0.3s, color 0.3s, filter 0.3s;
-}
-@keyframes swing-straight {
-    0%   { transform: rotate(-2deg) translateY(0);}
-    20%  { transform: rotate(2deg) translateY(0);}
-    40%  { transform: rotate(-1.5deg) translateY(0);}
-    60%  { transform: rotate(1deg) translateY(0);}
-    80%  { transform: rotate(-0.5deg) translateY(0);}
-    100% { transform: rotate(0deg) translateY(0);}
-}
-
-/* Flashed Messages */
 .flashes-container {
     position: fixed;
     top: 80px;
@@ -252,36 +254,129 @@ main {
     box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
 
-/* Buttons */
+/* =========================
+   Buttons
+   ========================= */
 .btn-medieval {
-    background-color: var(--btn-bg-color);
-    color: var(--btn-text-color);
-    border: 1px solid var(--navbar-bg-color);
+    background-color: #4e2800;
+    color: #e6d8a8;
+    border: 2px solid #6b3c00;
     font-family: 'MedievalSharp', cursive;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    padding: 0.5rem 1.2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    border-radius: 4px;
 }
 
 .btn-medieval:hover {
-    background-color: var(--btn-hover-bg-color);
-    color: #fff;
+    background-color: #6b3c00;
+    color: #fffbe7;
+    border-color: #9e5700;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2),
+                0 0 8px rgba(212, 175, 55, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Home */
+.btn-medieval:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2),
+                inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.btn-outline-medieval {
+    background-color: transparent;
+    color: #6b3c00;
+    border: 2px solid #6b3c00;
+    text-shadow: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline-medieval:hover {
+    background-color: #6b3c00;
+    color: #f5f1e6;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-commend-thread, .btn-commend-reply {
+    background-color: #e6d8a8;
+    color: #8b5a2b;
+    border: 1.5px solid #d4af37;
+    font-family: 'MedievalSharp', cursive;
+    transition: box-shadow 0.2s, background 0.2s, color 0.2s;
+    box-shadow: 0 2px 6px rgba(212,175,55,0.08);
+}
+
+.btn-commend-thread:hover, .btn-commend-reply:hover {
+    background-color: #ffe066;
+    color: #b8860b;
+    border-color: #ffd700;
+    box-shadow: 0 0 12px 2px #ffe066, 0 2px 8px rgba(212,175,55,0.12);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.btn-commend-thread:disabled:hover, .btn-commend-reply:disabled:hover {
+    background-color: #e6d8a8;
+    color: #8b5a2b;
+    border-color: #d4af37;
+    box-shadow: 0 2px 6px rgba(212,175,55,0.08);
+}
+.btn-commend-thread .fa-medal, .btn-commend-reply .fa-medal {
+    margin-right: 4px;
+    transition: color 0.2s, text-shadow 0.2s;
+}
+.btn-commend-thread.commended, .btn-commend-reply.commended {
+    background-color: #ffe066;
+    color: #b8860b;
+    border-color: #ffd700;
+    box-shadow: 0 0 12px 2px #ffe066;
+}
+.btn-commend-thread.commended .fa-medal, .btn-commend-reply.commended .fa-medal {
+    color: #ffd700;
+    text-shadow: 0 0 8px #ffe066, 0 0 16px #ffd700;
+}
+.btn-commend-thread:disabled, .btn-commend-reply:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+.btn-commend-thread .commend-count, .btn-commend-reply .commend-count {
+    margin-left: 6px;
+    font-weight: bold;
+    color: #b8860b;
+}
+
+.btn-outline-medieval {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+.btn-outline-medieval:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* =========================
+   Thread List & Cards
+   ========================= */
 #fixdoonsaisa {
     margin-bottom: 0px;
 }
 
 .thread-list-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
     transition: all 0.3s ease;
     border-radius: 10px;
-    margin-bottom: 12px;
     background: #fffbe7;
     border: 1.5px solid #e0cfa0;
     box-shadow: 0 2px 8px rgba(191,161,74,0.06);
 }
 
 .thread-list-item:hover {
-    background-color: #f5ecd6 !important;
-    transform: translateY(-2px) scale(1.01);
+    background-color: #e8e1d1 !important;
+    transform: translateX(2px);
     box-shadow: 0 4px 16px rgba(191,161,74,0.12);
 }
 
@@ -289,18 +384,6 @@ main {
     border: 2px solid #bfa14a;
     background: #fff;
     box-shadow: 0 1px 4px rgba(191,161,74,0.08);
-}
-
-.thread-list-item {
-    transition: all 0.3s ease;
-}
-
-.thread-list-item:hover {
-    background-color: #e8e1d1 !important;
-    transform: translateX(2px);
-}
-
-.thread-pic {
     transition: all 0.3s ease;
 }
 
@@ -309,7 +392,6 @@ main {
     box-shadow: 0 0 5px rgba(139, 90, 43, 0.5);
 }
 
-/* Cards */
 .card {
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
     background-color: var(--card-bg-color);
@@ -326,7 +408,24 @@ main {
     box-shadow: 0 2px 12px rgba(191,161,74,0.08);
 }
 
-/* Sidebar Styles */
+.thread-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.thread-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.thread-title {
+    transition: color 0.2s;
+}
+.thread-title:hover {
+    color: #6c757d !important;
+}
+
+/* =========================
+   Sidebar & Board
+   ========================= */
 aside {
     background-color: rgba(30, 15, 5, 0.95);
     border-left: 3px ridge #c9a227;
@@ -381,6 +480,9 @@ aside {
     text-decoration: underline;
 }
 
+/* =========================
+   User Profile & User Lists
+   ========================= */
 .user-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -401,11 +503,10 @@ aside {
     border-radius: 50%;
 }
 
-/* User Profile */
 .large-profile-pic {
-    width: 180px;
-    height: 180px;
-    object-fit: cover;
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
 }
 
 .profile-card {
@@ -425,78 +526,6 @@ aside {
     line-height: 1.6;
 }
 
-.thread-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.thread-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.thread-title {
-    transition: color 0.2s;
-}
-
-.thread-title:hover {
-    color: #6c757d !important;
-}
-
-.border-medieval {
-    border-color: #6c757d !important;
-}
-
-.bg-medieval {
-    background-color: #6c757d !important;
-    color: white !important;
-}
-
-.text-medieval {
-    color: #6c757d !important;
-}
-
-.btn-outline-medieval {
-    color: #6c757d;
-    border-color: #6c757d;
-}
-
-.btn-outline-medieval:hover {
-    background-color: #6c757d;
-    color: white;
-}
-
-.btn-commend-thread, .btn-commend-reply {
-    background-color: #e6d8a8;
-    color: #8b5a2b;
-    border: 1.5px solid #d4af37;
-    font-family: 'MedievalSharp', cursive;
-    transition: box-shadow 0.2s, background 0.2s, color 0.2s;
-    box-shadow: 0 2px 6px rgba(212,175,55,0.08);
-}
-.btn-commend-thread .fa-medal, .btn-commend-reply .fa-medal {
-    margin-right: 4px;
-    transition: color 0.2s, text-shadow 0.2s;
-}
-.btn-commend-thread.commended, .btn-commend-reply.commended {
-    background-color: #ffe066;
-    color: #b8860b;
-    border-color: #ffd700;
-    box-shadow: 0 0 12px 2px #ffe066;
-}
-.btn-commend-thread.commended .fa-medal, .btn-commend-reply.commended .fa-medal {
-    color: #ffd700;
-    text-shadow: 0 0 8px #ffe066, 0 0 16px #ffd700;
-}
-.btn-commend-thread:disabled, .btn-commend-reply:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-.btn-commend-thread .commend-count, .btn-commend-reply .commend-count {
-    margin-left: 6px;
-    font-weight: bold;
-    color: #b8860b;
-}
-
 .medieval-exp-bar {
     background: #e6d8a8 !important;
     border-radius: 8px;
@@ -512,7 +541,38 @@ aside {
     border-radius: 8px;
 }
 
-/* Others */
+/* Horizontal User List */
+.user-list-horizontal {
+    border: 1px solid #e0cfa0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.user-list-horizontal .user-list-row {
+    border-bottom: 1px solid #e0cfa0;
+}
+
+.user-list-horizontal .user-list-row:last-child {
+    border-bottom: none;
+}
+
+.user-list-horizontal .user-list-row:hover {
+    background: #f5ecd6;
+    box-shadow: 0 2px 8px rgba(191,161,74,0.08);
+    transition: background 0.2s;
+}
+.user-list-horizontal .user-list-row .btn-outline-medieval {
+    border-color: #bfa14a;
+    color: #8b5a2b;
+}
+.user-list-horizontal .user-list-row .btn-outline-medieval:hover {
+    background: #bfa14a;
+    color: #fffbe7;
+}
+
+/* =========================
+   Miscellaneous / Utility
+   ========================= */
 .profile-pic {
     width: 50px;
     height: 50px;
@@ -534,12 +594,6 @@ aside {
     margin-right: 10px;
 }
 
-.large-profile-pic {
-    width: 125px;
-    height: 125px;
-    border-radius: 50%;
-}
-
 .small-profile-pic {
     width: 30px;
     height: 30px;
@@ -550,12 +604,6 @@ aside {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-}
-
-.thread-list-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
 }
 
 .pagination {
@@ -583,47 +631,22 @@ aside {
     color: #6c757d;
 }
 
-/* Showcase backgrounds */
-.showcase-bg {
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+.border-medieval {
+    border-color: #6c757d !important;
 }
 
-.showcase-forums {
-    background: rgba(248,249,250,0.88);
+.bg-medieval {
+    background-color: #6c757d !important;
+    color: white !important;
 }
 
-.showcase-users {
-    background: rgba(245,231,198,0.88);
+.text-medieval {
+    color: #6c757d !important;
 }
 
-.showcase-about {
-    background: rgba(255,251,231,0.88);
-}
-
-.showcase-guilds {
-    background: rgba(249,247,240,0.88);
-}
-
-.showcase-join {
-    background: rgba(60, 40, 20, 0.65); /* warm dark, semi-transparent */
-}
-
-
-.brown-bg {
-    background: rgba(60, 40, 20, 0.85);
-    border: 2px solid #bfa14a;
-    border-radius: 10px;
-    box-shadow: 0 2px 12px rgba(139,90,43,0.10);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-}
-
-/* Notification Offcanvas */
+/* =========================
+   Notification Offcanvas
+   ========================= */
 #notificationOffcanvas .offcanvas-header,
 #notificationOffcanvas .offcanvas-body {
     background-color: rgba(40, 20, 10, 0.95);
@@ -674,44 +697,47 @@ aside {
     color: #b0a98f !important;
 }
 
-/* Horizontal User List */
-.user-list-horizontal {
-    border: 1px solid #e0cfa0;
-    border-radius: 12px;
-    overflow: hidden;
+/* =========================
+   Showcase Backgrounds
+   ========================= */
+.showcase-bg {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
 }
 
-.user-list-horizontal .user-list-row {
-    border-bottom: 1px solid #e0cfa0;
+.showcase-forums {
+    background: rgba(248,249,250,0.88);
 }
 
-.user-list-horizontal .user-list-row:last-child {
-    border-bottom: none;
+.showcase-users {
+    background: rgba(245,231,198,0.88);
 }
 
-.user-list-horizontal .user-list-row:hover {
-    background: #f5ecd6;
-    box-shadow: 0 2px 8px rgba(191,161,74,0.08);
-    transition: background 0.2s;
+.showcase-about {
+    background: rgba(255,251,231,0.88);
 }
-.user-list-horizontal .user-list-row .btn-outline-medieval {
-    border-color: #bfa14a;
-    color: #8b5a2b;
+
+.showcase-guilds {
+    background: rgba(249,247,240,0.88);
 }
-.user-list-horizontal .user-list-row .btn-outline-medieval:hover {
-    background: #bfa14a;
-    color: #fffbe7;
+
+.showcase-join {
+    background: rgba(60, 40, 20, 0.65); /* warm dark, semi-transparent */
 }
-.user-list-horizontal .user-list-row:hover {
-    background: #f5ecd6;
-    box-shadow: 0 2px 8px rgba(191,161,74,0.08);
-    transition: background 0.2s;
+
+/* =========================
+   Brown Background
+   ========================= */
+.brown-bg {
+    background: rgba(60, 40, 20, 0.85);
+    border: 2px solid #bfa14a;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(139,90,43,0.10);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
-.user-list-horizontal .user-list-row .btn-outline-medieval {
-    border-color: #bfa14a;
-    color: #8b5a2b;
-}
-.user-list-horizontal .user-list-row .btn-outline-medieval:hover {
-    background: #bfa14a;
-    color: #fffbe7;
-}
+

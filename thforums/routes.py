@@ -5,7 +5,6 @@ from flask_login import login_user, logout_user, current_user, login_required
 from thforums import app, db, bcrypt
 from PIL import Image
 from datetime import datetime
-from random import sample
 from thforums.models import User, Thread, Reply, Commend, Tag, Notification
 
 # import forms and models
@@ -58,8 +57,7 @@ def home():
     categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]  # predefined categories
     # latest_threads is a dictionary where each category maps to its latest threads
     latest_threads = {category: Thread.query.filter_by(category=category).order_by(Thread.date_posted.desc()).limit(3).all() for category in categories}
-    random_users = sample(User.query.all(), min(3, User.query.count()))  # get 3 random users
-    return render_template("home.html", title="Home", latest_threads=latest_threads, random_users=random_users)
+    return render_template("home.html", title="Home", latest_threads=latest_threads)
     
 # route for the about page
 @app.route("/about")
@@ -355,9 +353,7 @@ def list_users():
 
 # sidebar
 @app.context_processor
-def inject_random_users():
-    random_users = sample(User.query.all(), min(3, User.query.count())) if User.query.count() > 0 else []
-    # add current user's exp/level for sidebar
+def inject_sidebar_user():
     sidebar_exp = None
     sidebar_level = None
     sidebar_exp_required = None
@@ -366,7 +362,6 @@ def inject_random_users():
         sidebar_level = current_user.level
         sidebar_exp_required = current_user.required_exp_for_next_level()
     return {
-        'random_users': random_users,
         'sidebar_exp': sidebar_exp,
         'sidebar_level': sidebar_level,
         'sidebar_exp_required': sidebar_exp_required
