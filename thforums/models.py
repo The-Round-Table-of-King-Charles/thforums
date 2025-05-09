@@ -9,6 +9,12 @@ def load_user(user_id):
 
 
 # create Guild Table
+class Guild(db.Model):
+    id = db.Column(db.Integer, primary_key=True) #guild id
+    guild_name = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=False) #guild description
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) #time created
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id")) #foreign key for users
 # Add exp attribute to users
 
 # user model represents a registered user in the database

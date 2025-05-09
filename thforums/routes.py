@@ -5,10 +5,10 @@ from flask_login import login_user, logout_user, current_user, login_required
 from thforums import app, db, bcrypt
 from PIL import Image
 from datetime import datetime
-from thforums.models import User, Thread, Reply, Commend, Tag, Notification
+from thforums.models import User, Thread, Reply, Commend, Tag, Notification, Guild
 
 # import forms and models
-from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm
+from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm, RegisterGuild
 
 # helper function to save profile pictures
 def save_picture(form_picture):
@@ -367,6 +367,10 @@ def inject_sidebar_user():
         'sidebar_exp_required': sidebar_exp_required
     }
 
+
+
+
+
 # 404 error page
 @app.errorhandler(404)
 def page_not_found(e):
@@ -381,7 +385,13 @@ def internal_server_error(e):
 @app.route("/create_guild")
 @login_required
 def create_guild():
-        return render_template("create_guild.html", title="create_guild")
+    form = RegisterGuild()
+    if form.validate_on_submit():  # validate form inputs
+        guild = Guild(guild_name=form.guildname.data, content=form.description.data)
+        db.session.add(guild)
+        db.session.commit()
+        flash(f"Guild Created!")
+    return render_template("create_guild.html", title="Create Guild", form=form)
 
 # commend or uncommend a thread
 @app.route("/commend/thread/<int:thread_id>", methods=["POST"])

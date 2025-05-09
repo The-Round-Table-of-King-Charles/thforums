@@ -87,3 +87,8 @@ class EditReplyForm(FlaskForm):
 class SearchForm(FlaskForm):
     search = StringField("Search:", validators=[Optional(), Length(max=50)])
     submit = SubmitField("Search")
+
+class RegisterGuild(FlaskForm):
+    guild_name = StringField("Guild_Name:", validators=[DataRequired(), Length(min=2, max=20)])  # guild_name field
+    content = StringField("What's your guild about?:", validators=[DataRequired(), Email()])  # content field
+    submit = SubmitField("Sign Up")  # submit button

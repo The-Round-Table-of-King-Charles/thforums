@@ -1,12 +1,25 @@
 {% extends 'layout.html' %}
 
 {%block content %}
-<div class="text-center mb-4">
-    <h1 class="tavern-sign-straight d-inline-block shadow">
-        <i class="fas fa-shield-halved me-2"></i> Guild
-    </h1>
-</div>
+<h1>Create Guild</h1>
+    <form method="POST" action="" novalidate class="card p-4 mb-4">
+        
+        <div class="text-center mb-4">
+                {{ form.guild_name(class="form-label") }}
+        </div>
 
+        <div class="text-center mb-4">
+
+                {{ form.content() }}
+
+        </div>
+        <!-- submit button -->
+        <div class="text-center mb-4"><br>
+            {{ form.submit() }}
+        </div>
+    </fieldset>
+    
+</form>
 
 
 {% endblock %}
