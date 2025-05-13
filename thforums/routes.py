@@ -336,12 +336,13 @@ def list_users():
     elif request.method == "GET":  # handle query parameter for pagination
         search_query = request.args.get("search", "", type=str)
     page = request.args.get("page", 1, type=int)
+    # Show only 5 users per page
     if search_query:
-        users = User.query.filter(User.username.ilike(f"%{search_query}%")).paginate(page=page, per_page=10)
+        users = User.query.filter(User.username.ilike(f"%{search_query}%")).paginate(page=page, per_page=5)
     else:
-        users = User.query.paginate(page=page, per_page=10)
-    # get top 10 users by level, then exp
-    top_users = User.query.order_by(User.level.desc(), User.exp.desc()).limit(10).all()
+        users = User.query.paginate(page=page, per_page=5)
+    # get top 3 users by level, then exp
+    top_users = User.query.order_by(User.level.desc(), User.exp.desc()).limit(3).all()
     return render_template(
         "list_users.html",
         title="Users",

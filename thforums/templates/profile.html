@@ -14,7 +14,7 @@
     <!-- profile section -->
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card profile-card mb-5 border-2 border-medieval">
+            <div class="card profile-card mb-5">
                 <div class="card-body p-4">
                     <div class="row align-items-center">
                         <!-- profile picture -->
@@ -165,7 +165,7 @@
                         <ul class="pagination justify-content-center">
                             {% if threads.has_prev %}
                                 <li class="page-item">
-                                    <a class="page-link text-medieval" 
+                                    <a class="page-link prev-next" 
                                        href="{{ url_for('profile', page=threads.prev_num) }}">
                                         <i class="fas fa-chevron-left"></i> Previous
                                     </a>
@@ -187,7 +187,7 @@
                             {% endfor %}
                             {% if threads.has_next %}
                                 <li class="page-item">
-                                    <a class="page-link text-medieval" 
+                                    <a class="page-link prev-next" 
                                        href="{{ url_for('profile', page=threads.next_num) }}">
                                         Next <i class="fas fa-chevron-right"></i>
                                     </a>

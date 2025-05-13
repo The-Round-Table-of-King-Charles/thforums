@@ -161,7 +161,7 @@
                         <ul class="pagination justify-content-center">
                             {% if threads.has_prev %}
                                 <li class="page-item">
-                                    <a class="page-link text-medieval" 
+                                    <a class="page-link prev-next" 
                                        href="{{ url_for('user_profile', username=user.username, page=threads.prev_num) }}">
                                         <i class="fas fa-chevron-left"></i> previous
                                     </a>
@@ -185,7 +185,7 @@
                             
                             {% if threads.has_next %}
                                 <li class="page-item">
-                                    <a class="page-link text-medieval" 
+                                    <a class="page-link prev-next" 
                                        href="{{ url_for('user_profile', username=user.username, page=threads.next_num) }}">
                                         next <i class="fas fa-chevron-right"></i>
                                     </a>

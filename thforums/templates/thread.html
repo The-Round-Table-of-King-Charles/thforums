@@ -170,7 +170,7 @@
 <div class="pagination mt-4">
     {% if replies.pages > 1 %}
         {% if replies.has_prev %}
-            <a href="{{ url_for('view_thread', thread_id=thread.id, page=replies.prev_num) }}" class="btn btn-medieval me-2">Previous</a>
+            <a href="{{ url_for('view_thread', thread_id=thread.id, page=replies.prev_num) }}" class="btn btn-medieval prev-next me-2">Previous</a>
         {% endif %}
         {% for page_num in range(1, replies.pages + 1) %}
             <a href="{{ url_for('view_thread', thread_id=thread.id, page=page_num) }}"
@@ -179,7 +179,7 @@
             </a>
         {% endfor %}
         {% if replies.has_next %}
-            <a href="{{ url_for('view_thread', thread_id=thread.id, page=replies.next_num) }}" class="btn btn-medieval ms-2">Next</a>
+            <a href="{{ url_for('view_thread', thread_id=thread.id, page=replies.next_num) }}" class="btn btn-medieval prev-next ms-2">Next</a>
         {% endif %}
     {% endif %}
 </div>

@@ -1,13 +1,13 @@
 /* =========================
    Variables & Base Styles
    ========================= */
-:root {
+   :root {
     --background-color: #f5f1e6;
-    --background-image: url('https://i.pinimg.com/736x/b9/69/e1/b969e18f60defad33dd623985b8af591.jpg');
+    --background-image: url('background.jpg');
     --background-repeat: no-repeat;
     --background-size: 100% 100%;
     --background-attachment: fixed;
-    --cursor:url(Cursor.cur),auto;
+    --cursor: url('cursor.cur'), auto;
     --font-family: 'Cinzel', serif;
     --text-color: #3a3226;
     --navbar-bg-color: #3a3226;
@@ -29,7 +29,7 @@ html {
 }
 
 body {
-
+    cursor: url('cursor.cur'), auto;
     background-color: var(--background-color);
     background-image: var(--background-image);
     background-repeat: no-repeat;
@@ -40,6 +40,21 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    background-image: var(--background-image);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    filter: blur(2px) brightness(0.95);
+    pointer-events: none;
 }
 
 main {
@@ -426,6 +441,38 @@ main {
     color: #6c757d !important;
 }
 
+/* Medieval Card Bar Decoration */
+.medieval-card {
+    position: relative;
+    overflow: visible;
+    background-color: #f8ecd4 !important;
+    border: 3px solid #8b5a2b !important;
+    box-shadow: 0 4px 16px rgba(139,90,43,0.10), 0 1.5px 0 #bfa14a inset;
+}
+
+.medieval-card-bar {
+    width: calc(100% + 64px);
+    height: 16px;
+    background: #4e2800;
+    border-top: 2.5px solid #6b3c00;
+    border-bottom: 2.5px solid #3a1a00;
+    margin: -1.5rem -32px 1.5rem -32px;
+    border-radius: 4px 4px 6px 6px;
+    box-shadow: 0 2px 6px rgba(60,30,10,0.10);
+}
+.medieval-card-bar.bottom {
+    margin: 1.5rem -32px -1.5rem -32px;
+    border-radius: 6px 6px 4px 4px;
+    border-top: 2.5px solid #3a1a00;
+    border-bottom: 2.5px solid #6b3c00;
+    box-shadow: 0 -2px 6px rgba(60,30,10,0.10);
+}
+
+.medieval-card-bar::before,
+.medieval-card-bar::after {
+    display: none !important;
+}
+
 /* =========================
    Sidebar & Board
    ========================= */
@@ -513,8 +560,9 @@ aside {
 }
 
 .profile-card {
-    background-color: #f8f9fa;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f5e3 !important;
+    border: 3px solid #bfa14a !important;
+    border-radius: 12px !important;
 }
 
 .section-title {
@@ -609,29 +657,110 @@ aside {
     margin-bottom: 20px;
 }
 
+/* =========================
+   Pagination
+   ========================= */
 .pagination {
     text-align: center;
     margin-top: 20px;
 }
 
-.pagination a {
-    margin: 0 5px;
-    text-decoration: none;
-    color: #007bff;
+.pagination a,
+.pagination .page-link,
+.pagination .btn,
+.pagination .btn-sm {
+    background-color: #3a3226 !important;      /* dark medieval brown */
+    color: #ffeec0 !important;                 /* parchment/light gold */
+    border: 2px solid #bfa14a !important;      /* gold border */
+    border-radius: 6px !important;
+    margin: 0 4px 8px 4px; /* left, right, bottom, left */
+    padding: 6px 16px;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 1em;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    display: inline-block;
+    vertical-align: middle;
 }
 
-.pagination a:hover {
-    text-decoration: underline;
+.pagination a:hover,
+.pagination .page-link:hover,
+.pagination .btn:hover,
+.pagination .btn-sm:hover {
+    background-color: #6b4f27 !important;      /* lighter brown on hover */
+    color: #fffbe7 !important;
+    border-color: #ffd700 !important;
+    text-decoration: none !important;
 }
 
-.pagination .active {
+.pagination .active,
+.pagination .btn-medieval,
+.pagination .page-link.bg-medieval,
+.pagination .btn.btn-medieval,
+.pagination .page-item.active .page-link {
+    background-color: #bfa14a !important;      /* gold for active */
+    color: #3a3226 !important;
+    border-color: #ffd700 !important;
     font-weight: bold;
-    color: #000;
+    text-decoration: none !important;
 }
 
-.pagination span {
-    margin: 0 5px;
-    color: #6c757d;
+.pagination .btn-outline-medieval,
+.pagination .page-link.text-medieval {
+    background-color: #3a3226 !important;
+    color: #ffeec0 !important;
+    border-color: #bfa14a !important;
+    text-decoration: none !important;
+}
+
+.pagination .btn-outline-medieval:hover,
+.pagination .page-link.text-medieval:hover {
+    background-color: #6b4f27 !important;
+    color: #fffbe7 !important;
+    border-color: #ffd700 !important;
+    text-decoration: none !important;
+}
+
+.pagination span,
+.pagination .page-link.disabled,
+.pagination .disabled {
+    color: #bfa14a !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: default;
+    text-decoration: none !important;
+}
+
+.pagination .page-link {
+    border-radius: 6px !important;
+    margin: 0 4px;
+    min-width: 38px;
+    text-align: center;
+}
+
+.pagination .page-item .page-link:focus {
+    outline: none;
+    border-color: #ffd700 !important;
+}
+
+/* Previous/Next button color reversal */
+.pagination a.prev-next,
+.pagination .page-link.prev-next,
+.pagination .btn.prev-next {
+    background-color: #3a3226 !important;   /* dark brown background */
+    color: #ffeec0 !important;              /* yellow/light text */
+    border: 2px solid #bfa14a !important;   /* gold border */
+}
+
+.pagination a.prev-next:hover,
+.pagination .page-link.prev-next:hover,
+.pagination .btn.prev-next:hover {
+    background-color: #6b4f27 !important;   /* lighter brown on hover */
+    color: #ffd700 !important;              /* brighter yellow on hover */
+    border-color: #ffd700 !important;
 }
 
 .border-medieval {
@@ -713,23 +842,23 @@ aside {
 }
 
 .showcase-forums {
-    background: rgba(248,249,250,0.88);
+    background: rgba(248,249,250,0.75);
 }
 
 .showcase-users {
-    background: rgba(245,231,198,0.88);
+    background: rgba(245,231,198,0.75); 
 }
 
 .showcase-about {
-    background: rgba(255,251,231,0.88);
+    background: rgba(255,251,231,0.75);
 }
 
 .showcase-guilds {
-    background: rgba(249,247,240,0.88);
+    background: rgba(255, 245, 211, 0.75);
 }
 
 .showcase-join {
-    background: rgba(60, 40, 20, 0.65); /* warm dark, semi-transparent */
+    background: rgba(60, 40, 20, 0.50);
 }
 
 /* =========================

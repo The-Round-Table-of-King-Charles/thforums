@@ -75,20 +75,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //sound effects
-const buttons = document.querySelectorAll(".soundBtn");
-const sound = document.getElementById("btnSound");
-
-if (sound){
-    buttons.forEach(btn => {
-    btn.addEventListener('mouseover', () => {
+let lastPlay = 0;
+document.addEventListener('mouseenter', function(e) {
+  if (e.target.classList && e.target.classList.contains('soundBtn')) {
+    const sound = document.getElementById('btnSound');
+    const now = Date.now();
+    if (sound && now - lastPlay > 100) { // 100ms throttle
+      sound.pause();
       sound.currentTime = 0;
       sound.play();
-    });
-  })
-
-} else {
-  console.error('No sound element found with id "btnSound".');
-}
+      lastPlay = now;
+    }
+  }
+}, true);
 
 // commend (like) system for threads and replies
 document.addEventListener('DOMContentLoaded', function() {

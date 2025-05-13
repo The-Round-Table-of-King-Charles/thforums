@@ -73,7 +73,7 @@
                 <div class="pagination mt-4">
                     {% if threads.pages > 1 %}
                         {% if threads.has_prev %}
-                            <a href="{{ url_for('forums', page=threads.prev_num, search=search_query) }}" class="btn btn-medieval me-2">Previous</a>
+                            <a href="{{ url_for('forums', page=threads.prev_num, search=search_query) }}" class="btn btn-medieval prev-next me-2">Previous</a>
                         {% endif %}
                         {% for page_num in range(1, threads.pages + 1) %}
                             <a href="{{ url_for('forums', page=page_num, search=search_query) }}" 
@@ -82,7 +82,7 @@
                             </a>
                         {% endfor %}
                         {% if threads.has_next %}
-                            <a href="{{ url_for('forums', page=threads.next_num, search=search_query) }}" class="btn btn-medieval ms-2">Next</a>
+                            <a href="{{ url_for('forums', page=threads.next_num, search=search_query) }}" class="btn btn-medieval prev-next ms-2">Next</a>
                         {% endif %}
                     {% endif %}
                 </div>
