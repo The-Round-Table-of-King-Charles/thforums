@@ -38,9 +38,9 @@
                 <i class="fas fa-scroll fs-3 hover-shadow soundBtn"></i>
             </button>
             <!-- brand logo and name -->
-            <a class="navbar-brand tavern-logo" href="{{ url_for('home') }}">
-                <span class="tavern-sign">
-                    <i class="fas fa-beer soundBtn"></i> Tavernhold
+            <a class="navbar-brand tavern-logo soundBtn" href="{{ url_for('home') }}">
+                <span class="tavern-sign ">
+                    <i class="fas fa-beer "></i> Tavernhold
                 </span>
             </a>
             <!-- navbar toggle button for mobile view -->
@@ -272,13 +272,15 @@
         </div>
     </footer>
 
-    <!-- bootstrap js bundle with popper -->
+    
+    <!-- sound effect -->
+     <audio id="btnSound">
+        <source  src="{{ url_for('static', filename='Hover.mp3') }}" type="audio/mpeg">
+     </audio>
+
+     <!-- bootstrap js bundle with popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- custom javascript -->
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-    <!-- sound effect -->
-     <audiop  controls>
-        <source id="btnSound" src="{{ url_for('static', filename='Hover.mp3') }}" typer="audio/mpeg" reload="auto">
-     </audio>
 </body>
 </html>

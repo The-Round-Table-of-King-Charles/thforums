@@ -7,6 +7,7 @@
     --background-repeat: no-repeat;
     --background-size: 100% 100%;
     --background-attachment: fixed;
+    --cursor:url(Cursor.cur),auto;
     --font-family: 'Cinzel', serif;
     --text-color: #3a3226;
     --navbar-bg-color: #3a3226;
@@ -28,7 +29,7 @@ html {
 }
 
 body {
-    cursor:url(Cursor.cur),auto;
+
     background-color: var(--background-color);
     background-image: var(--background-image);
     background-repeat: no-repeat;

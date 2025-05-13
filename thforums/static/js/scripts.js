@@ -99,12 +99,17 @@ document.addEventListener('DOMContentLoaded', function() {
 const buttons = document.querySelectorAll(".soundBtn");
 const sound = document.getElementById("btnSound");
 
-buttons.forEach(btn => {
+if (sound){
+    buttons.forEach(btn => {
     btn.addEventListener('mouseover', () => {
       sound.currentTime = 0;
       sound.play();
     });
   })
+
+} else {
+  console.error('No sound element found with id "btnSound".');
+}
 
 // commend (like) system for threads and replies
 document.addEventListener('DOMContentLoaded', function() {
@@ -173,3 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function Loading(){
+    
+}
