@@ -33,10 +33,6 @@
     <!-- navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
         <div class="container d-flex align-items-center">
-            <!-- button to open the offcanvas sidebar -->
-            <button id="offcanvasToggle" class="btn text-light me-2 offcanvas-btn d-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas">
-                <i class="fas fa-scroll fs-3 hover-shadow soundBtn"></i>
-            </button>
             <!-- brand logo and name -->
             <a class="navbar-brand tavern-logo soundBtn" href="{{ url_for('home') }}">
                 <span class="tavern-sign ">
@@ -71,10 +67,16 @@
                 <!-- right-side user authentication links -->
                 <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}
+                        <!-- button to open the offcanvas sidebar -->
+                        <li class="nav-item me-1 d-flex align-items-center">
+                            <button id="offcanvasToggle" class="btn nav-link p-0 text-light offcanvas-btn d-flex align-items-center hover-shadow" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas" style="background: none; border: none;">
+                                <i class="fas fa-star" style="font-size: 1.5rem; width: 32px; height: 32px; color: #ffd700; display: flex; align-items: center; justify-content: center;"></i>
+                            </button>
+                        </li>
                         <!-- notification bell icon -->
-                        <li class="nav-item me-2">
-                            <a class="nav-link position-relative" href="#" id="notificationBell" data-bs-toggle="offcanvas" data-bs-target="#notificationOffcanvas" aria-controls="notificationOffcanvas">
-                                <i class="fas fa-bell soundBtn"></i>
+                        <li class="nav-item me-1d-flex align-items-center">
+                            <a class="nav-link position-relative d-flex align-items-center hover-shadow" href="#" id="notificationBell" data-bs-toggle="offcanvas" data-bs-target="#notificationOffcanvas" aria-controls="notificationOffcanvas">
+                                <i class="fas fa-bell" style="font-size: 1.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"></i>
                                 {% if unread_notifications|length > 0 %}
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                     {{ unread_notifications|length }}
@@ -82,8 +84,9 @@
                                 {% endif %}
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" href="{{ url_for('profile') }}">
+                        <!-- profile -->
+                        <li class="nav-item d-flex align-items-center">
+                            <a class="nav-link d-flex align-items-center hover-shadow" href="{{ url_for('profile') }}">
                                 <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.image_file else 'default.png')) }}"
                                      alt="Profile Picture"
                                      class="rounded-circle"
@@ -91,7 +94,7 @@
                                 <span style="font-weight: 500;">{{ current_user.username }}</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item d-flex align-items-center">
                             <a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt soundBtn"></i> Logout</a>
                         </li>
                     {% else %}

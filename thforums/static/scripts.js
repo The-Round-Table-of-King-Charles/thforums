@@ -8,27 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 5000);
     console.log('Tavernhold Forums scripts loaded');
 
-    // Offcanvas sidebar open on hover
-    // const offcanvasToggle = document.getElementById('offcanvasToggle');
-    // const offcanvasElem = document.getElementById('offcanvas');
-    // if (offcanvasToggle && offcanvasElem) {
-    //     let offcanvasInstance = bootstrap.Offcanvas.getOrCreateInstance(offcanvasElem);
-
-    //     offcanvasToggle.addEventListener('mouseenter', function() {
-    //         if (!offcanvasElem.classList.contains('show')) {
-    //             offcanvasInstance.show();
-    //         }
-    //     });
-
-    //     // Optional: close when mouse leaves the sidebar area
-    //     offcanvasElem.addEventListener('mouseleave', function(e) {
-    //         // Only close if mouse leaves to outside the sidebar
-    //         if (!offcanvasElem.contains(e.relatedTarget)) {
-    //             offcanvasInstance.hide();
-    //         }
-    //     });
-    // }
-
     // Mark notifications as read when notification offcanvas is opened
     const notifOffcanvasElem = document.getElementById('notificationOffcanvas');
     if (notifOffcanvasElem) {
