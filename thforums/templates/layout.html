@@ -57,21 +57,21 @@
                 <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}
                         <!-- button to open the offcanvas sidebar -->
-                        <li class="nav-item me-1 d-flex align-items-center">
-                            <button id="offcanvasToggle" class="btn nav-link p-0 text-light offcanvas-btn d-flex align-items-center hover-shadow" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas" style="background: none; border: none;">
+                        <li class="nav-item me-2 d-flex align-items-center">
+                            <button id="offcanvasToggle" class="btn p-0 text-light offcanvas-btn d-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas">
                                 <i class="fas fa-star" style="font-size: 1.5rem; width: 32px; height: 32px; color: #ffd700; display: flex; align-items: center; justify-content: center;"></i>
                             </button>
                         </li>
                         <!-- notification bell icon -->
-                        <li class="nav-item me-1d-flex align-items-center">
-                            <a class="nav-link position-relative d-flex align-items-center hover-shadow" href="#" id="notificationBell" data-bs-toggle="offcanvas" data-bs-target="#notificationOffcanvas" aria-controls="notificationOffcanvas">
-                                <i class="fas fa-bell" style="font-size: 1.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"></i>
+                        <li class="nav-item me-0 d-flex align-items-center">
+                            <button class="position-relative d-flex align-items-center btn p-0 text-light " id="notificationBell" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationOffcanvas" aria-controls="notificationOffcanvas" style="background: none; border: none;">
+                                <i class="fas fa-bell" style="font-size: 1.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #bfa14a;"></i>
                                 {% if unread_notifications|length > 0 %}
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                     {{ unread_notifications|length }}
                                 </span>
                                 {% endif %}
-                            </a>
+                            </button>
                         </li>
                         <!-- profile -->
                         <li class="nav-item d-flex align-items-center">

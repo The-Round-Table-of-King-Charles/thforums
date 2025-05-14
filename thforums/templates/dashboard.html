@@ -6,43 +6,51 @@
     {% if threads.items %}
         <div class="list-group">
             {% for thread in threads.items %}
-                <a href="{{ url_for('view_thread', thread_id=thread.id) }}" class="list-group-item list-group-item-action mb-3 rounded shadow-sm thread-list-item d-flex align-items-stretch" style="background: #f8f5f0;">
-                    <div class="d-flex flex-column align-items-center justify-content-center me-4" style="min-width: 90px;">
-                        <img src="{{ url_for('static', filename='profile_pics/' ~ thread.author.image_file) }}" alt="User" class="rounded-circle border border-3 border-medieval mb-2" style="width:64px; height:64px; object-fit:cover;">
-                        <div class="fw-bold text-center" style="font-size:0.98em;">{{ thread.author.username }}</div>
-                        <div class="text-muted" style="font-size:0.85em;">Lv. {{ thread.author.level }}</div>
-                    </div>
-                    <div class="flex-grow-1 d-flex flex-column justify-content-between">
-                        <div>
-                            <div class="d-flex align-items-center mb-1">
-                                <span class="badge bg-medieval me-2" style="font-size:0.95em;">
-                                    <i class="fas fa-folder-open me-1"></i>{{ thread.category }}
-                                </span>
-                                <span class="fw-bold fs-5">{{ thread.title }}</span>
-                            </div>
-                            <div class="text-muted mb-2" style="font-size:0.95em;">
-                                Posted {{ thread.date_posted.strftime('%b %d, %Y %H:%M') }}
-                                {% if thread.edited %}
-                                    <span class="badge bg-secondary ms-2">Edited</span>
+                <div class="thread-dashboard-entry medieval-card mb-3 shadow-sm">
+                    <div class="d-flex align-items-stretch px-3 py-3" style="background: #f8f5f0; border-radius: 8px;">
+                        <div class="d-flex flex-column align-items-center justify-content-center mx-2" style="min-width: 90px;">
+                            <img src="{{ url_for('static', filename='profile_pics/' ~ thread.author.image_file) }}" alt="User" class="rounded-circle border border-3 border-medieval mb-2" style="width:64px; height:64px; object-fit:cover;">
+                            <div class="fw-bold text-center" style="font-size:0.98em;">{{ thread.author.username }}</div>
+                            <div class="text-muted" style="font-size:0.85em;">Lv. {{ thread.author.level }}</div>
+                        </div>
+                        <!-- Vertical separator -->
+                        <div class="vr mx-3" style="min-height: 80px; border-color: #bfa14a; opacity: 0.7;"></div>
+                        <div class="flex-grow-1 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="mb-1">
+                                    <span class="thread-dashboard-title fw-bold" style="font-size:1.45em; color:#3a3226;">
+                                        {{ thread.title }}
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center mb-1">
+                                    <span class="badge bg-medieval me-2" style="font-size:0.95em;">
+                                        <i class="fas fa-folder-open me-1"></i>{{ thread.category }}
+                                    </span>
+                                </div>
+                                <div class="text-muted mb-2" style="font-size:0.95em;">
+                                    Posted {{ thread.date_posted.strftime('%b %d, %Y %H:%M') }}
+                                    {% if thread.edited %}
+                                        <span class="badge bg-secondary ms-2">Edited</span>
+                                    {% endif %}
+                                </div>
+                                <div class="mb-2" style="color:#5a4633;">
+                                    {{ thread.content[:220] }}{% if thread.content|length > 220 %}...{% endif %}
+                                </div>
+                                {% if thread.tags %}
+                                    <div class="mt-1">
+                                        {% for tag in thread.tags %}
+                                            <span class="badge bg-warning text-dark me-1">{{ tag.name }}</span>
+                                        {% endfor %}
+                                    </div>
                                 {% endif %}
                             </div>
-                            <div class="mb-2" style="color:#5a4633;">
-                                {{ thread.content[:220] }}{% if thread.content|length > 220 %}...{% endif %}
+                            <div class="d-flex align-items-center mt-2" style="font-size:0.95em;">
+                                <span class="me-3"><i class="fas fa-comments"></i> {{ thread.replies|length }} Replies</span>
+                                <span class="me-3"><i class="fas fa-star"></i> {{ thread.commend_count() }} Commends</span>
                             </div>
-                            {% if thread.tags %}
-                                <div class="mt-1">
-                                    {% for tag in thread.tags %}
-                                        <span class="badge bg-warning text-dark me-1">{{ tag.name }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="d-flex align-items-center mt-2" style="font-size:0.95em;">
-                            <span class="me-3"><i class="fas fa-comments"></i> {{ thread.replies|length }} Replies</span>
-                            <span class="me-3"><i class="fas fa-star"></i> {{ thread.commend_count() }} Commends</span>
                         </div>
                     </div>
-                </a>
+                </div>
             {% endfor %}
         </div>
         <!-- Pagination -->
