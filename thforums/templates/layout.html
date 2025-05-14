@@ -17,24 +17,13 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 </head>
-
-<!--
-    To-do List for this Website:
-    - Fix Forum Layout
-    - Polish Web Design 
-    - Add 3d light effect to containers
-
-
-    -add effects on border
-    -add shadow on Category preview
--->
  
-<body class="cursor">
+<body>
     <!-- navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
         <div class="container d-flex align-items-center">
             <!-- brand logo and name -->
-            <a class="navbar-brand tavern-logo soundBtn" href="{{ url_for('home') }}">
+            <a class="navbar-brand tavern-logo soundBtn" href="{{ url_for('landing') }}">
                 <span class="tavern-sign ">
                     <i class="fas fa-beer "></i> Tavernhold
                 </span>
@@ -47,7 +36,7 @@
                 <!-- left-side navigation links -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('home') }}"><i class="fas fa-home soundBtn"></i> Home</a>
+                        <a class="nav-link" href="{{ url_for('home') }}"><i class="fas fa-home soundBtn"></i> Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('about') }}"><i class="fas fa-scroll soundBtn"></i> About</a>

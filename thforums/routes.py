@@ -50,15 +50,21 @@ def get_or_create_tags(tag_string):
         tags.append(tag)
     return tags
 
-# route for the home page
+# route for the landing page
 @app.route("/")
+def landing():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+    return render_template("home.html", title="Home")
+
+# route for the home page
 @app.route("/home")
+@login_required
 def home():
-    categories = ["General Discussion", "Looking for Adventurers", "Commissions and Quest"]  # predefined categories
-    # latest_threads is a dictionary where each category maps to its latest threads
-    latest_threads = {category: Thread.query.filter_by(category=category).order_by(Thread.date_posted.desc()).limit(3).all() for category in categories}
-    return render_template("home.html", title="Home", latest_threads=latest_threads)
-    
+    page = request.args.get("page", 1, type=int)
+    threads = Thread.query.order_by(Thread.date_posted.desc()).paginate(page=page, per_page=15)
+    return render_template("dashboard.html", title="Dashboard", threads=threads)
+
 # route for the about page
 @app.route("/about")
 def about():
