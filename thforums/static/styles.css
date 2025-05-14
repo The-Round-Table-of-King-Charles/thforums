@@ -912,3 +912,9 @@ aside {
     letter-spacing: 0.5px;
 }
 
+.medieval-auth-form .btn,
+.medieval-auth-form button,
+.medieval-auth-form input[type="submit"] {
+    font-family: 'Cinzel', serif !important;
+}
+
