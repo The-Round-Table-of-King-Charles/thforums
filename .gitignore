@@ -2,3 +2,4 @@
 /thforums/__pycache__
 /thforums/static/profile_pics/*
 !/thforums/static/profile_pics/default.png
+instance/database.db
