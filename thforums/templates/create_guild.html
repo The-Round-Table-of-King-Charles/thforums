@@ -1,29 +1,21 @@
 {% extends 'layout.html' %}
 
-{%block content %}
-<h1>Create Guild</h1>
+{% block content %}
+<div class="container">
+    <h1 class="mb-4 tavern-sign-straight"><i class="fas fa-shield-halved me-2"></i>Create Guild</h1>
     <form method="POST" action="" novalidate class="card p-4 mb-4">
-        
-        <div class="text-center mb-4">
-            <legend class="text-left mb-4"><b>Guild Name</b></legend>
-                {{ form.guild_name(class="form-label") }}
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.guild_name.label(class="form-label") }}
+            {{ form.guild_name(class="form-control") }}
         </div>
-
-        <div class="text-center mb-4">
-            <legend class="text-left mb-4"><b>Guild Description</b></legend>
-
-                {{ form.content() }}
-
+        <div class="mb-3">
+            {{ form.content.label(class="form-label") }}
+            {{ form.content(class="form-control") }}
         </div>
-        <!-- submit button -->
-        <div class="text-center mb-4"><br>
-            {{ form.submit() }}
+        <div class="text-center">
+            {{ form.submit(class="btn btn-medieval") }}
         </div>
-    </fieldset>
-    
-</form>
-
-
-
-
+    </form>
+</div>
 {% endblock %}

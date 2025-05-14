@@ -11,6 +11,11 @@
                      alt="Profile Picture"
                      class="large-profile-pic rounded-circle border border-3 border-medieval shadow mb-2">
                 <h5 class="mt-2 mb-1" style="font-family: 'Cinzel', serif;">{{ thread.author.username }}</h5>
+                {% if thread.author.guild %}
+                    <div class="mb-1">
+                        <span class="badge bg-medieval"><i class="fas fa-shield-halved"></i> {{ thread.author.guild.guild_name }}</span>
+                    </div>
+                {% endif %}
                 <div style="font-size:0.97em; margin-bottom:8px;">
                     {{ thread.author.bio or "This user hasn't written a bio yet." }}
                 </div>
@@ -96,6 +101,11 @@
                          alt="Profile Picture"
                          class="large-profile-pic rounded-circle border border-3 border-medieval shadow mb-2">
                     <h5 class="mt-2 mb-1" style="font-family: 'Cinzel', serif;">{{ reply.author.username }}</h5>
+                    {% if reply.author.guild %}
+                        <div class="mb-1">
+                            <span class="badge bg-medieval"><i class="fas fa-shield-halved"></i> {{ reply.author.guild.guild_name }}</span>
+                        </div>
+                    {% endif %}
                     <div style="font-size:0.97em; margin-bottom:8px;">
                         {{ reply.author.bio or "This user hasn't written a bio yet." }}
                     </div>

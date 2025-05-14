@@ -60,7 +60,7 @@
                             <a class="nav-link" href="{{ url_for('list_users') }}"><i class="fas fa-users soundBtn"></i> Users</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('create_guild') }}"><i class="fas fa-shield-halved soundBtn"></i> Guild</a>
+                            <a class="nav-link" href="{{ url_for('guild_main') }}"><i class="fas fa-shield-halved soundBtn"></i> Guild</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -177,6 +177,11 @@
                                 {% endif %}
                             </h5>
                             {% if current_user.is_authenticated %}
+                                {% if user_guild %}
+                                    <div class="mb-2">
+                                        <span class="badge bg-medieval"><i class="fas fa-shield-halved"></i> {{ user_guild.guild_name }}</span>
+                                    </div>
+                                {% endif %}
                                 <div class="mb-2" style="color:#fffbe7;">
                                     <i class="fas fa-star" style="color:#ffd700;"></i>
                                     Level {{ sidebar_level }}

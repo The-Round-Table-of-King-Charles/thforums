@@ -8,7 +8,7 @@ from datetime import datetime
 from thforums.models import User, Thread, Reply, Commend, Tag, Notification, Guild
 
 # import forms and models
-from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm, RegisterGuild
+from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm, RegisterGuild, EditGuildForm, TransferGuildOwnershipForm, JoinGuildForm, LeaveGuildForm
 
 # helper function to save profile pictures
 def save_picture(form_picture):
@@ -368,20 +368,6 @@ def inject_sidebar_user():
         'sidebar_exp_required': sidebar_exp_required
     }
 
-
-
-
-
-# 404 error page
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html', title="Page Not Found"), 404
-
-# 500 error page
-@app.errorhandler(500)
-def internal_server_error(e):
-    return render_template('500.html', title="Server Error"), 500
-
 # guild route
 @app.route("/create_guild")
 @login_required
@@ -492,3 +478,131 @@ def create_thread_commend_notification(thread, commender):
         )
         db.session.add(notif)
         db.session.commit()
+
+@app.route("/guild")
+@login_required
+def guild_main():
+    if not current_user.guild:
+        return redirect(url_for('guild_list'))
+    guild = current_user.guild
+    members = User.query.filter_by(guild_id=guild.id).all()
+    return render_template("guild_main.html", title="Guild", guild=guild, members=members)
+
+@app.route("/guilds")
+@login_required
+def guild_list():
+    page = request.args.get('page', 1, type=int)
+    search = request.args.get('search', '', type=str)
+    if search:
+        guilds = Guild.query.filter(Guild.guild_name.ilike(f"%{search}%")).paginate(page=page, per_page=10)
+    else:
+        guilds = Guild.query.paginate(page=page, per_page=10)
+    return render_template("guild_list.html", title="Guilds", guilds=guilds)
+
+@app.route("/guild/create", methods=["GET", "POST"])
+@login_required
+def guild_create():
+    if current_user.guild:
+        flash("You are already in a guild.", "warning")
+        return redirect(url_for('guild_main'))
+    form = EditGuildForm()
+    if form.validate_on_submit():
+        guild = Guild(guild_name=form.guild_name.data, content=form.content.data, owner_id=current_user.id)
+        db.session.add(guild)
+        db.session.commit()
+        current_user.guild_id = guild.id
+        db.session.commit()
+        flash("Guild created!", "success")
+        return redirect(url_for('guild_main'))
+    return render_template("create_guild.html", title="Create Guild", form=form)
+
+@app.route("/guild/join/<int:guild_id>", methods=["POST"])
+@login_required
+def guild_join(guild_id):
+    if current_user.guild:
+        flash("You are already in a guild.", "warning")
+        return redirect(url_for('guild_main'))
+    guild = Guild.query.get_or_404(guild_id)
+    current_user.guild_id = guild.id
+    db.session.commit()
+    flash(f"You joined {guild.guild_name}!", "success")
+    return redirect(url_for('guild_main'))
+
+@app.route("/guild/leave", methods=["POST"])
+@login_required
+def guild_leave():
+    if not current_user.guild:
+        flash("You are not in a guild.", "warning")
+        return redirect(url_for('guild_list'))
+    if current_user.guild.owner_id == current_user.id:
+        flash("Owner cannot leave the guild. Transfer ownership first.", "danger")
+        return redirect(url_for('guild_main'))
+    current_user.guild_id = None
+    db.session.commit()
+    flash("You left the guild.", "success")
+    return redirect(url_for('guild_list'))
+
+@app.route("/guild/edit", methods=["GET", "POST"])
+@login_required
+def guild_edit():
+    guild = current_user.guild
+    if not guild or guild.owner_id != current_user.id:
+        flash("You are not the owner.", "danger")
+        return redirect(url_for('guild_main'))
+    form = EditGuildForm(obj=guild)
+    if form.validate_on_submit():
+        guild.guild_name = form.guild_name.data
+        guild.content = form.content.data
+        db.session.commit()
+        flash("Guild updated.", "success")
+        return redirect(url_for('guild_main'))
+    return render_template("edit_guild.html", title="Edit Guild", form=form, guild=guild)
+
+@app.route("/guild/transfer", methods=["GET", "POST"])
+@login_required
+def guild_transfer():
+    guild = current_user.guild
+    if not guild or guild.owner_id != current_user.id:
+        flash("You are not the owner.", "danger")
+        return redirect(url_for('guild_main'))
+    form = TransferGuildOwnershipForm()
+    form.new_owner.choices = [(m.id, m.username) for m in guild.members if m.id != current_user.id]
+    if form.validate_on_submit():
+        guild.owner_id = form.new_owner.data
+        db.session.commit()
+        flash("Ownership transferred.", "success")
+        return redirect(url_for('guild_main'))
+    return render_template("transfer_guild.html", title="Transfer Guild Ownership", form=form, guild=guild)
+
+@app.route("/guild/remove_member/<int:user_id>", methods=["POST"])
+@login_required
+def guild_remove_member(user_id):
+    guild = current_user.guild
+    if not guild or guild.owner_id != current_user.id:
+        flash("You are not the owner.", "danger")
+        return redirect(url_for('guild_main'))
+    member = User.query.get_or_404(user_id)
+    if member.guild_id != guild.id or member.id == guild.owner_id:
+        flash("Invalid operation.", "danger")
+        return redirect(url_for('guild_main'))
+    member.guild_id = None
+    db.session.commit()
+    flash("Member removed.", "success")
+    return redirect(url_for('guild_main'))
+
+# Context processor to inject guild everywhere
+@app.context_processor
+def inject_user_guild():
+    if current_user.is_authenticated and current_user.guild:
+        return dict(user_guild=current_user.guild)
+    return dict(user_guild=None)
+
+# 404 error page
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html', title="Page Not Found"), 404
+
+# 500 error page
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html', title="Server Error"), 500

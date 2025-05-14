@@ -57,8 +57,14 @@
                         <!-- profile details -->
                         <div class="col-md-8">
                             <div class="profile-details">
-                                <h2 class="mb-4">{{ current_user.username }} # {{ current_user.id }} </h2>
-                                
+                                <div class="d-flex align-items-center mb-4">
+                                    <h2 class="mb-0 me-2">{{ current_user.username }} # {{ current_user.id }}</h2>
+                                    {% if user_guild %}
+                                        <span class="badge bg-medieval align-middle" style="font-size:1em;">
+                                            <i class="fas fa-shield-halved"></i> {{ user_guild.guild_name }}
+                                        </span>
+                                    {% endif %}
+                                </div>
                                 <div class="mb-3">
                                     <div class="d-flex align-items-center mb-2">
                                         <i class="fas fa-envelope me-2 text-medieval"></i>

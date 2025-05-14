@@ -63,6 +63,11 @@
                         <div class="col-md-8">
                             <div class="profile-details">
                                 <h2 class="mb-4">{{ user.username }}</h2>
+                                {% if user.guild %}
+                                    <div class="mb-2">
+                                        <span class="badge bg-medieval"><i class="fas fa-shield-halved"></i> {{ user.guild.guild_name }}</span>
+                                    </div>
+                                {% endif %}
 
                                 <!-- user email -->
                                 <div class="mb-3">
