@@ -6,7 +6,7 @@
         <i class="fas fa-book me-2"></i> Register
     </h1>
 </div>
-<form method="POST" action="" novalidate class="card p-4 mb-4">
+<form method="POST" action="" novalidate class="card p-4 mb-4 medieval-auth-form">
     {{ form.hidden_tag() }}
     <fieldset>
         <legend class="text-left mb-4"><b>Join us Today!</b></legend>
@@ -50,7 +50,7 @@
 
     <!-- link to login page -->
     <div class="text-center mt-3">
-        <small><a href="{{ url_for('login') }}" class="text-decoration-none">Already have an account?</a></small>
+        <small><a href="{{ url_for('login') }}" class="text-decoration-none" style="color: #bfa14a;">Already have an account?</a></small>
     </div>
 
     </form>

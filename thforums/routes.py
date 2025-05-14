@@ -8,7 +8,7 @@ from datetime import datetime
 from thforums.models import User, Thread, Reply, Commend, Tag, Notification, Guild
 
 # import forms and models
-from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm, RegisterGuild, EditGuildForm, TransferGuildOwnershipForm, JoinGuildForm, LeaveGuildForm
+from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm, RegisterGuild, EditGuildForm, TransferGuildOwnershipForm, JoinGuildForm, LeaveGuildForm, PasswordRecoveryForm
 
 # helper function to save profile pictures
 def save_picture(form_picture):
@@ -606,3 +606,18 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html', title="Server Error"), 500
+
+@app.route("/recover_password", methods=["GET", "POST"])
+def recover_password():
+    form = PasswordRecoveryForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            hashed_pw = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+            user.password = hashed_pw
+            db.session.commit()
+            flash("Password updated! You can now log in.", "success")
+            return redirect(url_for("login"))
+        else:
+            flash("No account found with that email.", "error")
+    return render_template("recover_password.html", form=form, title="Recover Password")

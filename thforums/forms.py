@@ -107,3 +107,9 @@ class JoinGuildForm(FlaskForm):
 
 class LeaveGuildForm(FlaskForm):
     submit = SubmitField("Leave Guild")
+
+class PasswordRecoveryForm(FlaskForm):
+    email = StringField("Email:", validators=[DataRequired(), Email()])
+    new_password = PasswordField("New Password:", validators=[DataRequired()])
+    confirm_password = PasswordField("Confirm New Password:", validators=[DataRequired(), EqualTo("new_password")])
+    submit = SubmitField("Reset Password")

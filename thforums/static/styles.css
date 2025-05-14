@@ -904,3 +904,11 @@ aside {
     width: 100%;
 }
 
+/* font change in authentication forms */
+.medieval-auth-form input,
+.medieval-auth-form select,
+.medieval-auth-form textarea {
+    font-family: 'EB Garamond', serif !important;
+    letter-spacing: 0.5px;
+}
+

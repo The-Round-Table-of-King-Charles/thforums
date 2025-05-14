@@ -6,7 +6,7 @@
 		<i class="fas fa-pen me-2"></i> Login
     </h1>
 </div>
-<form method="POST" action="" novalidate class="card p-4 mb-4">
+<form method="POST" action="" novalidate class="card p-4 mb-4 medieval-auth-form">
     {{ form.hidden_tag() }}
     <fieldset>
         <legend class="text-left mb-4"><b>Log to your account</b></legend>
@@ -25,6 +25,11 @@
             {% for error in form.password.errors %}
                 <div class="text-danger small">{{ error }}</div>
             {% endfor %}
+            <div class="mt-2">
+                <a href="{{ url_for('recover_password') }}" class="text-decoration-none" style="color: #bfa14a; font-size: 0.95em;">
+                    Forgot password?
+                </a>
+            </div>
         </div>
         <!-- remember me checkbox -->
         <div class="form-check mb-3">
@@ -38,7 +43,7 @@
     </fieldset>
     <!-- link to register page -->
     <div class="text-center mt-3">
-        <small><a href="{{ url_for('register') }}" class="text-decoration-none" style="color: gold;">Don't have an account?</a></small>
+        <small><a href="{{ url_for('register') }}" class="text-decoration-none" style="color: #bfa14a;">Don't have an account?</a></small>
     </div>
 </form>
 
