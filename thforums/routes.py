@@ -375,7 +375,7 @@ def inject_sidebar_user():
     }
 
 # guild route
-@app.route("/create_guild")
+@app.route("/create_guild", methods=["POST"])
 @login_required
 def create_guild():
     form = RegisterGuild()
