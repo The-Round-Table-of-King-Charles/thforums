@@ -383,7 +383,7 @@ def internal_server_error(e):
     return render_template('500.html', title="Server Error"), 500
 
 # guild route
-@app.route("/create_guild")
+@app.route("/create_guild", methods=["POST"])
 @login_required
 def create_guild():
     form = RegisterGuild()
