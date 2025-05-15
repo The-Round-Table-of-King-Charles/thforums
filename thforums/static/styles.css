@@ -968,3 +968,23 @@ aside {
     font-family: 'Cinzel', serif !important;
 }
 
+
+.shivering-primeval{
+    color: #ffd700;
+    text-shadow:2px, 2px, #ffd700;
+}
+.shivering-primeval:hover{
+    background-color: #ffd700 ;
+    color: #6b3c00;
+    text-shadow: #6b3c00 ;
+}
+
+
+
+.assassins-sharpshooters{
+    color: #bfa14a;
+}
+.assassins-sharpshooters:hover{
+    background-color: #bfa14a;
+    color: #6b3c00;
+}
