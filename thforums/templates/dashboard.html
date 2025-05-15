@@ -1,9 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+
 <div class="container py-4">
     <h2 class="mb-4 tavern-sign-straight"><i class="fas fa-fire me-2"></i>Latest Threads</h2>
-    {% if threads.items %}
+
+<div class="row">
+    <div class="col-lg-8">
+        {% if threads.items %}
         <div class="list-group">
             {% for thread in threads.items %}
                 <div class="thread-dashboard-entry medieval-card mb-3 shadow-sm">
@@ -84,4 +88,132 @@
         <div class="alert alert-info">No threads found.</div>
     {% endif %}
 </div>
+
+    <div class=" col-md-4">
+        <aside>
+            <div class="user-profile-preview mb-3 p-3 rounded text-center " style="background: #2d2212; border: 4px solid #604c2e;">
+                            <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.is_authenticated and current_user.image_file else 'default.png')) }}"
+                                 class="rounded-circle mb-2" alt="User" style="width: 72px; height: 72px; object-fit: cover; border: 2px solid #ffd700;">
+                            <h5 class="mt-2 mb-1" style="color:#ffd700;">
+                                {% if current_user.is_authenticated %}
+                                    {{ current_user.username }}
+                                {% else %}
+                                    Guest
+                                {% endif %}
+                            </h5>
+                            {% if current_user.is_authenticated %}
+                                {% if user_guild %}
+                                    <div class="mb-2">
+                                        <span class="badge bg-medieval"><i class="fas fa-shield-halved"></i> {{ user_guild.guild_name }}</span>
+                                    </div>
+                                {% endif %}
+                                <div class="mb-2" style="color:#fffbe7;">
+                                    <i class="fas fa-star" style="color:#ffd700;"></i>
+                                    Level {{ sidebar_level }}
+                                </div>
+                                <div class="sidebar-exp-level mb-2 p-2 rounded">
+                                    <div class="progress medieval-exp-bar" style="height: 16px; background:#4a3a1a;">
+                                        <div class="progress-bar medieval-exp-progress" role="progressbar"
+                                            style="width: {{ (sidebar_exp / sidebar_exp_required * 100) | round(0) }}%; background: linear-gradient(90deg,#ffe066,#ffd700 80%,#bfa14a); color:#3a3226;"
+                                            aria-valuenow="{{ sidebar_exp }}"
+                                            aria-valuemin="0"
+                                            aria-valuemax="{{ sidebar_exp_required }}">
+                                        </div>
+                                    </div>
+                                    <div class="exp-value mt-1" style="font-size:0.95em; color:#bfa14a; font-weight:bold;">
+                                        {{ sidebar_exp }}/{{ sidebar_exp_required }} EXP
+                                    </div>
+                                </div>
+                                <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-warning mt-2">
+                                    <i class="fas fa-user"></i> View Profile
+                                </a>
+                            {% else %}
+                                <div class="mb-2" style="color:#fffbe7;">
+                                    <i class="fas fa-sign-in-alt"></i> Please log in
+                                </div>
+                                <a href="{{ url_for('login') }}" class="btn btn-sm btn-outline-light mt-2">
+                                    <i class="fas fa-sign-in-alt"></i> Login
+                                </a>
+                            {% endif %}
+                        </div>
+            <div class="threads-section">
+                <div class="brown-bg d-flex justify-content-between align-items-center p-3 mb-4">
+                    <h2 class="mb-0" style="font-size:2em; color: #bfa14a;">
+                        <i class="fas fa-scroll me-2"></i>Your Threads
+                    </h2>
+                    <span class="badge bg-medieval">{{ threads.total }} total</span>
+                </div>
+
+                {% if threads.items %}
+                    <ul class="list-group">
+                        {% for thread in threads.items %}
+                            <li class="list-group-item thread-list-item py-3 px-3" style="background: #fffbe7; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(191,161,74,0.06); border: 1.5px solid #e0cfa0;">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.image_file else 'default.png')) }}" 
+                                         alt="Profile Picture" 
+                                         class="thread-pic me-3 border border-2 border-medieval shadow-sm" style="background:#fff;">
+                                    <div class="flex-grow-1">
+                                        <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
+                                           class="text-decoration-none fw-bold text-dark" style="font-size:1.15em;">
+                                            {{ thread.title }}
+                                        </a>
+                                        {% if thread.tags %}
+                                            <div class="mb-1 mt-1">
+                                                {% for tag in thread.tags %}
+                                                    <a href="{{ url_for('threads_by_tag', tag_name=tag.name) }}" class="badge bg-secondary me-1">{{ tag.name }}</a>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        <div class="text-muted small mt-1">
+                                            <span>
+                                                Posted on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M') }}
+                                            </span>
+                                            {% if thread.edited %}
+                                                <span class="ms-2">(Edited)</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="thread-actions btn-group ms-2">
+                                        <a href="{{ url_for('edit_thread', thread_id=thread.id) }}" 
+                                           class="btn btn-sm btn-outline-medieval" 
+                                           title="Edit thread">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form method="POST" action="{{ url_for('delete_thread', thread_id=thread.id) }}" class="d-inline">
+                                            <button type="submit" 
+                                                    class="btn btn-sm btn-outline-danger" 
+                                                    title="Delete thread"
+                                                    onclick="return confirm('Are you sure you want to delete this thread?');">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state text-center py-5">
+                        <i class="fas fa-scroll fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">You haven't created any threads yet.</h4>
+                        <a href="{{ url_for('new_thread') }}" class="btn btn-medieval mt-3">
+                            <i class="fas fa-plus me-2"></i>Create Your First Thread
+                        </a>
+                    </div>
+                {% endif %}
+
+        </aside>
+        
+
+        
+    </div>
+
+    
+
+
+
+</div>
+
+
+    
 {% endblock %}

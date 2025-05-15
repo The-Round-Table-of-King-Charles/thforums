@@ -188,7 +188,3 @@ function Loading(){
 socket.onerror = function(error) {
   alert(`[error]`);
 };
-
-function create_guild() {
-    window.open("{{ url_for('create_guild') }}", "", "width:200, height: 100");
-}
