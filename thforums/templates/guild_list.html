@@ -6,7 +6,7 @@
             <h2 class="tavern-sign-straight mb-0"><i class="fas fa-shield-halved me-2"></i>Guilds</h2>
             <a href="{{ url_for('guild_create') }}" class="btn btn-medieval"><i class="fas fa-plus"></i> Create Guild</a>
         </div>
-        <!-- Guild search bar -->
+        <!-- guild search bar -->
         <form method="GET" action="{{ url_for('guild_list') }}" class="mb-4">
             <div class="input-group" style="max-width:400px;">
                 <input type="text" name="search" class="form-control" placeholder="Search guilds..." value="{{ request.args.get('search', '') }}">
@@ -27,7 +27,7 @@
                     </li>
                 {% endfor %}
             </ul>
-            <!-- Pagination styled like user list -->
+            <!-- pagination -->
             <div class="pagination mt-4">
                 {% if guilds.pages > 1 %}
                     {% if guilds.has_prev %}

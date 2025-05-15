@@ -13,7 +13,7 @@
                             <div class="fw-bold text-center" style="font-size:0.98em;">{{ thread.author.username }}</div>
                             <div class="text-muted" style="font-size:0.85em;">Lv. {{ thread.author.level }}</div>
                         </div>
-                        <!-- Vertical separator -->
+                        <!-- separator -->
                         <div class="vr mx-3" style="min-height: 80px; border-color: #bfa14a; opacity: 0.7;"></div>
                         <div class="flex-grow-1 d-flex flex-column justify-content-between">
                             <div>
@@ -53,7 +53,7 @@
                 </div>
             {% endfor %}
         </div>
-        <!-- Pagination -->
+        <!-- pagination -->
         <div class="pagination mt-4">
             {% if threads.pages > 1 %}
                 {% if threads.has_prev %}

@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-//sound effects
+// sound effects
 let lastPlay = 0;
 document.addEventListener('mouseenter', function(e) {
   if (e.target.classList && e.target.classList.contains('soundBtn')) {

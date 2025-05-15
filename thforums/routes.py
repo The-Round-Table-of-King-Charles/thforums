@@ -596,7 +596,6 @@ def guild_remove_member(user_id):
     flash("Member removed.", "success")
     return redirect(url_for('guild_main'))
 
-# Context processor to inject guild everywhere
 @app.context_processor
 def inject_user_guild():
     if current_user.is_authenticated and current_user.guild:
