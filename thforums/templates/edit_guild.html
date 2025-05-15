@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+    <div class="card p-4 mb-4 medieval-card shadow" style="background: #fffbe7; border-radius: 16px; border: 3px solid #bfa14a;">
+        <h2 class="mb-4 tavern-sign-straight"><i class="fas fa-cog me-2"></i>Edit Guild</h2>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.guild_name.label(class="form-label") }}
+                {{ form.guild_name(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.content.label(class="form-label") }}
+                {{ form.content(class="form-control") }}
+            </div>
+            <div class="text-center">
+                {{ form.submit(class="btn btn-medieval") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

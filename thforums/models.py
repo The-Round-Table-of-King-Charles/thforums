@@ -15,6 +15,15 @@ class Guild(db.Model):
     content = db.Column(db.Text, nullable=False) #guild description
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) #time created
     user_id = db.Column(db.Integer, db.ForeignKey("user.id")) #foreign key for users
+    owner_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    members = db.relationship("User", backref="guild", lazy=True, foreign_keys="User.guild_id")
+
+    def is_owner(self, user):
+        return self.owner_id == user.id
+
+    def member_count(self):
+        return len(self.members)
+
 # Add exp attribute to users
 
 # user model represents a registered user in the database
@@ -32,6 +41,7 @@ class User(db.Model, UserMixin):
     exp = db.Column(db.Integer, nullable=False, default=0)  # exp for user, default 0
     level = db.Column(db.Integer, nullable=False, default=1)  # user level, default 1
     commends_received = db.relationship("Commend", backref="user_target", lazy=True, primaryjoin="User.id==Commend.user_id_target")
+    guild_id = db.Column(db.Integer, db.ForeignKey("guild.id"), nullable=True)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
@@ -43,7 +53,6 @@ class User(db.Model, UserMixin):
         return any(c.user_id == user.id for c in self.commends_received if c.user_id_target == self.id)
 
     def required_exp_for_next_level(self):
-        # Example: 100 * current level
         return 100 * self.level
 
     def add_exp(self, amount):
@@ -132,10 +141,6 @@ class Commend(db.Model):
         db.UniqueConstraint('user_id', 'reply_id', name='unique_user_reply_commend'),
         db.UniqueConstraint('user_id', 'user_id_target', name='unique_user_user_commend'),
     )
-
-# guild model
-class Guild():
-     id = db.Column(db.Integer, primary_key=True)
 
 # notification model
 class Notification(db.Model):

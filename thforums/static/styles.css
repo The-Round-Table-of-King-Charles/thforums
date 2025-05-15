@@ -35,7 +35,7 @@ button, a {
 html {
     cursor: var(--cursor);
     height: 100%;
-    font-size: 100%; 
+    font-size: 90%; 
 }
 
 body {
@@ -396,7 +396,6 @@ main {
     align-items: center;
     margin-bottom: 10px;
     transition: all 0.3s ease;
-    border-radius: 10px;
     background: #fffbe7;
     border: 1.5px solid #e0cfa0;
     box-shadow: 0 2px 8px rgba(191,161,74,0.06);
@@ -404,7 +403,6 @@ main {
 
 .thread-list-item:hover {
     background-color: #e8e1d1 !important;
-    transform: translateX(2px);
     box-shadow: 0 4px 16px rgba(191,161,74,0.12);
 }
 
@@ -481,6 +479,38 @@ main {
 .medieval-card-bar::before,
 .medieval-card-bar::after {
     display: none !important;
+}
+
+/* Dashboard thread entry border and brown title bar */
+.thread-dashboard-entry {
+    border: 2px solid #bfa14a;
+    border-radius: 8px;
+    background: #fffbe7;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(191,161,74,0.10);
+    overflow: hidden;
+}
+
+/* Thread title style for dashboard */
+.thread-dashboard-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.45em;
+    font-weight: bold;
+    color: #3a3226;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+/* Vertical separator for dashboard thread entries */
+.vr {
+    width: 2px;
+    min-width: 2px;
+    background-color: #bfa14a;
+    opacity: 0.7;
+    border-radius: 1px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    align-self: stretch;
 }
 
 /* =========================
@@ -839,6 +869,29 @@ aside {
     color: #b0a98f !important;
 }
 
+.offcanvas-btn:hover i,
+#notificationBell:hover i {
+    box-shadow: 0 0 12px 4px #ffd700, 0 0 24px 8px #bfa14a;
+    color: #ffe066 !important;
+    transition: box-shadow 0.2s, color 0.2s;
+}
+
+#offcanvasToggle:hover i,
+#notificationBell:hover i {
+    color: #ffe066 !important;
+    text-shadow: 0 0 8px #ffe066, 0 0 16px #ffd700;
+    box-shadow: none !important;
+    transition: color 0.2s, text-shadow 0.2s;
+}
+
+/* Remove any background or box on hover */
+#offcanvasToggle:hover,
+#notificationBell:hover,
+#offcanvasToggle:focus,
+#notificationBell:focus {
+    background: none !important;
+    box-shadow: none !important;
+}
 /* =========================
    Showcase Backgrounds
    ========================= */
@@ -902,5 +955,19 @@ aside {
     min-width: 180px;
     max-width: 220px;
     width: 100%;
+}
+
+/* font change in authentication forms */
+.medieval-auth-form input,
+.medieval-auth-form select,
+.medieval-auth-form textarea {
+    font-family: 'EB Garamond', serif !important;
+    letter-spacing: 0.5px;
+}
+
+.medieval-auth-form .btn,
+.medieval-auth-form button,
+.medieval-auth-form input[type="submit"] {
+    font-family: 'Cinzel', serif !important;
 }
 

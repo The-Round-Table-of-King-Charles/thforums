@@ -9,7 +9,7 @@
     <!-- font awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- google fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700&family=EB+Garamond&display=swap" rel="stylesheet">
     <!-- custom css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <!-- web icon -->
@@ -17,24 +17,13 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 </head>
-
-<!--
-    To-do List for this Website:
-    - Fix Forum Layout
-    - Polish Web Design 
-    - Add 3d light effect to containers
-
-
-    -add effects on border
-    -add shadow on Category preview
--->
  
-<body class="cursor">
+<body>
     <!-- navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
         <div class="container d-flex align-items-center">
             <!-- brand logo and name -->
-            <a class="navbar-brand tavern-logo soundBtn" href="{{ url_for('home') }}">
+            <a class="navbar-brand tavern-logo soundBtn" href="{{ url_for('landing') }}">
                 <span class="tavern-sign ">
                     <i class="fas fa-beer "></i> Tavernhold
                 </span>
@@ -47,7 +36,7 @@
                 <!-- left-side navigation links -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('home') }}"><i class="fas fa-home soundBtn"></i> Home</a>
+                        <a class="nav-link" href="{{ url_for('home') }}"><i class="fas fa-home soundBtn"></i> Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('about') }}"><i class="fas fa-scroll soundBtn"></i> About</a>
@@ -60,7 +49,7 @@
                             <a class="nav-link" href="{{ url_for('list_users') }}"><i class="fas fa-users soundBtn"></i> Users</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('create_guild') }}"><i class="fas fa-shield-halved soundBtn"></i> Guild</a>
+                            <a class="nav-link" href="{{ url_for('guild_main') }}"><i class="fas fa-shield-halved soundBtn"></i> Guild</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -68,21 +57,21 @@
                 <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}
                         <!-- button to open the offcanvas sidebar -->
-                        <li class="nav-item me-1 d-flex align-items-center">
-                            <button id="offcanvasToggle" class="btn nav-link p-0 text-light offcanvas-btn d-flex align-items-center hover-shadow" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas" style="background: none; border: none;">
+                        <li class="nav-item me-2 d-flex align-items-center">
+                            <button id="offcanvasToggle" class="btn p-0 text-light offcanvas-btn d-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas">
                                 <i class="fas fa-star" style="font-size: 1.5rem; width: 32px; height: 32px; color: #ffd700; display: flex; align-items: center; justify-content: center;"></i>
                             </button>
                         </li>
                         <!-- notification bell icon -->
-                        <li class="nav-item me-1d-flex align-items-center">
-                            <a class="nav-link position-relative d-flex align-items-center hover-shadow" href="#" id="notificationBell" data-bs-toggle="offcanvas" data-bs-target="#notificationOffcanvas" aria-controls="notificationOffcanvas">
-                                <i class="fas fa-bell" style="font-size: 1.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"></i>
+                        <li class="nav-item me-0 d-flex align-items-center">
+                            <button class="position-relative d-flex align-items-center btn p-0 text-light " id="notificationBell" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationOffcanvas" aria-controls="notificationOffcanvas" style="background: none; border: none;">
+                                <i class="fas fa-bell" style="font-size: 1.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #bfa14a;"></i>
                                 {% if unread_notifications|length > 0 %}
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                     {{ unread_notifications|length }}
                                 </span>
                                 {% endif %}
-                            </a>
+                            </button>
                         </li>
                         <!-- profile -->
                         <li class="nav-item d-flex align-items-center">
@@ -177,6 +166,11 @@
                                 {% endif %}
                             </h5>
                             {% if current_user.is_authenticated %}
+                                {% if user_guild %}
+                                    <div class="mb-2">
+                                        <span class="badge bg-medieval"><i class="fas fa-shield-halved"></i> {{ user_guild.guild_name }}</span>
+                                    </div>
+                                {% endif %}
                                 <div class="mb-2" style="color:#fffbe7;">
                                     <i class="fas fa-star" style="color:#ffd700;"></i>
                                     Level {{ sidebar_level }}

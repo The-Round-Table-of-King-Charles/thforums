@@ -8,34 +8,49 @@
 </div>
 
 <!-- description -->
-<div class="card p-4 mb-4 medieval-card">
-    <div class="medieval-card-bar"></div>
-    <p class="text-center">
+<div class="thread-dashboard-entry medieval-card mb-4 p-4 text-center">
+    <!-- logo and title -->
+    <div class="d-flex flex-row align-items-center justify-content-center mb-3 gap-3 flex-wrap">
+        <span class="thread-dashboard-title fw-bold" style="font-size:2em;">
+            What is
+        </span>
+        <span class="tavern-logo d-inline-block mb-2" style="font-size:2.1em;">
+            <span class="tavern-sign" style="font-family: 'MedievalSharp', cursive; text-shadow: 1px 1px 2px #3a3226;">
+                <i class="fas fa-beer"></i> Tavernhold
+            </span>
+        </span>
+    </div>
+    
+    <p class="mb-2" style="font-size:1.08em;">
         Tavernhold is a web forum for adventurers and mercenaries to connect, share stories, and embark on quests together.
     </p>
+    <!-- Separator below description -->
+    <hr class="my-4" style="border-top:2px solid #bfa14a; width:60%; margin:auto;">
     <div class="text-center mt-3">
         <small><b>In Fulfillment for the Project for</b></small>
         <br>
-        <span class="badge bg-secondary">CPE 202 - Database Management System</span>
+        <span class="badge bg-primary" style="font-size:1em;">CPE 202 - Database Management System</span>
         <br>
         <small><b>Presented to:</b></small>
         <br>
-        <span class="badge bg-secondary">Engr. Jayson Carl Ferrer</span>
+        <span class="badge bg-success" style="font-size:1em;">Engr. Jayson Carl Ferrer</span>
     </div>
-    <div class="medieval-card-bar bottom"></div>
 </div>
 
 <!-- technologies used -->
-<div class="card p-4 mb-4 medieval-card">
-    <div class="medieval-card-bar"></div>
-    <h4 class="mb-3 text-center"><i class="fas fa-cogs me-2"></i>Technologies Used</h4>
+<div class="thread-dashboard-entry medieval-card mb-4 p-4">
+    <div class="mb-3 text-center">
+        <span class="thread-dashboard-title fw-bold" style="font-size:1.25em;">
+            <i class="fas fa-cogs me-2"></i>Technologies Used
+        </span>
+    </div>
     <div class="d-flex flex-wrap justify-content-center gap-4 mb-3">
         <div class="text-center" style="min-width:110px;">
             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" alt="Flask" style="height:40px; margin-bottom:8px;">
             <div><b>Flask</b><br><small>Python web framework for backend logic and routing</small></div>
         </div>
         <div class="text-center" style="min-width:110px;">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jinja/jinja-original.svg" alt="Jinja2" style="height:40px; margin-bottom:8px;">
+            <img src="https://jinja.palletsprojects.com/en/stable/_images/jinja-logo.png" alt="Jinja2" style="height:40px; margin-bottom:8px;">
             <div><b>Jinja2</b><br><small>Templating engine for dynamic HTML rendering</small></div>
         </div>
         <div class="text-center" style="min-width:110px;">
@@ -72,20 +87,26 @@
             <div><b>Custom CSS</b><br><small>Custom-made Medieval-inspired theme and effects</small></div>
         </div>
     </div>
-    <div class="medieval-card-bar bottom"></div>
 </div>
 
 <!-- members -->
-<div class="card p-4 mb-4 medieval-card">
-    <div class="medieval-card-bar"></div>
-    <h4 class="mb-4 text-center"><i class="fas fa-users me-2"></i>Developers</h4>
+<div class="thread-dashboard-entry medieval-card mb-4 p-4">
+    <div class="mb-3 text-center">
+        <span class="thread-dashboard-title fw-bold" style="font-size:1.25em;">
+            <i class="fas fa-users me-2"></i>Developers
+        </span>
+    </div>
     <div class="row justify-content-center">
         <!-- Charles Arvin Dela Cruz -->
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="border rounded p-3 h-100 text-center shadow-sm">
+            <div class="border border-3 border-primary rounded p-3 h-100 text-center shadow-sm bg-white">
                 <img src="https://placehold.co/96x96?text=Picture" alt="Profile Picture" class="rounded-circle mb-2" width="96" height="96">
-                <h5 class="mb-1">Dela Cruz, Charles Arvin</h5>
-                <div class="text-muted mb-2">Group Leader<br>Backend Programmer<br>Frontend Programmer</div>
+                <h5 class="mb-2">Dela Cruz, Charles Arvin</h5>
+                <div class="mb-2">
+                    <span class="badge bg-primary mb-1">Group Leader</span>
+                    <span class="badge bg-success mb-1">Backend Programmer</span>
+                    <span class="badge bg-warning text-dark mb-1">Frontend Programmer</span>
+                </div>
                 <div>
                     <a href="#" class="text-decoration-none me-2" title="Facebook"><i class="fab fa-facebook fa-lg"></i></a>
                     <a href="#" class="text-decoration-none me-2" title="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
@@ -95,10 +116,13 @@
         </div>
         <!-- Castro, Christian Benedict -->
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="border rounded p-3 h-100 text-center shadow-sm">
+            <div class="border border-3 border-success rounded p-3 h-100 text-center shadow-sm bg-white">
                 <img src="https://placehold.co/96x96?text=Picture" alt="Profile Picture" class="rounded-circle mb-2" width="96" height="96">
-                <h5 class="mb-1">Castro, Christian Benedict</h5>
-                <div class="text-muted mb-2">Backend Programmer<br>Frontend Programmer</div>
+                <h5 class="mb-2">Castro, Christian Benedict</h5>
+                <div class="mb-2">
+                    <span class="badge bg-success mb-1">Backend Programmer</span>
+                    <span class="badge bg-warning text-dark mb-1">Frontend Programmer</span>
+                </div>
                 <div>
                     <a href="#" class="text-decoration-none me-2" title="Facebook"><i class="fab fa-facebook fa-lg"></i></a>
                     <a href="#" class="text-decoration-none me-2" title="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
@@ -108,10 +132,13 @@
         </div>
         <!-- Bulacan, John Frederick -->
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="border rounded p-3 h-100 text-center shadow-sm">
+            <div class="border border-3 border-warning rounded p-3 h-100 text-center shadow-sm bg-white">
                 <img src="https://placehold.co/96x96?text=Picture" alt="Profile Picture" class="rounded-circle mb-2" width="96" height="96">
-                <h5 class="mb-1">Bulacan, John Frederick</h5>
-                <div class="text-muted mb-2">Website Designer<br>Assets Manager</div>
+                <h5 class="mb-2">Bulacan, John Frederick</h5>
+                <div class="mb-2">
+                    <span class="badge bg-info text-dark mb-1">Website Designer</span>
+                    <span class="badge bg-secondary mb-1">Assets Manager</span>
+                </div>
                 <div>
                     <a href="#" class="text-decoration-none me-2" title="Facebook"><i class="fab fa-facebook fa-lg"></i></a>
                     <a href="#" class="text-decoration-none me-2" title="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
@@ -121,10 +148,13 @@
         </div>
         <!-- Duque, Leo Jennyl -->
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="border rounded p-3 h-100 text-center shadow-sm">
+            <div class="border border-3 border-warning rounded p-3 h-100 text-center shadow-sm bg-white">
                 <img src="https://placehold.co/96x96?text=Picture" alt="Profile Picture" class="rounded-circle mb-2" width="96" height="96">
-                <h5 class="mb-1">Duque, Leo Jennyl</h5>
-                <div class="text-muted mb-2">Website Designer<br>Assets Manager</div>
+                <h5 class="mb-2">Duque, Leo Jennyl</h5>
+                <div class="mb-2">
+                    <span class="badge bg-info text-dark mb-1">Website Designer</span>
+                    <span class="badge bg-secondary mb-1">Assets Manager</span>
+                </div>
                 <div>
                     <a href="#" class="text-decoration-none me-2" title="Facebook"><i class="fab fa-facebook fa-lg"></i></a>
                     <a href="#" class="text-decoration-none me-2" title="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
@@ -134,10 +164,13 @@
         </div>
         <!-- Binas, John Nico -->
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="border rounded p-3 h-100 text-center shadow-sm">
+            <div class="border border-3 border-warning rounded p-3 h-100 text-center shadow-sm bg-white">
                 <img src="https://placehold.co/96x96?text=Picture" alt="Profile Picture" class="rounded-circle mb-2" width="96" height="96">
-                <h5 class="mb-1">Binas, John Nico</h5>
-                <div class="text-muted mb-2">Website Designer<br>Assets Manager</div>
+                <h5 class="mb-2">Binas, John Nico</h5>
+                <div class="mb-2">
+                    <span class="badge bg-info text-dark mb-1">Website Designer</span>
+                    <span class="badge bg-secondary mb-1">Assets Manager</span>
+                </div>
                 <div>
                     <a href="#" class="text-decoration-none me-2" title="Facebook"><i class="fab fa-facebook fa-lg"></i></a>
                     <a href="#" class="text-decoration-none me-2" title="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
@@ -146,6 +179,5 @@
             </div>
         </div>
     </div>
-    <div class="medieval-card-bar bottom"></div>
 </div>
 {% endblock %}

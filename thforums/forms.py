@@ -92,3 +92,24 @@ class RegisterGuild(FlaskForm):
     guild_name = StringField("Guild_Name:", validators=[DataRequired(), Length(min=2, max=20)])  # guild_name field
     content = StringField("What's your guild about?:", validators=[DataRequired(), Email()])  # content field
     submit = SubmitField("Sign Up")  # submit button
+
+class EditGuildForm(FlaskForm):
+    guild_name = StringField("Guild Name", validators=[DataRequired(), Length(min=2, max=50)])
+    content = TextAreaField("Description", validators=[DataRequired(), Length(max=500)])
+    submit = SubmitField("Update Guild")
+
+class TransferGuildOwnershipForm(FlaskForm):
+    new_owner = SelectField("Transfer Ownership To", coerce=int, validators=[DataRequired()])
+    submit = SubmitField("Transfer Ownership")
+
+class JoinGuildForm(FlaskForm):
+    submit = SubmitField("Join Guild")
+
+class LeaveGuildForm(FlaskForm):
+    submit = SubmitField("Leave Guild")
+
+class PasswordRecoveryForm(FlaskForm):
+    email = StringField("Email:", validators=[DataRequired(), Email()])
+    new_password = PasswordField("New Password:", validators=[DataRequired()])
+    confirm_password = PasswordField("Confirm New Password:", validators=[DataRequired(), EqualTo("new_password")])
+    submit = SubmitField("Reset Password")

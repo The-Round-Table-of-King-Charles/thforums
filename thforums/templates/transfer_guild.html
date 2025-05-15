@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+    <div class="card p-4 mb-4 medieval-card shadow" style="background: #fffbe7; border-radius: 16px; border: 3px solid #bfa14a;">
+        <h2 class="mb-4 tavern-sign-straight"><i class="fas fa-user-shield me-2"></i>Transfer Guild Ownership</h2>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.new_owner.label(class="form-label") }}
+                {{ form.new_owner(class="form-select") }}
+            </div>
+            <div class="text-center">
+                {{ form.submit(class="btn btn-medieval") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
