@@ -540,7 +540,7 @@ aside {
     text-align: center;
 }
 
-.event-card, .popular-threads, .tavern-specials {
+.board-card {
     background-color: rgba(20, 10, 2, 0.9);
     padding: 10px;
     margin-bottom: 15px;
@@ -549,22 +549,22 @@ aside {
     color: #e6d8a8;
 }
 
-.event-list, .thread-list {
+.board-list {
     list-style: none;
     padding-left: 0;
     color: #e6d8a8;
 }
 
-.event-list li, .thread-list li {
+.board-list li {
     margin-bottom: 5px;
 }
 
-.event-list li a, .thread-list li a {
+.board-list li a {
     color: #d4af37;
     text-decoration: none;
 }
 
-.event-list li a:hover, .thread-list li a:hover {
+.board-list li a:hover {
     text-decoration: underline;
 }
 

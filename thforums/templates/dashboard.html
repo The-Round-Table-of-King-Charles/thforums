@@ -10,47 +10,63 @@
         {% if threads.items %}
         <div class="list-group">
             {% for thread in threads.items %}
-                <div class="thread-dashboard-entry medieval-card mb-3 shadow-sm">
-                    <div class="d-flex align-items-stretch px-3 py-3" style="background: #f8f5f0; border-radius: 8px;">
+                <div class="thread-dashboard-entry medieval-card mb-3 shadow-sm" style="transition: box-shadow 0.2s, border-color 0.2s; border-radius: 16px;">
+                    <div class="d-flex align-items-stretch px-3 py-3" style="background: #f8f5f0; border-radius: 16px;">
                         <div class="d-flex flex-column align-items-center justify-content-center mx-2" style="min-width: 90px;">
                             <img src="{{ url_for('static', filename='profile_pics/' ~ thread.author.image_file) }}" alt="User" class="rounded-circle border border-3 border-medieval mb-2" style="width:64px; height:64px; object-fit:cover;">
-                            <div class="fw-bold text-center" style="font-size:0.98em;">{{ thread.author.username }}</div>
-                            <div class="text-muted" style="font-size:0.85em;">Lv. {{ thread.author.level }}</div>
+                            <div class="fw-bold text-center" style="font-size:0.98em; color:#3a3226;">{{ thread.author.username }}</div>
+                            <div class="text-muted" style="font-size:0.85em; color:#6c757d !important;">Lv. {{ thread.author.level }}</div>
                         </div>
                         <!-- separator -->
                         <div class="vr mx-3" style="min-height: 80px; border-color: #bfa14a; opacity: 0.7;"></div>
                         <div class="flex-grow-1 d-flex flex-column justify-content-between">
                             <div>
-                                <div class="mb-1">
-                                    <span class="thread-dashboard-title fw-bold" style="font-size:1.45em; color:#3a3226;">
-                                        {{ thread.title }}
-                                    </span>
-                                </div>
-                                <div class="d-flex align-items-center mb-1">
-                                    <span class="badge bg-medieval me-2" style="font-size:0.95em;">
-                                        <i class="fas fa-folder-open me-1"></i>{{ thread.category }}
-                                    </span>
-                                </div>
-                                <div class="text-muted mb-2" style="font-size:0.95em;">
-                                    Posted {{ thread.date_posted.strftime('%b %d, %Y %H:%M') }}
-                                    {% if thread.edited %}
-                                        <span class="badge bg-secondary ms-2">Edited</span>
-                                    {% endif %}
-                                </div>
-                                <div class="mb-2" style="color:#5a4633;">
-                                    {{ thread.content[:220] }}{% if thread.content|length > 220 %}...{% endif %}
-                                </div>
-                                {% if thread.tags %}
-                                    <div class="mt-1">
-                                        {% for tag in thread.tags %}
-                                            <span class="badge bg-warning text-dark me-1">{{ tag.name }}</span>
-                                        {% endfor %}
+                                <a href="{{ url_for('view_thread', thread_id=thread.id) }}" class="text-decoration-none" style="display:block;">
+                                    <div>
+                                        <div class="mb-1">
+                                            <span class="thread-dashboard-title fw-bold" style="font-size:1.45em; color:#3a3226;">
+                                                {{ thread.title }}
+                                            </span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-1">
+                                            <span class="badge bg-medieval me-2" style="font-size:0.95em;">
+                                                <i class="fas fa-folder-open me-1"></i>{{ thread.category }}
+                                            </span>
+                                        </div>
+                                        <div class="text-muted mb-2" style="font-size:0.95em; color:#6c757d !important;">
+                                            Posted {{ thread.date_posted.strftime('%b %d, %Y %H:%M') }}
+                                            {% if thread.edited %}
+                                                <span class="badge bg-secondary ms-2">Edited</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="mb-2" style="color:#5a4633;">
+                                            {{ thread.content[:220] }}{% if thread.content|length > 220 %}...{% endif %}
+                                        </div>
+                                        {% if thread.tags %}
+                                            <div class="mt-1">
+                                                {% for tag in thread.tags %}
+                                                    <span class="badge bg-warning text-dark me-1">{{ tag.name }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
                                     </div>
-                                {% endif %}
+                                </a>
                             </div>
-                            <div class="d-flex align-items-center mt-2" style="font-size:0.95em;">
-                                <span class="me-3"><i class="fas fa-comments"></i> {{ thread.replies|length }} Replies</span>
-                                <span class="me-3"><i class="fas fa-star"></i> {{ thread.commend_count() }} Commends</span>
+                            <div class="d-flex align-items-center justify-content-between mt-2" style="font-size:0.95em;">
+                                <div>
+                                    <span class="me-3" style="color:#bfa14a;"><i class="fas fa-comments"></i> {{ thread.replies|length }} Replies</span>
+                                    <span class="me-3" style="color:#bfa14a;"><i class="fas fa-star"></i> {{ thread.commend_count() }} Commends</span>
+                                </div>
+                                <button 
+                                    class="btn btn-commend-thread ms-auto mt-0 {% if current_user.is_authenticated and thread.is_commended_by(current_user) %}commended{% endif %}" 
+                                    data-thread-id="{{ thread.id }}"
+                                    style="font-size:0.98em; min-width:120px;"
+                                    {% if not current_user.is_authenticated %}disabled title="Log in to commend"{% endif %}
+                                    onclick="event.stopPropagation();">
+                                    <i class="fas fa-medal"></i>
+                                    <span class="commend-label">{% if current_user.is_authenticated and thread.is_commended_by(current_user) %}Commended{% else %}Commend{% endif %}</span>
+                                    <span class="commend-count">{{ thread.commend_count() }}</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -87,133 +103,170 @@
     {% else %}
         <div class="alert alert-info">No threads found.</div>
     {% endif %}
-</div>
-
-    <div class=" col-md-4">
-        <aside>
-            <div class="user-profile-preview mb-3 p-3 rounded text-center " style="background: #2d2212; border: 4px solid #604c2e;">
-                            <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.is_authenticated and current_user.image_file else 'default.png')) }}"
-                                 class="rounded-circle mb-2" alt="User" style="width: 72px; height: 72px; object-fit: cover; border: 2px solid #ffd700;">
-                            <h5 class="mt-2 mb-1" style="color:#ffd700;">
-                                {% if current_user.is_authenticated %}
-                                    {{ current_user.username }}
-                                {% else %}
-                                    Guest
-                                {% endif %}
-                            </h5>
-                            {% if current_user.is_authenticated %}
-                                {% if user_guild %}
-                                    <div class="mb-2">
-                                        <span class="badge bg-medieval"><i class="fas fa-shield-halved"></i> {{ user_guild.guild_name }}</span>
-                                    </div>
-                                {% endif %}
-                                <div class="mb-2" style="color:#fffbe7;">
-                                    <i class="fas fa-star" style="color:#ffd700;"></i>
-                                    Level {{ sidebar_level }}
-                                </div>
-                                <div class="sidebar-exp-level mb-2 p-2 rounded">
-                                    <div class="progress medieval-exp-bar" style="height: 16px; background:#4a3a1a;">
-                                        <div class="progress-bar medieval-exp-progress" role="progressbar"
-                                            style="width: {{ (sidebar_exp / sidebar_exp_required * 100) | round(0) }}%; background: linear-gradient(90deg,#ffe066,#ffd700 80%,#bfa14a); color:#3a3226;"
-                                            aria-valuenow="{{ sidebar_exp }}"
-                                            aria-valuemin="0"
-                                            aria-valuemax="{{ sidebar_exp_required }}">
-                                        </div>
-                                    </div>
-                                    <div class="exp-value mt-1" style="font-size:0.95em; color:#bfa14a; font-weight:bold;">
-                                        {{ sidebar_exp }}/{{ sidebar_exp_required }} EXP
-                                    </div>
-                                </div>
-                                <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-warning mt-2">
-                                    <i class="fas fa-user"></i> View Profile
-                                </a>
-                            {% else %}
-                                <div class="mb-2" style="color:#fffbe7;">
-                                    <i class="fas fa-sign-in-alt"></i> Please log in
-                                </div>
-                                <a href="{{ url_for('login') }}" class="btn btn-sm btn-outline-light mt-2">
-                                    <i class="fas fa-sign-in-alt"></i> Login
-                                </a>
-                            {% endif %}
-                        </div>
-            <div class="threads-section">
-                <div class="brown-bg d-flex justify-content-between align-items-center p-3 mb-4">
-                    <h2 class="mb-0" style="font-size:2em; color: #bfa14a;">
-                        <i class="fas fa-scroll me-2"></i>Your Threads
-                    </h2>
-                    <span class="badge bg-medieval">{{ threads.total }} total</span>
-                </div>
-
-                {% if threads.items %}
-                    <ul class="list-group">
-                        {% for thread in threads.items %}
-                            <li class="list-group-item thread-list-item py-3 px-3" style="background: #fffbe7; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(191,161,74,0.06); border: 1.5px solid #e0cfa0;">
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.image_file else 'default.png')) }}" 
-                                         alt="Profile Picture" 
-                                         class="thread-pic me-3 border border-2 border-medieval shadow-sm" style="background:#fff;">
-                                    <div class="flex-grow-1">
-                                        <a href="{{ url_for('view_thread', thread_id=thread.id) }}" 
-                                           class="text-decoration-none fw-bold text-dark" style="font-size:1.15em;">
-                                            {{ thread.title }}
-                                        </a>
-                                        {% if thread.tags %}
-                                            <div class="mb-1 mt-1">
-                                                {% for tag in thread.tags %}
-                                                    <a href="{{ url_for('threads_by_tag', tag_name=tag.name) }}" class="badge bg-secondary me-1">{{ tag.name }}</a>
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-                                        <div class="text-muted small mt-1">
-                                            <span>
-                                                Posted on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M') }}
-                                            </span>
-                                            {% if thread.edited %}
-                                                <span class="ms-2">(Edited)</span>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="thread-actions btn-group ms-2">
-                                        <a href="{{ url_for('edit_thread', thread_id=thread.id) }}" 
-                                           class="btn btn-sm btn-outline-medieval" 
-                                           title="Edit thread">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form method="POST" action="{{ url_for('delete_thread', thread_id=thread.id) }}" class="d-inline">
-                                            <button type="submit" 
-                                                    class="btn btn-sm btn-outline-danger" 
-                                                    title="Delete thread"
-                                                    onclick="return confirm('Are you sure you want to delete this thread?');">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <div class="empty-state text-center py-5">
-                        <i class="fas fa-scroll fa-3x text-muted mb-3"></i>
-                        <h4 class="text-muted">You haven't created any threads yet.</h4>
-                        <a href="{{ url_for('new_thread') }}" class="btn btn-medieval mt-3">
-                            <i class="fas fa-plus me-2"></i>Create Your First Thread
-                        </a>
-                    </div>
-                {% endif %}
-
-        </aside>
-        
-
-        
     </div>
 
-    
+    <div class="col-md-4">
+        <!-- tavern notices -->
+        <div class="offcanvas-header tavern-board p-3 mb-2">
+            <h4 class="board-title text-center mb-0" style="color:#ffd700;">
+                <i class="fas fa-scroll me-2"></i>Tavern Notices
+            </h4>
+        </div>
+        <aside class="p-0" style="background: rgba(30,15,5,0.97); border-radius: 10px; border-left: 3px ridge #c9a227; box-shadow: 3px 3px 10px rgba(0,0,0,0.5); color: #e6d8a8; margin-top: 0; margin-bottom: 18px;">
+            <div class="p-2"></div>
+            <!-- announcement carousel -->
+            <div class="mb-4" style="margin: 0 18px 28px 18px;">
+                <div class="offcanvas-header tavern-board p-3 mb-2" style="border-radius: 8px;">
+                    <h4 class="board-title text-center mb-0" style="color:#ffd700;"><i class="fas fa-bullhorn me-2"></i>Announcements</h4>
+                </div>
+                <div id="dashboardAnnouncementsCarousel" class="carousel slide shadow rounded overflow-hidden" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="https://placehold.co/400x160/8b5a2b/fff?text=Announcement+1" class="d-block w-100" alt="Announcement 1" style="object-fit:cover; height:160px;">
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3 p-2">
+                                <h6 class="fw-bold text-warning mb-1">Welcome to Tavernhold!</h6>
+                                <p class="mb-0 text-light">Check out the latest features and join the adventure!</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://placehold.co/400x160/bfa14a/fff?text=Announcement+2" class="d-block w-100" alt="Announcement 2" style="object-fit:cover; height:160px;">
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3 p-2">
+                                <h6 class="fw-bold text-warning mb-1">Guilds Are Live!</h6>
+                                <p class="mb-0 text-light">Form or join a guild and rise through the ranks.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://placehold.co/400x160/6c757d/fff?text=Announcement+3" class="d-block w-100" alt="Announcement 3" style="object-fit:cover; height:160px;">
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3 p-2">
+                                <h6 class="fw-bold text-warning mb-1">New Forum Categories</h6>
+                                <p class="mb-0 text-light">Explore new topics and share your stories!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#dashboardAnnouncementsCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#dashboardAnnouncementsCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            </div>
 
+            <!-- notif preview -->
+            <div class="mb-4" style="margin: 0 18px 28px 18px;">
+                <div class="offcanvas-header tavern-board p-3 mb-2" style="border-radius: 8px;">
+                    <h5 class="board-title text-center mb-0" style="color:#ffd700;"><i class="fas fa-bell me-2"></i>Notifications</h5>
+                </div>
+                <div class="brown-bg p-3 rounded shadow-sm" style="background:rgba(60,40,20,0.92) !important;">
+                    {% if notifications and notifications|length > 0 %}
+                        <ul class="list-group list-group-flush mb-2">
+                            {% for notif in notifications[:3] %}
+                            <li class="list-group-item bg-transparent d-flex align-items-start {% if not notif.read %}fw-bold{% else %}notification-read{% endif %}" style="font-size:0.98em; color:#fff;">
+                                <span class="me-2">
+                                    {% if notif.type == 'reply' %}
+                                        <i class="fas fa-reply text-info"></i>
+                                    {% elif notif.type == 'commend' %}
+                                        <i class="fas fa-thumbs-up text-success"></i>
+                                    {% else %}
+                                        <i class="fas fa-info-circle text-secondary"></i>
+                                    {% endif %}
+                                </span>
+                                <div>
+                                    <span style="color:#fff;">{{ notif.message|safe }}</span>
+                                    <div class="small text-muted">{{ notif.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#notificationOffcanvas" class="btn btn-sm btn-outline-warning w-100 mt-2">
+                            View All Notifications
+                        </a>
+                    {% else %}
+                        <div class="text-center text-light">No notifications yet.</div>
+                    {% endif %}
+                </div>
+            </div>
 
+            <!-- user preview -->
+            <div class="mb-4" style="margin: 0 18px 28px 18px;">
+                <div class="offcanvas-header tavern-board p-3 mb-2" style="border-radius: 8px;">
+                    <h5 class="board-title text-center mb-0" style="color:#ffd700;"><i class="fas fa-user me-2"></i>Your Profile</h5>
+                </div>
+                <div class="user-profile-preview p-3 rounded text-center" style="background: #2d2212; border: 4px solid #604c2e;">
+                    <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.is_authenticated and current_user.image_file else 'default.png')) }}"
+                        class="rounded-circle mb-2" alt="User" style="width: 72px; height: 72px; object-fit: cover; border: 2px solid #ffd700;">
+                    <h5 class="mt-2 mb-1" style="color:#ffd700;">
+                        {% if current_user.is_authenticated %}
+                            {{ current_user.username }}
+                        {% else %}
+                            Guest
+                        {% endif %}
+                    </h5>
+                    {% if current_user.is_authenticated %}
+                        {% if user_guild %}
+                            <div class="mb-2">
+                                <span class="badge bg-medieval"><i class="fas fa-shield-halved"></i> {{ user_guild.guild_name }}</span>
+                            </div>
+                        {% endif %}
+                        <div class="mb-2" style="color:#fffbe7;">
+                            <i class="fas fa-star" style="color:#ffd700;"></i>
+                            Level {{ sidebar_level }}
+                        </div>
+                        <div class="sidebar-exp-level mb-2 p-2 rounded">
+                            <div class="progress medieval-exp-bar" style="height: 16px; background:#4a3a1a;">
+                                <div class="progress-bar medieval-exp-progress" role="progressbar"
+                                    style="width: {{ (sidebar_exp / sidebar_exp_required * 100) | round(0) }}%; background: linear-gradient(90deg,#ffe066,#ffd700 80%,#bfa14a); color:#3a3226;"
+                                    aria-valuenow="{{ sidebar_exp }}"
+                                    aria-valuemin="0"
+                                    aria-valuemax="{{ sidebar_exp_required }}">
+                                </div>
+                            </div>
+                            <div class="exp-value mt-1" style="font-size:0.95em; color:#bfa14a; font-weight:bold;">
+                                {{ sidebar_exp }}/{{ sidebar_exp_required }} EXP
+                            </div>
+                        </div>
+                        <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-warning mt-2">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    {% else %}
+                        <div class="mb-2" style="color:#fffbe7;">
+                            <i class="fas fa-sign-in-alt"></i> Please log in
+                        </div>
+                        <a href="{{ url_for('login') }}" class="btn btn-sm btn-outline-light mt-2">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
 
+            <!-- recent threads -->
+            {% if current_user.is_authenticated and user_threads and user_threads|length > 0 %}
+            <div class="mb-4" style="margin: 0 18px 18px 18px;">
+                <div class="offcanvas-header tavern-board p-3 mb-2" style="border-radius: 8px;">
+                    <h5 class="board-title text-center mb-0" style="color:#ffd700;"><i class="fas fa-scroll me-2"></i>Your Latest Posts</h5>
+                </div>
+                <div class="brown-bg p-3 rounded shadow-sm" style="background:rgba(60,40,20,0.92) !important;">
+                    <ul class="list-group list-group-flush">
+                        {% for thread in user_threads[:3] %}
+                        <li class="list-group-item bg-transparent">
+                            <a href="{{ url_for('view_thread', thread_id=thread.id) }}" class="fw-bold text-medieval text-decoration-none" style="font-size:1em; color:#ffd700;">
+                                {{ thread.title }}
+                            </a>
+                            <div class="text-muted small" style="color:#fffbe7 !important;">
+                                <i class="far fa-clock"></i> {{ thread.date_posted.strftime('%Y-%m-%d %H:%M') }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-medieval w-100 mt-2">
+                        View All My Threads
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+            <div class="p-2"></div>
+        </aside>
+    </div>
 </div>
 
-
-    
 {% endblock %}

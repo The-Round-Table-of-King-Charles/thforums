@@ -63,7 +63,18 @@ def landing():
 def home():
     page = request.args.get("page", 1, type=int)
     threads = Thread.query.order_by(Thread.date_posted.desc()).paginate(page=page, per_page=15)
-    return render_template("dashboard.html", title="Dashboard", threads=threads)
+    notifications = []
+    user_threads = []
+    if current_user.is_authenticated:
+        notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.timestamp.desc()).limit(3).all()
+        user_threads = Thread.query.filter_by(author=current_user).order_by(Thread.date_posted.desc()).limit(3).all()
+    return render_template(
+        "dashboard.html",
+        title="Dashboard",
+        threads=threads,
+        notifications=notifications,
+        user_threads=user_threads
+    )
 
 # route for the about page
 @app.route("/about")
