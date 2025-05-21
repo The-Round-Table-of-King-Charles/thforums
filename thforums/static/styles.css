@@ -988,3 +988,17 @@ aside {
     background-color: #bfa14a;
     color: #6b3c00;
 }
+.thread-post-img {
+    max-width: 100%;
+    max-height: 350px;
+    margin-bottom: 10px;
+    display: block;
+    object-fit: contain;
+}
+.thread-list-img {
+    max-width: 90px;
+    max-height: 90px;
+    margin-bottom: 8px;
+    display: block;
+    object-fit: cover;
+}

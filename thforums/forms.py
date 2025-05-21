@@ -67,21 +67,25 @@ class ThreadForm(FlaskForm):
     ], validators=[DataRequired()])  # category dropdown
     content = TextAreaField("Content", validators=[DataRequired()])  # thread content field
     tags = StringField("Tags (comma-separated)", validators=[Optional(), Length(max=128)])
+    image = FileField("Attach Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'])])
     submit = SubmitField("Create Thread")  # submit button
 
 # form for replying to a thread
 class ReplyForm(FlaskForm):
     content = TextAreaField("Reply", validators=[DataRequired()])  # reply content field
+    image = FileField("Attach Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'])])
     submit = SubmitField("Post Reply")  # submit button
 
 class EditThreadForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired(), Length(min=1, max=100)])
     content = TextAreaField("Content", validators=[DataRequired()])
     tags = StringField("Tags (comma-separated)", validators=[Optional(), Length(max=128)])
+    image = FileField("Change Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'])])
     submit = SubmitField("Update Thread")
 
 class EditReplyForm(FlaskForm):
     content = TextAreaField("Reply", validators=[DataRequired()])
+    image = FileField("Change Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'])])
     submit = SubmitField("Update Reply")
 
 class SearchForm(FlaskForm):

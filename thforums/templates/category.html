@@ -28,28 +28,35 @@
                 <div class="flex-grow-1 d-flex flex-column justify-content-between">
                     <div>
                         <a href="{{ url_for('view_thread', thread_id=thread.id) }}" class="text-decoration-none" style="display:block;">
-                            <div>
-                                <span class="thread-dashboard-title fw-bold" style="font-size:1.45em; color:#3a3226;">
-                                    {{ thread.title }}
-                                </span>
-                            </div>
-                            <div class="text-muted mb-2" style="font-size:0.95em; color:#6c757d !important;">
-                                Posted {{ thread.date_posted.strftime('%b %d, %Y %H:%M') }}
-                                {% if thread.edited %}
-                                    <span class="badge bg-secondary ms-2">Edited</span>
+                            <div class="d-flex align-items-start">
+                                <div class="flex-grow-1">
+                                    <span class="thread-dashboard-title fw-bold" style="font-size:1.45em; color:#3a3226;">
+                                        {{ thread.title }}
+                                    </span>
+                                    <div class="text-muted mb-2" style="font-size:0.95em; color:#6c757d !important;">
+                                        Posted {{ thread.date_posted.strftime('%b %d, %Y %H:%M') }}
+                                        {% if thread.edited %}
+                                            <span class="badge bg-secondary ms-2">Edited</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-2" style="color:#5a4633;">
+                                        {{ thread.content[:220] }}{% if thread.content|length > 220 %}...{% endif %}
+                                    </div>
+                                    <!-- tags -->
+                                    {% if thread.tags %}
+                                        <div class="mt-1">
+                                            {% for tag in thread.tags %}
+                                                <span class="badge bg-warning text-dark me-1">{{ tag.name }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {% if thread.image_file %}
+                                <div class="ms-3" style="max-width:110px;">
+                                    <img src="{{ url_for('static', filename='post_images/' + thread.image_file) }}" alt="Thread Image" class="thread-list-img">
+                                </div>
                                 {% endif %}
                             </div>
-                            <div class="mb-2" style="color:#5a4633;">
-                                {{ thread.content[:220] }}{% if thread.content|length > 220 %}...{% endif %}
-                            </div>
-                            <!-- tags -->
-                            {% if thread.tags %}
-                                <div class="mt-1">
-                                    {% for tag in thread.tags %}
-                                        <span class="badge bg-warning text-dark me-1">{{ tag.name }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
                         </a>
                     </div>
                     <div class="d-flex align-items-center justify-content-between mt-2" style="font-size:0.95em;">

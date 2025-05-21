@@ -6,7 +6,7 @@
 		<i class="fas fa-pen me-2"></i> Edit Thread
     </h1>
 </div>
-<form method="POST" class="card p-4 mb-4">
+<form method="POST" enctype="multipart/form-data" class="card p-4 mb-4">
     {{ form.hidden_tag() }}
     <!-- input for thread title -->
     <div class="mb-3">
@@ -23,6 +23,11 @@
         {{ form.tags.label(class="form-label") }}
         {{ form.tags(class="form-control", placeholder="e.g. magic, quest, help") }}
         <small class="text-muted">Separate tags with commas.</small>
+    </div>
+    <div class="mb-3">
+        {{ form.image.label(class="form-label") }}
+        {{ form.image(class="form-control") }}
+        <small class="text-muted">Optional. JPG, PNG, GIF up to 2MB.</small>
     </div>
     <!-- submit button -->
     <div class="text-center">

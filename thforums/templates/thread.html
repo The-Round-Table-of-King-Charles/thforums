@@ -65,6 +65,11 @@
                     <p class="text-muted small">(Edited on {{ thread.last_edited.strftime('%Y-%m-%d %H:%M:%S') }})</p>
                 {% endif %}
                 <hr>
+                {% if thread.image_file %}
+                    <div class="thread-image mb-3">
+                        <img src="{{ url_for('static', filename='post_images/' + thread.image_file) }}" alt="Thread Image" class="img-fluid rounded thread-post-img">
+                    </div>
+                {% endif %}
                 <p>{{ thread.content }}</p>
                 <div class="d-flex align-items-center mb-2">
                     <!-- commend button for thread -->
@@ -142,14 +147,23 @@
                     {% if reply.deleted %}
                         <p class="text-muted"><i>Reply has been deleted</i></p>
                     {% else %}
-                        <p class="mb-0">
-                            on {{ reply.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}
-                        </p>
-                        {% if reply.edited %}
-                            <p class="text-muted small">(Edited on {{ reply.last_edited.strftime('%Y-%m-%d %H:%M:%S') }})</p>
-                        {% endif %}
-                        <hr>
-                        <p>{{ reply.content }}</p>
+                        <div class="d-flex align-items-start">
+                            <div class="flex-grow-1">
+                                <p class="mb-0">
+                                    on {{ reply.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}
+                                </p>
+                                {% if reply.edited %}
+                                    <p class="text-muted small">(Edited on {{ reply.last_edited.strftime('%Y-%m-%d %H:%M:%S') }})</p>
+                                {% endif %}
+                                <hr>
+                                <p>{{ reply.content }}</p>
+                            </div>
+                            {% if reply.image_file %}
+                            <div class="ms-3" style="max-width:110px;">
+                                <img src="{{ url_for('static', filename='post_images/' + reply.image_file) }}" alt="Reply Image" class="thread-list-img">
+                            </div>
+                            {% endif %}
+                        </div>
                         <div class="d-flex align-items-center mb-2">
                             <!-- commend button for reply -->
                             <button
@@ -196,11 +210,16 @@
 
 <!-- reply form -->
 {% if current_user.is_authenticated %}
-    <form method="POST" class="card p-4 mt-4 mb-4">
+    <form method="POST" enctype="multipart/form-data" class="card p-4 mt-4 mb-4">
         {{ form.hidden_tag() }}
         <div class="mb-3">
             {{ form.content.label(class="form-label") }}
             {{ form.content(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.image.label(class="form-label") }}
+            {{ form.image(class="form-control") }}
+            <small class="text-muted">Optional. JPG, PNG, GIF up to 2MB.</small>
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-medieval") }}

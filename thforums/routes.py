@@ -1,4 +1,6 @@
 import os
+from werkzeug.utils import secure_filename
+import secrets
 
 from flask import render_template, url_for, flash, redirect, request, current_app, g, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
@@ -38,6 +40,16 @@ def save_picture(form_picture):
 
     # return the filename
     return picture_fn
+
+def save_post_image(form_image):
+    if not form_image:
+        return None
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(secure_filename(form_image.filename))
+    image_fn = random_hex + f_ext
+    image_path = os.path.join(current_app.root_path, 'static', 'post_images', image_fn)
+    form_image.save(image_path)
+    return image_fn
 
 def get_or_create_tags(tag_string):
     tag_names = [t.strip().lower() for t in tag_string.split(',') if t.strip()]
@@ -120,17 +132,17 @@ def update_profile():
 @app.route("/thread/new", methods=["GET", "POST"])
 @login_required
 def new_thread():
-    category = request.args.get("category")  # get the category from the query parameter
     form = ThreadForm()
-    if category:
-        form.category.data = category  # pre-fill the category if provided
-    # if a category is provided in the query parameter, pre-fill the form's category field
     if form.validate_on_submit():
+        image_file = None
+        if form.image.data:
+            image_file = save_post_image(form.image.data)
         thread = Thread(
             title=form.title.data,
-            content=form.content.data,
             category=form.category.data,
-            author=current_user
+            content=form.content.data,
+            author=current_user,
+            image_file=image_file
         )
         # handle tags
         if form.tags.data:
@@ -161,8 +173,10 @@ def view_thread(thread_id):
         if not current_user.is_authenticated:
             flash("You must be logged in to post a reply.", "error")
             return redirect(url_for("login"))
-        # if the form is valid, create  a new reply and associate it with the thread
-        reply = Reply(content=form.content.data, user_id=current_user.id, thread=thread)
+        image_file = None
+        if form.image.data:
+            image_file = save_post_image(form.image.data)
+        reply = Reply(content=form.content.data, user_id=current_user.id, thread=thread, image_file=image_file)
         db.session.add(reply)
         # award exp for replying
         leveled_up = current_user.add_exp(5)
@@ -285,6 +299,8 @@ def edit_thread(thread_id):
         thread.last_edited = datetime.utcnow()
         # update tags
         thread.tags = get_or_create_tags(form.tags.data) if form.tags.data else []
+        if form.image.data:
+            thread.image_file = save_post_image(form.image.data)
         db.session.commit()
         flash("Thread updated successfully!", "success")
         return redirect(url_for("view_thread", thread_id=thread.id))
@@ -320,6 +336,8 @@ def edit_reply(reply_id):
         reply.content = form.content.data
         reply.edited = True
         reply.last_edited = datetime.utcnow()
+        if form.image.data:
+            reply.image_file = save_post_image(form.image.data)
         db.session.commit()
         flash("Reply updated successfully!", "success")
         return redirect(url_for("view_thread", thread_id=reply.thread_id))

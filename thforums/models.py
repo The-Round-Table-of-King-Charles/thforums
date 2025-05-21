@@ -97,6 +97,7 @@ class Thread(db.Model):
     last_edited = db.Column(db.DateTime)  # timestamp of the last edit
     commends = db.relationship("Commend", backref="thread", lazy=True, primaryjoin="Thread.id==Commend.thread_id")
     tags = db.relationship('Tag', secondary=thread_tags, back_populates='threads')
+    image_file = db.Column(db.String(128))  # filename of uploaded image (nullable)
 
     def __repr__(self):
         return f"Thread('{self.title}', '{self.date_posted}')"
@@ -118,6 +119,7 @@ class Reply(db.Model):
     last_edited = db.Column(db.DateTime)  # timestamp of the last edit
     deleted = db.Column(db.Boolean, default=False)  # flag to indicate if the reply is deleted
     commends = db.relationship("Commend", backref="reply", lazy=True, primaryjoin="Reply.id==Commend.reply_id")
+    image_file = db.Column(db.String(128))  # filename of uploaded image (nullable)
 
     def __repr__(self):
         return f"Reply('{self.content[:20] if self.content else ''}', '{self.date_posted}')"
