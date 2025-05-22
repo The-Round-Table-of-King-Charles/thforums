@@ -24,8 +24,6 @@ class Guild(db.Model):
     def member_count(self):
         return len(self.members)
 
-# Add exp attribute to users
-
 # user model represents a registered user in the database
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)  # unique id for each user
@@ -156,6 +154,7 @@ class Notification(db.Model):
 
     user = db.relationship('User', backref=db.backref('notifications', lazy='dynamic'))
 
+# quest model for quests
 class Quest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     thread_id = db.Column(db.Integer, db.ForeignKey('thread.id'), unique=True, nullable=False)

@@ -76,6 +76,7 @@ class ReplyForm(FlaskForm):
     image = FileField("Attach Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'])])
     submit = SubmitField("Post Reply")  # submit button
 
+# form for editing a thread
 class EditThreadForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired(), Length(min=1, max=100)])
     content = TextAreaField("Content", validators=[DataRequired()])
@@ -83,35 +84,42 @@ class EditThreadForm(FlaskForm):
     image = FileField("Change Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'])])
     submit = SubmitField("Update Thread")
 
+# form for editing replies
 class EditReplyForm(FlaskForm):
     content = TextAreaField("Reply", validators=[DataRequired()])
     image = FileField("Change Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'])])
     submit = SubmitField("Update Reply")
 
+# form for searches
 class SearchForm(FlaskForm):
     search = StringField("Search:", validators=[Optional(), Length(max=50)])
     submit = SubmitField("Search")
 
+#form for guild registration
 class RegisterGuild(FlaskForm):
     guild_name = StringField("Guild_Name:", validators=[DataRequired(), Length(min=2, max=20)])  # guild_name field
     content = StringField("What's your guild about?:", validators=[DataRequired(), Email()])  # content field
     submit = SubmitField("Sign Up")  # submit button
 
+# form for editing guilds
 class EditGuildForm(FlaskForm):
     guild_name = StringField("Guild Name", validators=[DataRequired(), Length(min=2, max=50)])
     content = TextAreaField("Description", validators=[DataRequired(), Length(max=500)])
     submit = SubmitField("Update Guild")
 
+# form for transferring guild ownership
 class TransferGuildOwnershipForm(FlaskForm):
     new_owner = SelectField("Transfer Ownership To", coerce=int, validators=[DataRequired()])
     submit = SubmitField("Transfer Ownership")
 
+# form for joining and leaving guilds
 class JoinGuildForm(FlaskForm):
     submit = SubmitField("Join Guild")
 
 class LeaveGuildForm(FlaskForm):
     submit = SubmitField("Leave Guild")
 
+# form for password recovery
 class PasswordRecoveryForm(FlaskForm):
     email = StringField("Email:", validators=[DataRequired(), Email()])
     new_password = PasswordField("New Password:", validators=[DataRequired()])
