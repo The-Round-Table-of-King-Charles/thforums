@@ -341,7 +341,8 @@ def login():
 @app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for("home"))
+    flash('Logged out successfully. Farewell, adventurer!', 'success')
+    return redirect(url_for("landing"))
 
 # route to view another user's profile
 @app.route("/user/<string:username>")
