@@ -96,8 +96,11 @@
                 {% if threads %}
                 <div class="list-group">
                     {% for thread in threads %}
-                    <div class="thread-dashboard-entry medieval-card shadow-sm" style="transition: box-shadow 0.2s, border-color 0.2s; border-radius: 0; margin-bottom: 0; border-width: 0.5px !important; border-style: solid; border-color: #bfa14a !important;">
-                        <div class="d-flex align-items-stretch px-3 py-3" style="background: #f8f5f0; border-radius: 0;">
+                    <div class="thread-dashboard-entry medieval-card mb-3 shadow-sm
+                        {% if thread.category == 'Looking for Adventurers' %}thread-advert-thread no-radius no-margin thin-border
+                        {% elif thread.category == 'Commissions and Quest' %}thread-quest-thread no-radius no-margin thin-border
+                        {% else %}thread-general-thread no-radius no-margin thin-border{% endif %}">
+                        <div class="d-flex align-items-stretch px-3 py-3" style="background: #f8f5f0; border-radius: 16px;">
                             <div class="d-flex flex-column align-items-center justify-content-center mx-2" style="min-width: 90px;">
                                 <img src="{{ url_for('static', filename='profile_pics/' + (thread.author.image_file if thread.author.image_file else 'default.png')) }}" alt="User" class="rounded-circle border border-3 border-medieval mb-2" style="width:64px; height:64px; object-fit:cover;">
                                 <div class="fw-bold text-center" style="font-size:0.98em; color:#3a3226;">{{ thread.author.username }}</div>
@@ -112,12 +115,47 @@
                                                 <span class="thread-dashboard-title fw-bold" style="font-size:1.45em; color:#3a3226;">
                                                     {{ thread.title }}
                                                 </span>
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <span class="badge bg-medieval me-2" style="font-size:0.95em;">
+                                                        <i class="fas fa-folder-open me-1"></i>{{ thread.category }}
+                                                    </span>
+                                                </div>
                                                 <div class="text-muted mb-2" style="font-size:0.95em; color:#6c757d !important;">
                                                     Posted {{ thread.date_posted.strftime('%b %d, %Y %H:%M') }}
                                                     {% if thread.edited %}
                                                         <span class="badge bg-secondary ms-2">Edited</span>
                                                     {% endif %}
                                                 </div>
+                                                <!-- Category-specific preview info -->
+                                                {% if thread.category == "Looking for Adventurers" and thread.author.guild %}
+                                                    <div class="guild-preview-box mb-2 p-2 rounded" style="background:#e6f2ff; border:1.5px solid #228be6;">
+                                                        <b><i class="fas fa-shield-halved"></i> {{ thread.author.guild.guild_name }}</b>
+                                                        <div class="small text-muted">{{ thread.author.guild.content }}</div>
+                                                        {% if current_user.is_authenticated and not current_user.guild %}
+                                                            <form method="POST" action="{{ url_for('guild_join', guild_id=thread.author.guild.id) }}">
+                                                                <button type="submit" class="btn btn-sm btn-outline-medieval mt-2">Join Guild</button>
+                                                            </form>
+                                                        {% elif current_user.is_authenticated and current_user.guild and current_user.guild.id == thread.author.guild.id %}
+                                                            <span class="badge bg-success mt-2">You are a member</span>
+                                                        {% endif %}
+                                                    </div>
+                                                {% elif thread.category == "Commissions and Quest" %}
+                                                    {% set quest = thread.quest.first() if thread.quest else None %}
+                                                    <div class="quest-preview-box mb-2 p-2 rounded" style="background:#fffbe7; border:1.5px solid #bfa14a;">
+                                                        <b><i class="fas fa-scroll"></i> Quest</b>
+                                                        {% if quest %}
+                                                            {% if quest.status == "completed" %}
+                                                                <span class="badge bg-success ms-2">Completed by {{ quest.completer.username if quest.completer else "?" }}</span>
+                                                            {% elif quest.status == "accepted" %}
+                                                                <span class="badge bg-info ms-2">Accepted by {{ quest.completer.username if quest.completer else "?" }}</span>
+                                                            {% else %}
+                                                                <span class="badge bg-warning ms-2">Open</span>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <span class="badge bg-warning ms-2">Open</span>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endif %}
                                                 <div class="mb-2" style="color:#5a4633;">
                                                     {{ thread.content[:220] }}{% if thread.content|length > 220 %}...{% endif %}
                                                 </div>

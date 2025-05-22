@@ -7,7 +7,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from thforums import app, db, bcrypt
 from PIL import Image
 from datetime import datetime
-from thforums.models import User, Thread, Reply, Commend, Tag, Notification, Guild
+from thforums.models import User, Thread, Reply, Commend, Tag, Notification, Guild, Quest
 
 # import forms and models
 from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm, RegisterGuild, EditGuildForm, TransferGuildOwnershipForm, JoinGuildForm, LeaveGuildForm, PasswordRecoveryForm
@@ -167,9 +167,25 @@ def category_threads(category):
 # route to view a specific thread and its replies
 @app.route("/thread/<int:thread_id>", methods=["GET", "POST"])
 def view_thread(thread_id):
-    thread = Thread.query.get_or_404(thread_id)  # get the thread or return 404 if not found
+    thread = Thread.query.get_or_404(thread_id)
     form = ReplyForm()
-    if form.validate_on_submit():
+    category = thread.category
+
+    guild = None
+    quest_status = None
+    quest_completer = None
+
+    if category == "Looking for Adventurers":
+        if thread.author.guild:
+            guild = thread.author.guild
+    elif category == "Commissions and Quest":
+        quest = Quest.query.filter_by(thread_id=thread.id).first()
+        if quest:
+            quest_status = quest.status
+            quest_completer = User.query.get(quest.completer_id) if quest.completer_id else None
+
+    # Allow all users to reply to "Looking for Adventurers" threads
+    if form.validate_on_submit() and (category == "General Discussion" or category == "Looking for Adventurers"):
         if not current_user.is_authenticated:
             flash("You must be logged in to post a reply.", "error")
             return redirect(url_for("login"))
@@ -178,7 +194,6 @@ def view_thread(thread_id):
             image_file = save_post_image(form.image.data)
         reply = Reply(content=form.content.data, user_id=current_user.id, thread=thread, image_file=image_file)
         db.session.add(reply)
-        # award exp for replying
         leveled_up = current_user.add_exp(5)
         db.session.commit()
         flash("Your reply has been posted!", "success")
@@ -186,10 +201,63 @@ def view_thread(thread_id):
             flash(f"You leveled up! You are now level {current_user.level}.", "success")
         create_reply_notification(reply)
         return redirect(url_for("view_thread", thread_id=thread.id))
-    
-    page = request.args.get("page", 1, type=int)  # get the current page number
+
+    page = request.args.get("page", 1, type=int)
     replies = Reply.query.filter_by(thread_id=thread.id).order_by(Reply.date_posted.asc()).paginate(page=page, per_page=5)
-    return render_template("thread.html", title=thread.title, thread=thread, form=form, replies=replies)
+    return render_template(
+        "thread.html",
+        title=thread.title,
+        thread=thread,
+        form=form,
+        replies=replies,
+        guild=guild,
+        quest_status=quest_status,
+        quest_completer=quest_completer
+    )
+
+# --- Quest Accept/Complete routes ---
+
+@app.route("/thread/<int:thread_id>/accept_quest", methods=["POST"])
+@login_required
+def accept_quest(thread_id):
+    thread = Thread.query.get_or_404(thread_id)
+    if thread.category != "Commissions and Quest" or thread.author == current_user:
+        flash("Invalid quest.", "danger")
+        return redirect(url_for("view_thread", thread_id=thread.id))
+    quest = Quest.query.filter_by(thread_id=thread.id).first()
+    if quest and quest.status == "accepted":
+        flash("Quest already accepted.", "warning")
+        return redirect(url_for("view_thread", thread_id=thread.id))
+    if not quest:
+        quest = Quest(thread_id=thread.id, completer_id=current_user.id, status="accepted")
+        db.session.add(quest)
+    else:
+        quest.completer_id = current_user.id
+        quest.status = "accepted"
+    db.session.commit()
+    flash("You have accepted the quest!", "success")
+    return redirect(url_for("view_thread", thread_id=thread.id))
+
+@app.route("/thread/<int:thread_id>/complete_quest", methods=["POST"])
+@login_required
+def complete_quest(thread_id):
+    thread = Thread.query.get_or_404(thread_id)
+    if thread.category != "Commissions and Quest" or thread.author != current_user:
+        flash("You are not authorized.", "danger")
+        return redirect(url_for("view_thread", thread_id=thread.id))
+    quest = Quest.query.filter_by(thread_id=thread.id).first()
+    if not quest or quest.status != "accepted":
+        flash("No quest to complete.", "warning")
+        return redirect(url_for("view_thread", thread_id=thread.id))
+    quest.status = "completed"
+    completer = User.query.get(quest.completer_id)
+    if completer:
+        completer.add_exp(30)
+        db.session.commit()
+        flash(f"Quest completed! {completer.username} earned 30 EXP.", "success")
+    else:
+        flash("Completer not found.", "danger")
+    return redirect(url_for("view_thread", thread_id=thread.id))
 
 # route to view all forums
 @app.route("/forums", methods=["GET", "POST"])
@@ -624,6 +692,25 @@ def guild_remove_member(user_id):
     db.session.commit()
     flash("Member removed.", "success")
     return redirect(url_for('guild_main'))
+
+@app.route("/guild/invite/<int:user_id>", methods=["POST"])
+@login_required
+def guild_invite(user_id):
+    # Only allow if current user has a guild and is not inviting themselves
+    if not current_user.guild:
+        flash("You must be in a guild to recruit members.", "warning")
+        return redirect(request.referrer or url_for('home'))
+    user = User.query.get_or_404(user_id)
+    if user.guild_id:
+        flash("User is already in a guild.", "warning")
+        return redirect(request.referrer or url_for('home'))
+    if user.id == current_user.id:
+        flash("You cannot recruit yourself.", "warning")
+        return redirect(request.referrer or url_for('home'))
+    user.guild_id = current_user.guild.id
+    db.session.commit()
+    flash(f"{user.username} has been recruited to your guild!", "success")
+    return redirect(request.referrer or url_for('home'))
 
 @app.context_processor
 def inject_user_guild():

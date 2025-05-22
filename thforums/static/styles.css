@@ -1002,3 +1002,37 @@ aside {
     display: block;
     object-fit: cover;
 }
+
+/* Category-specific thread card styles */
+.thread-advert-thread {
+    border: 2.5px solid #228be6 !important;
+    background: linear-gradient(90deg, #e6f2ff 80%, #b3e0ff 100%);
+    box-shadow: 0 2px 12px #228be633;
+}
+.thread-quest-thread {
+    border: 2.5px solid #bfa14a !important;
+    background: linear-gradient(90deg, #fffbe7 80%, #ffe066 100%);
+    box-shadow: 0 2px 12px #bfa14a33;
+}
+
+.no-radius {
+    border-radius: 0 !important;
+}
+.no-margin {
+    margin-bottom: 0 !important;
+}
+.thin-border {
+    border-width: 1px !important;
+}
+
+/* Guild/Quest preview boxes */
+.guild-preview-box {
+    border-left: 4px solid #228be6;
+    background: #e6f2ff;
+    font-size: 1em;
+}
+.quest-preview-box {
+    border-left: 4px solid #bfa14a;
+    background: #fffbe7;
+    font-size: 1em;
+}

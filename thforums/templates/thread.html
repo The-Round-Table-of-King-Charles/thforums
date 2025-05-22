@@ -48,29 +48,74 @@
                 </div>
             </div>
             <!-- thread content on the right -->
-            <div class="col-md-9" style="border-left: 2px solid #bfa14a;">
-                <h1 class="mb-0">{{ thread.title }}</h1>
-                <!-- tags under title -->
-                {% if thread.tags %}
-                    <div class="mb-2">
-                        {% for tag in thread.tags %}
-                            <a href="{{ url_for('threads_by_tag', tag_name=tag.name) }}" class="badge bg-secondary me-1">{{ tag.name }}</a>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <p class="text-muted mb-0">
-                    on {{ thread.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}
-                </p>
-                {% if thread.edited %}
-                    <p class="text-muted small">(Edited on {{ thread.last_edited.strftime('%Y-%m-%d %H:%M:%S') }})</p>
-                {% endif %}
-                <hr>
+            <div class="col-md-9">
+                <h3 class="mb-2">{{ thread.title }}</h3>
                 {% if thread.image_file %}
-                    <div class="thread-image mb-3">
+                    <div class="mb-3">
                         <img src="{{ url_for('static', filename='post_images/' + thread.image_file) }}" alt="Thread Image" class="img-fluid rounded thread-post-img">
                     </div>
                 {% endif %}
-                <p>{{ thread.content }}</p>
+                <div class="mb-3">{{ thread.content|safe }}</div>
+                {% if thread.category == "Looking for Adventurers" and thread.author.guild %}
+    <div class="guild-preview-box mb-3 p-3 rounded" style="background:#e6f2ff; border:1.5px solid #228be6;">
+        <h5 class="mb-1"><i class="fas fa-shield-halved"></i> Guild Advertisement</h5>
+        <div class="mb-2"><b>{{ thread.author.guild.guild_name }}</b></div>
+        <div class="mb-2">{{ thread.author.guild.content }}</div>
+        {% if current_user.is_authenticated %}
+            {% if not current_user.guild %}
+                <!-- Show join button if user has no guild -->
+                <form method="POST" action="{{ url_for('guild_join', guild_id=thread.author.guild.id) }}">
+                    <button type="submit" class="btn btn-medieval">Join Guild</button>
+                </form>
+            {% elif current_user.guild and not thread.author.guild and current_user.id != thread.author.id %}
+                <!-- Show recruit button if user has a guild and author does not and not self -->
+                <form method="POST" action="{{ url_for('guild_invite', user_id=thread.author.id) }}">
+                    <button type="submit" class="btn btn-outline-medieval">Recruit Member?</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+{% elif thread.category == "Looking for Adventurers" and not thread.author.guild %}
+    {% if current_user.is_authenticated and current_user.guild and current_user.id != thread.author.id %}
+        <!-- Show recruit button if user has a guild and author does not and not self -->
+        <form method="POST" action="{{ url_for('guild_invite', user_id=thread.author.id) }}">
+            <button type="submit" class="btn btn-outline-medieval">Recruit Member?</button>
+        </form>
+    {% endif %}
+{% elif thread.category == "Commissions and Quest" %}
+                    {% set quest = thread.quest %}
+                    <div class="quest-preview-box mb-3 p-3 rounded" style="background:#fffbe7; border:1.5px solid #bfa14a;">
+                        <h5 class="mb-1"><i class="fas fa-scroll"></i> Quest</h5>
+                        {% if quest %}
+                            {% if quest.status == "completed" %}
+                                <span class="badge bg-success ms-2">Completed by {{ quest.completer.username if quest.completer else "?" }}</span>
+                            {% elif quest.status == "accepted" %}
+                                <span class="badge bg-info ms-2">Accepted by {{ quest.completer.username if quest.completer else "?" }}</span>
+                                {% if current_user == thread.author %}
+                                    <form method="POST" action="{{ url_for('complete_quest', thread_id=thread.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-success mt-2">Mark as Completed</button>
+                                    </form>
+                                {% endif %}
+                            {% else %}
+                                {% if current_user.is_authenticated and current_user != thread.author %}
+                                    <form method="POST" action="{{ url_for('accept_quest', thread_id=thread.id) }}">
+                                        <button type="submit" class="btn btn-medieval">Accept Quest</button>
+                                    </form>
+                                {% else %}
+                                    <span class="badge bg-warning ms-2">Open</span>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            {% if current_user.is_authenticated and current_user != thread.author %}
+                                <form method="POST" action="{{ url_for('accept_quest', thread_id=thread.id) }}">
+                                    <button type="submit" class="btn btn-medieval">Accept Quest</button>
+                                </form>
+                            {% else %}
+                                <span class="badge bg-warning ms-2">Open</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endif %}
                 <div class="d-flex align-items-center mb-2">
                     <!-- commend button for thread -->
                     <button
@@ -209,7 +254,8 @@
 </div>
 
 <!-- reply form -->
-{% if current_user.is_authenticated %}
+{% if (thread.category == "General Discussion" and current_user.is_authenticated) or
+      (thread.category == "Looking for Adventurers" and current_user.is_authenticated) %}
     <form method="POST" enctype="multipart/form-data" class="card p-4 mt-4 mb-4">
         {{ form.hidden_tag() }}
         <div class="mb-3">

@@ -98,6 +98,7 @@ class Thread(db.Model):
     commends = db.relationship("Commend", backref="thread", lazy=True, primaryjoin="Thread.id==Commend.thread_id")
     tags = db.relationship('Tag', secondary=thread_tags, back_populates='threads')
     image_file = db.Column(db.String(128))  # filename of uploaded image (nullable)
+    quest = db.relationship('Quest', backref='thread', uselist=False, lazy='joined')
 
     def __repr__(self):
         return f"Thread('{self.title}', '{self.date_posted}')"
@@ -154,3 +155,11 @@ class Notification(db.Model):
     read = db.Column(db.Boolean, default=False)
 
     user = db.relationship('User', backref=db.backref('notifications', lazy='dynamic'))
+
+class Quest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    thread_id = db.Column(db.Integer, db.ForeignKey('thread.id'), unique=True, nullable=False)
+    completer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    status = db.Column(db.String(20), default="open")  # open, accepted, completed
+
+    completer = db.relationship("User", foreign_keys=[completer_id])

@@ -3,3 +3,4 @@
 /thforums/static/profile_pics/*
 !/thforums/static/profile_pics/default.png
 instance/database.db
+/thforums/static/post_images
