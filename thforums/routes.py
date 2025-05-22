@@ -7,10 +7,10 @@ from flask_login import login_user, logout_user, current_user, login_required
 from thforums import app, db, bcrypt
 from PIL import Image
 from datetime import datetime
-from thforums.models import User, Thread, Reply, Commend, Tag, Notification, Guild, Quest
+from thforums.models import User, Thread, Reply, Commend, Tag, Notification, Guild, Quest, GuildPost, GuildPostCommend
 
 # import forms and models
-from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm, RegisterGuild, EditGuildForm, TransferGuildOwnershipForm, JoinGuildForm, LeaveGuildForm, PasswordRecoveryForm
+from thforums.forms import RegistrationForm, LoginForm, UpdateProfileForm, ThreadForm, ReplyForm, EditThreadForm, EditReplyForm, SearchForm, RegisterGuild, EditGuildForm, TransferGuildOwnershipForm, JoinGuildForm, LeaveGuildForm, PasswordRecoveryForm, GuildPostForm
 
 # helper function to save profile pictures
 def save_picture(form_picture):
@@ -236,6 +236,7 @@ def accept_quest(thread_id):
         quest.status = "accepted"
     db.session.commit()
     flash("You have accepted the quest!", "success")
+    create_quest_accept_notification(thread, current_user)
     return redirect(url_for("view_thread", thread_id=thread.id))
 
 @app.route("/thread/<int:thread_id>/complete_quest", methods=["POST"])
@@ -255,6 +256,7 @@ def complete_quest(thread_id):
         completer.add_exp(30)
         db.session.commit()
         flash(f"Quest completed! {completer.username} earned 30 EXP.", "success")
+        create_quest_complete_notification(thread, completer)
     else:
         flash("Completer not found.", "danger")
     return redirect(url_for("view_thread", thread_id=thread.id))
@@ -484,6 +486,17 @@ def create_guild():
         flash(f"Guild Created!")
     return render_template("create_guild.html", title="Create Guild", form=form)
 
+@app.route("/guilds")
+@login_required
+def guild_list():
+    page = request.args.get('page', 1, type=int)
+    search = request.args.get('search', '', type=str)
+    if search:
+        guilds = Guild.query.filter(Guild.guild_name.ilike(f"%{search}%")).paginate(page=page, per_page=10)
+    else:
+        guilds = Guild.query.paginate(page=page, per_page=10)
+    return render_template("guild_list.html", title="Guilds", guilds=guilds)
+
 # commend or uncommend a thread
 @app.route("/commend/thread/<int:thread_id>", methods=["POST"])
 @login_required
@@ -583,42 +596,103 @@ def create_thread_commend_notification(thread, commender):
         db.session.add(notif)
         db.session.commit()
 
-@app.route("/guild")
+def create_quest_accept_notification(thread, accepter):
+    if thread.user_id != accepter.id:
+        notif = Notification(
+            user_id=thread.user_id,
+            type='quest_accept',
+            message=f'<a href="{url_for("profile", user_id=accepter.id)}">{accepter.username}</a> accepted your quest "<a href="{url_for("view_thread", thread_id=thread.id)}">{thread.title}</a>".',
+        )
+        db.session.add(notif)
+        db.session.commit()
+
+def create_quest_complete_notification(thread, completer):
+    if thread.user_id != completer.id:
+        notif = Notification(
+            user_id=thread.user_id,
+            type='quest_complete',
+            message=f'<a href="{url_for("profile", user_id=completer.id)}">{completer.username}</a> completed your quest "<a href="{url_for("view_thread", thread_id=thread.id)}">{thread.title}</a>".',
+        )
+        db.session.add(notif)
+        db.session.commit()
+
+def create_guild_join_notification(guild, user):
+    # Notify the joining user
+    notif_user = Notification(
+        user_id=user.id,
+        type='guild_join',
+        message=f'You joined the guild <b>{guild.guild_name}</b>.'
+    )
+    db.session.add(notif_user)
+    # Notify the guild owner (if not the joining user)
+    if guild.owner_id != user.id:
+        notif_owner = Notification(
+            user_id=guild.owner_id,
+            type='guild_join',
+            message=f'<a href="{url_for("profile", user_id=user.id)}">{user.username}</a> joined your guild <b>{guild.guild_name}</b>.',
+        )
+        db.session.add(notif_owner)
+    db.session.commit()
+
+def create_guild_leave_notification(guild, user):
+    # Notify the leaving user
+    notif_user = Notification(
+        user_id=user.id,
+        type='guild_leave',
+        message=f'You left the guild <b>{guild.guild_name}</b>.',
+    )
+    db.session.add(notif_user)
+    # Notify the guild owner (if not the leaving user)
+    if guild.owner_id != user.id:
+        notif_owner = Notification(
+            user_id=guild.owner_id,
+            type='guild_leave',
+            message=f'<a href="{url_for("profile", user_id=user.id)}">{user.username}</a> left your guild <b>{guild.guild_name}</b>.',
+        )
+        db.session.add(notif_owner)
+    db.session.commit()
+
+@app.route("/guild", methods=["GET", "POST"])
 @login_required
 def guild_main():
     if not current_user.guild:
         return redirect(url_for('guild_list'))
     guild = current_user.guild
-    members = User.query.filter_by(guild_id=guild.id).all()
-    return render_template("guild_main.html", title="Guild", guild=guild, members=members)
-
-@app.route("/guilds")
-@login_required
-def guild_list():
-    page = request.args.get('page', 1, type=int)
-    search = request.args.get('search', '', type=str)
-    if search:
-        guilds = Guild.query.filter(Guild.guild_name.ilike(f"%{search}%")).paginate(page=page, per_page=10)
-    else:
-        guilds = Guild.query.paginate(page=page, per_page=10)
-    return render_template("guild_list.html", title="Guilds", guilds=guilds)
-
-@app.route("/guild/create", methods=["GET", "POST"])
-@login_required
-def guild_create():
-    if current_user.guild:
-        flash("You are already in a guild.", "warning")
-        return redirect(url_for('guild_main'))
-    form = EditGuildForm()
+    form = GuildPostForm()
+    page = request.args.get("page", 1, type=int)
+    # Change order_by to descending
+    posts = GuildPost.query.filter_by(guild_id=guild.id).order_by(GuildPost.date_posted.desc()).paginate(page=page, per_page=10)
     if form.validate_on_submit():
-        guild = Guild(guild_name=form.guild_name.data, content=form.content.data, owner_id=current_user.id)
-        db.session.add(guild)
+        image_file = None
+        if form.image.data:
+            image_file = save_post_image(form.image.data)
+        post = GuildPost(
+            content=form.content.data,
+            user_id=current_user.id,
+            guild_id=guild.id,
+            image_file=image_file
+        )
+        db.session.add(post)
         db.session.commit()
-        current_user.guild_id = guild.id
+        flash("Message posted!", "success")
+        return redirect(url_for("guild_main"))
+    members = User.query.filter_by(guild_id=guild.id).all()
+    return render_template("guild_main.html", title="Guild", guild=guild, members=members, posts=posts, form=form)
+
+@app.route("/guild_post/commend/<int:post_id>", methods=["POST"])
+@login_required
+def guild_post_commend(post_id):
+    post = GuildPost.query.get_or_404(post_id)
+    commend = GuildPostCommend.query.filter_by(user_id=current_user.id, guild_post_id=post_id).first()
+    if commend:
+        db.session.delete(commend)
         db.session.commit()
-        flash("Guild created!", "success")
-        return redirect(url_for('guild_main'))
-    return render_template("create_guild.html", title="Create Guild", form=form)
+        return jsonify({"commended": False, "count": post.commend_count()})
+    else:
+        new_commend = GuildPostCommend(user_id=current_user.id, guild_post_id=post_id)
+        db.session.add(new_commend)
+        db.session.commit()
+        return jsonify({"commended": True, "count": post.commend_count()})
 
 @app.route("/guild/join/<int:guild_id>", methods=["POST"])
 @login_required
@@ -630,93 +704,83 @@ def guild_join(guild_id):
     current_user.guild_id = guild.id
     db.session.commit()
     flash(f"You joined {guild.guild_name}!", "success")
+    create_guild_join_notification(guild, current_user)
     return redirect(url_for('guild_main'))
 
-@app.route("/guild/leave", methods=["POST"])
+@app.route("/guild/leave", methods=["POST", "GET"])
 @login_required
 def guild_leave():
-    if not current_user.guild:
+    guild = current_user.guild
+    if not guild:
         flash("You are not in a guild.", "warning")
         return redirect(url_for('guild_list'))
-    if current_user.guild.owner_id == current_user.id:
-        flash("Owner cannot leave the guild. Transfer ownership first.", "danger")
-        return redirect(url_for('guild_main'))
-    current_user.guild_id = None
-    db.session.commit()
-    flash("You left the guild.", "success")
-    return redirect(url_for('guild_list'))
-
-@app.route("/guild/edit", methods=["GET", "POST"])
-@login_required
-def guild_edit():
-    guild = current_user.guild
-    if not guild or guild.owner_id != current_user.id:
-        flash("You are not the owner.", "danger")
-        return redirect(url_for('guild_main'))
-    form = EditGuildForm(obj=guild)
-    if form.validate_on_submit():
-        guild.guild_name = form.guild_name.data
-        guild.content = form.content.data
+    if guild.is_owner(current_user) and guild.member_count() == 1:
+        # Owner and only member: delete guild
+        db.session.delete(guild)
+        current_user.guild_id = None
         db.session.commit()
-        flash("Guild updated.", "success")
-        return redirect(url_for('guild_main'))
-    return render_template("edit_guild.html", title="Edit Guild", form=form, guild=guild)
+        flash("Guild deleted.", "success")
+        return redirect(url_for('guild_list'))
+    else:
+        current_user.guild_id = None
+        db.session.commit()
+        flash("You left the guild.", "success")
+        create_guild_leave_notification(guild, current_user)
+        return redirect(url_for('guild_list'))
 
 @app.route("/guild/transfer", methods=["GET", "POST"])
 @login_required
 def guild_transfer():
     guild = current_user.guild
-    if not guild or guild.owner_id != current_user.id:
+    if not guild or not guild.is_owner(current_user):
         flash("You are not the owner.", "danger")
         return redirect(url_for('guild_main'))
     form = TransferGuildOwnershipForm()
+    # Only allow transfer to other members
     form.new_owner.choices = [(m.id, m.username) for m in guild.members if m.id != current_user.id]
     if form.validate_on_submit():
-        guild.owner_id = form.new_owner.data
-        db.session.commit()
-        flash("Ownership transferred.", "success")
-        return redirect(url_for('guild_main'))
+        new_owner = User.query.get(form.new_owner.data)
+        if new_owner and new_owner.guild_id == guild.id:
+            guild.owner_id = new_owner.id
+            db.session.commit()
+            flash(f"Ownership transferred to {new_owner.username}.", "success")
+            return redirect(url_for('guild_main'))
+        else:
+            flash("Invalid member selected.", "danger")
     return render_template("transfer_guild.html", title="Transfer Guild Ownership", form=form, guild=guild)
 
 @app.route("/guild/remove_member/<int:user_id>", methods=["POST"])
 @login_required
 def guild_remove_member(user_id):
     guild = current_user.guild
-    if not guild or guild.owner_id != current_user.id:
+    if not guild or not guild.is_owner(current_user):
         flash("You are not the owner.", "danger")
         return redirect(url_for('guild_main'))
     member = User.query.get_or_404(user_id)
-    if member.guild_id != guild.id or member.id == guild.owner_id:
-        flash("Invalid operation.", "danger")
+    if member.guild_id != guild.id or member.id == current_user.id:
+        flash("Invalid member.", "danger")
         return redirect(url_for('guild_main'))
     member.guild_id = None
     db.session.commit()
-    flash("Member removed.", "success")
+    flash(f"{member.username} has been removed from the guild.", "success")
     return redirect(url_for('guild_main'))
 
 @app.route("/guild/invite/<int:user_id>", methods=["POST"])
 @login_required
 def guild_invite(user_id):
-    if not current_user.guild:
-        flash("You must be in a guild to recruit members.", "warning")
-        return redirect(request.referrer or url_for('home'))
+    # This is a placeholder for invite logic (e.g., notification or direct join)
     user = User.query.get_or_404(user_id)
+    if not current_user.guild:
+        flash("You must be in a guild to invite.", "danger")
+        return redirect(url_for('guild_main'))
     if user.guild_id:
         flash("User is already in a guild.", "warning")
-        return redirect(request.referrer or url_for('home'))
-    if user.id == current_user.id:
-        flash("You cannot recruit yourself.", "warning")
-        return redirect(request.referrer or url_for('home'))
+        return redirect(url_for('guild_main'))
+    # For now, just auto-join the user (or you can implement a notification system)
     user.guild_id = current_user.guild.id
     db.session.commit()
-    flash(f"{user.username} has been recruited to your guild!", "success")
-    return redirect(request.referrer or url_for('home'))
-
-@app.context_processor
-def inject_user_guild():
-    if current_user.is_authenticated and current_user.guild:
-        return dict(user_guild=current_user.guild)
-    return dict(user_guild=None)
+    flash(f"{user.username} has been added to your guild!", "success")
+    return redirect(url_for('guild_main'))
 
 # 404 error page
 @app.errorhandler(404)
@@ -742,3 +806,33 @@ def recover_password():
         else:
             flash("No account found with that email.", "error")
     return render_template("recover_password.html", form=form, title="Recover Password")
+
+@app.route("/guild/create", methods=["GET", "POST"])
+@login_required
+def guild_create():
+    form = EditGuildForm()
+    if form.validate_on_submit():
+        guild = Guild(guild_name=form.guild_name.data, content=form.content.data, owner_id=current_user.id)
+        db.session.add(guild)
+        db.session.commit()
+        current_user.guild_id = guild.id
+        db.session.commit()
+        flash("Guild created!", "success")
+        return redirect(url_for('guild_main'))
+    return render_template("create_guild.html", title="Create Guild", form=form)
+
+@app.route("/guild/edit", methods=["GET", "POST"])
+@login_required
+def guild_edit():
+    guild = current_user.guild
+    if not guild or guild.owner_id != current_user.id:
+        flash("You are not the owner.", "danger")
+        return redirect(url_for('guild_main'))
+    form = EditGuildForm(obj=guild)
+    if form.validate_on_submit():
+        guild.guild_name = form.guild_name.data
+        guild.content = form.content.data
+        db.session.commit()
+        flash("Guild updated.", "success")
+        return redirect(url_for('guild_main'))
+    return render_template("edit_guild.html", title="Edit Guild", form=form, guild=guild)

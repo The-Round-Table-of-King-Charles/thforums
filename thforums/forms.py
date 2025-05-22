@@ -125,3 +125,9 @@ class PasswordRecoveryForm(FlaskForm):
     new_password = PasswordField("New Password:", validators=[DataRequired()])
     confirm_password = PasswordField("Confirm New Password:", validators=[DataRequired(), EqualTo("new_password")])
     submit = SubmitField("Reset Password")
+
+# form for posting in the guild
+class GuildPostForm(FlaskForm):
+    content = TextAreaField("Message", validators=[DataRequired()])
+    image = FileField("Attach Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'])])
+    submit = SubmitField("Post")

@@ -162,19 +162,10 @@ main {
     80%  { transform: rotate(-0.5deg);}
     100% { transform: rotate(0deg);}
 }
-
-/* Offcanvas button hover animation */
-.offcanvas-btn {
-    transition: transform 0.2s cubic-bezier(.4,2,.6,1), box-shadow 0.2s;
-}
+/* Offcanvas button */
 .offcanvas-btn:hover {
-    transform: scale(1.12) rotate(-4deg);
     text-shadow: 0 0 8px #fee257;
 }
-.offcanvas-btn:active {
-    transform: scale(0.98) rotate(0deg);
-}
-
 /* Tavernhold logo hover animation */
 .tavern-logo {
     display: inline-block;
@@ -326,6 +317,17 @@ main {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
+.btn-outline-light-brown {
+    color: #d2b48c;
+    border-color: #d2b48c;
+    background-color: transparent;
+}
+.btn-outline-light-brown:hover, .btn-outline-light-brown:focus {
+    background-color: #ecd9c6;
+    color: #3a3226;
+    border-color: #d2b48c;
+}
+
 .btn-commend-thread, .btn-commend-reply {
     background-color: #e6d8a8;
     color: #8b5a2b;
@@ -357,11 +359,11 @@ main {
     background-color: #ffe066;
     color: #b8860b;
     border-color: #ffd700;
-    box-shadow: 0 0 12px 2px #ffe066;
+    /* Removed box-shadow for no glow */
 }
 .btn-commend-thread.commended .fa-medal, .btn-commend-reply.commended .fa-medal {
     color: #ffd700;
-    text-shadow: 0 0 8px #ffe066, 0 0 16px #ffd700;
+    /* Removed text-shadow for no glow */
 }
 .btn-commend-thread:disabled, .btn-commend-reply:disabled {
     opacity: 0.7;
@@ -371,15 +373,6 @@ main {
     margin-left: 6px;
     font-weight: bold;
     color: #b8860b;
-}
-
-.btn-outline-medieval {
-    color: #6c757d;
-    border-color: #6c757d;
-}
-.btn-outline-medieval:hover {
-    background-color: #6c757d;
-    color: white;
 }
 
 /* =========================
@@ -611,7 +604,7 @@ aside {
 }
 
 .bio-content {
-    white-space: pre-line;
+    font-size: 120%;
     line-height: 1.6;
 }
 

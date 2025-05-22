@@ -11,8 +11,7 @@
                 </div>
             {% endif %}
         </div>
-        <p class="mt-3" style="color:#3a3226;">{{ guild.content }}</p>
-        <hr>
+        <p class="mt-3" style="color:#3a3226; font-size: 150%;">{{ guild.content }}</p>
         <h4 style="color:#bfa14a;">Members ({{ guild.member_count() }})</h4>
         <ul class="list-group">
             {% for member in members %}
@@ -28,6 +27,11 @@
                         <form method="POST" action="{{ url_for('guild_remove_member', user_id=member.id) }}" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Remove this member?')">Remove</button>
                         </form>
+                    {% elif member.id == current_user.id and guild.is_owner(current_user) and guild.member_count() == 1 %}
+                        <!-- owner and only member: GET to show confirmation -->
+                        <form method="GET" action="{{ url_for('guild_leave') }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Leave and delete this guild?')">Leave & Delete Guild</button>
+                        </form>
                     {% elif member.id == current_user.id and not guild.is_owner(current_user) %}
                         <form method="POST" action="{{ url_for('guild_leave') }}" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Leave this guild?')">Leave</button>
@@ -36,20 +40,147 @@
                 </li>
             {% endfor %}
         </ul>
-    </div>
-
-    <div>
-        
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasLabel">Offcanvas</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-        <div class="offcanvas-body">
-            Content for the offcanvas goes here. You can place just about any Bootstrap component or custom elements here.
+        <hr>
+        <!-- guild discussion -->
+        <div class="mb-3">
+            <h4 class="mb-0 tavern-sign-straight">
+                <i class="fas fa-comments me-2"></i>Guild Discussions
+            </h4>
         </div>
+        <!-- accordion post form -->
+        <div class="accordion mb-4" id="guildPostAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingPostForm">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePostForm" aria-expanded="false" aria-controls="collapsePostForm">
+                        <i class="fas fa-feather-alt me-2"></i> What's on your mind?
+                    </button>
+                </h2>
+                <div id="collapsePostForm" class="accordion-collapse collapse" aria-labelledby="headingPostForm" data-bs-parent="#guildPostAccordion">
+                    <div class="accordion-body">
+                        <form method="POST" enctype="multipart/form-data" class="card p-3 mb-0">
+                            {{ form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ form.content.label(class="form-label") }}
+                                {{ form.content(class="form-control") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.image.label(class="form-label") }}
+                                {{ form.image(class="form-control") }}
+                                <small class="text-muted">Optional. JPG, PNG, GIF up to 2MB.</small>
+                            </div>
+                            <div class="text-end">
+                                {{ form.submit(class="btn btn-medieval") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- guild posts list -->
+        {% if posts.items %}
+            {% for post in posts.items %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <!-- user info -->
+                        <div class="col-md-3 text-center mb-3 mb-md-0 d-flex flex-column align-items-center justify-content-center" style="border-right: 2px solid #bfa14a;">
+                            <img src="{{ url_for('static', filename='profile_pics/' + (post.author.image_file if post.author.image_file else 'default.png')) }}"
+                                 alt="Profile Picture"
+                                 class="large-profile-pic rounded-circle border border-3 border-medieval shadow mb-2">
+                            <h5 class="mt-2 mb-1" style="font-family: 'Cinzel', serif;">{{ post.author.username }}</h5>
+                            {% if post.author.guild %}
+                                <div class="mb-1">
+                                    <span class="badge bg-medieval"><i class="fas fa-shield-halved"></i> {{ post.author.guild.guild_name }}</span>
+                                </div>
+                            {% endif %}
+                            <div style="font-size:0.97em; margin-bottom:8px;">
+                                {{ post.author.bio or "This user hasn't written a bio yet." }}
+                            </div>
+                            <span class="badge bg-medieval mb-2" style="font-size:1.1em;">
+                                <i class="fas fa-star text-warning"></i> Level {{ post.author.level }}
+                            </span>
+                            <div class="exp-bar mb-2" style="width:100%; max-width:140px; margin:0 auto;">
+                                <div class="progress medieval-exp-bar" style="height: 18px;">
+                                    <div class="progress-bar medieval-exp-progress" role="progressbar"
+                                        style="width: {{ (post.author.exp / post.author.required_exp_for_next_level() * 100) | round(0) }}%;"
+                                        aria-valuenow="{{ post.author.exp }}"
+                                        aria-valuemin="0"
+                                        aria-valuemax="{{ post.author.required_exp_for_next_level() }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="exp-value mt-1" style="font-size:0.95em; color:#bfa14a; font-weight:bold;">
+                                {{ post.author.exp }}/{{ post.author.required_exp_for_next_level() }} EXP
+                            </div>
+                            <div class="mt-2 d-flex justify-content-center align-items-center">
+                                <span>
+                                    <i class="fas fa-medal text-warning"></i>
+                                    <b>{{ post.author.commend_count() }}</b> Commends
+                                </span>
+                            </div>
+                            <div class="mt-2">
+                                <a href="{{ url_for('user_profile', username=post.author.username) }}" class="btn btn-sm btn-outline-medieval mt-2">
+                                    <i class="fas fa-user"></i> View Profile
+                                </a>
+                            </div>
+                        </div>
+                        <!-- post content -->
+                        <div class="col-md-9" style="border-left: 2px solid #bfa14a;">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-grow-1 w-100">
+                                    <p class="mb-0">
+                                        on {{ post.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}
+                                    </p>
+                                    {% if post.edited %}
+                                        <p class="text-muted small">(Edited on {{ post.last_edited.strftime('%Y-%m-%d %H:%M:%S') }})</p>
+                                    {% endif %}
+                                    <hr>
+                                    {% if post.image_file %}
+                                    <div class="ms-3">
+                                        <img src="{{ url_for('static', filename='post_images/' + post.image_file) }}"
+                                             alt="Post Image"
+                                             class="img-fluid rounded thread-post-img">
+                                    </div>
+                                    {% endif %}
+                                    <p>{{ post.content }}</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-2 mt-2">
+                                <!-- commend button for post -->
+                                <button
+                                    class="btn btn-commend-thread me-2 {% if current_user.is_authenticated and post.is_commended_by(current_user) %}commended{% endif %}"
+                                    data-guild-post-id="{{ post.id }}"
+                                    {% if not current_user.is_authenticated %}disabled title="Log in to commend"{% endif %}>
+                                    <i class="fas fa-medal"></i>
+                                    <span class="commend-label">{% if current_user.is_authenticated and post.is_commended_by(current_user) %}Commended{% else %}Commend{% endif %}</span>
+                                    <span class="commend-count">{{ post.commend_count() }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <!-- pagination -->
+            <div class="pagination mt-4">
+                {% if posts.pages > 1 %}
+                    {% if posts.has_prev %}
+                        <a href="{{ url_for('guild_main', page=posts.prev_num) }}" class="btn btn-medieval prev-next me-2">Previous</a>
+                    {% endif %}
+                    {% for page_num in range(1, posts.pages + 1) %}
+                        <a href="{{ url_for('guild_main', page=page_num) }}"
+                           class="btn btn-sm {{ 'btn-medieval' if page_num == posts.page else 'btn-outline-medieval' }} me-1">
+                            {{ page_num }}
+                        </a>
+                    {% endfor %}
+                    {% if posts.has_next %}
+                        <a href="{{ url_for('guild_main', page=posts.next_num) }}" class="btn btn-medieval prev-next ms-2">Next</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="alert alert-info mt-4">No posts yet. Be the first to post in your guild!</div>
+        {% endif %}
     </div>
-
-    
 </div>
 {% endblock %}

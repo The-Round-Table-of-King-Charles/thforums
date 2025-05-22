@@ -162,3 +162,29 @@ class Quest(db.Model):
     status = db.Column(db.String(20), default="open")  # open, accepted, completed
 
     completer = db.relationship("User", foreign_keys=[completer_id])
+
+# post model represents a post in a guild, similar to a thread in a forum
+class GuildPost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    guild_id = db.Column(db.Integer, db.ForeignKey("guild.id"), nullable=False)
+    image_file = db.Column(db.String(128))
+    edited = db.Column(db.Boolean, default=False)
+    last_edited = db.Column(db.DateTime)
+    commends = db.relationship("GuildPostCommend", backref="guild_post", lazy=True)
+
+    author = db.relationship("User", backref="guild_posts", foreign_keys=[user_id])
+
+    def commend_count(self):
+        return len(self.commends)
+
+    def is_commended_by(self, user):
+        return any(c.user_id == user.id for c in self.commends)
+
+# commend model for guild posts
+class GuildPostCommend(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    guild_post_id = db.Column(db.Integer, db.ForeignKey("guild_post.id"), nullable=False)

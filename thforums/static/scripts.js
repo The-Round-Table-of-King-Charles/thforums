@@ -155,6 +155,27 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    // Guild post commend
+    document.querySelectorAll('.btn-commend-thread[data-guild-post-id]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = btn.getAttribute('data-guild-post-id');
+            fetch(`/guild_post/commend/${postId}`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.classList.toggle('commended', data.commended);
+                btn.querySelector('.commend-label').textContent = data.commended ? 'Commended' : 'Commend';
+                btn.querySelector('.commend-count').textContent = data.count;
+            });
+        });
+    });
 });
 
 function Loading(){

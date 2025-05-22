@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+    <div class="alert alert-danger mt-5 text-center p-5">
+        <h2 class="mb-4"><i class="fas fa-exclamation-triangle"></i> Delete Guild?</h2>
+        <p>
+            You are the last member of <strong>{{ guild.guild_name }}</strong>.<br>
+            <strong>Leaving will permanently delete this guild and all its data.</strong>
+        </p>
+        <form method="POST" action="{{ url_for('guild_leave') }}">
+            <button type="submit" class="btn btn-danger btn-lg me-2">Yes, Delete Guild & Leave</button>
+            <a href="{{ url_for('guild_main') }}" class="btn btn-secondary btn-lg">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
