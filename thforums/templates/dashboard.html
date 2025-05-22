@@ -60,7 +60,7 @@
                                                     {% endif %}
                                                 </div>
                                             {% elif thread.category == "Commissions and Quest" %}
-                                                {% set quest = thread.quest.first() if thread.quest else None %}
+                                                {% set quest = thread.quest %}
                                                 <div class="quest-preview-box mb-2 p-2 rounded" style="background:#fffbe7; border:1.5px solid #bfa14a;">
                                                     <b><i class="fas fa-scroll"></i> Quest</b>
                                                     {% if quest %}

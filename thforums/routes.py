@@ -184,7 +184,7 @@ def view_thread(thread_id):
             quest_status = quest.status
             quest_completer = User.query.get(quest.completer_id) if quest.completer_id else None
 
-    # Allow all users to reply to "Looking for Adventurers" threads
+    # allow all users to reply to "Looking for Adventurers" threads
     if form.validate_on_submit() and (category == "General Discussion" or category == "Looking for Adventurers"):
         if not current_user.is_authenticated:
             flash("You must be logged in to post a reply.", "error")
@@ -697,7 +697,6 @@ def guild_remove_member(user_id):
 @app.route("/guild/invite/<int:user_id>", methods=["POST"])
 @login_required
 def guild_invite(user_id):
-    # Only allow if current user has a guild and is not inviting themselves
     if not current_user.guild:
         flash("You must be in a guild to recruit members.", "warning")
         return redirect(request.referrer or url_for('home'))
