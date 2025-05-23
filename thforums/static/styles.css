@@ -1031,3 +1031,17 @@ aside {
     background: #fffbe7;
     font-size: 1em;
 }
+
+@media (max-width: 991.98px) {
+  .navbar-nav.ms-auto {
+    align-items: flex-end;
+  }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        zoom: 0.75;
+        /* transform: scale(0.6);
+        transform-origin: 0 0; */
+    }
+}

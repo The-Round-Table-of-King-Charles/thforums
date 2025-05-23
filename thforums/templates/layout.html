@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}} - Tavernhold</title>
+    <meta name="viewport" content="width=1200, initial-scale=0.55, minimum-scale=0.3, maximum-scale=2.0, user-scalable=yes">    <title>{{title}} - Tavernhold</title>
     <!-- bootstrap css -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- font awesome icons -->
@@ -32,69 +31,76 @@
             <button class="navbar-toggler soundBtn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- left-side navigation links -->
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('home') }}"><i class="fas fa-home soundBtn"></i> Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('about') }}"><i class="fas fa-scroll soundBtn"></i> About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('forums') }}"><i class="fas fa-comments soundBtn"></i> Forums</a>
-                    </li>
-                    {% if current_user.is_authenticated %}
-                        <li class="nav-item">   
-                            <a class="nav-link" href="{{ url_for('list_users') }}"><i class="fas fa-users soundBtn"></i> Users</a>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    <!-- left-side navigation links -->
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('home') }}"><i class="fas fa-home soundBtn"></i> Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('guild_main') }}"><i class="fas fa-shield-halved soundBtn"></i> Guild</a>
-                        </li>
-                    {% endif %}
-                </ul>
-                <!-- right-side user authentication links -->
-                <ul class="navbar-nav">
-                    {% if current_user.is_authenticated %}
-                        <!-- button to open the offcanvas sidebar -->
-                        <li class="nav-item me-2 d-flex align-items-center">
-                            <button id="offcanvasToggle" class="btn p-0 text-light offcanvas-btn d-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas">
-                                <i class="fas fa-star" style="font-size: 1.5rem; width: 32px; height: 32px; color: #ffd700; display: flex; align-items: center; justify-content: center;"></i>
-                            </button>
-                        </li>
-                        <!-- notification bell icon -->
-                        <li class="nav-item me-0 d-flex align-items-center">
-                            <button class="position-relative d-flex align-items-center btn p-0 text-light " id="notificationBell" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationOffcanvas" aria-controls="notificationOffcanvas" style="background: none; border: none;">
-                                <i class="fas fa-bell" style="font-size: 1.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #bfa14a;"></i>
-                                {% if unread_notifications|length > 0 %}
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {{ unread_notifications|length }}
-                                </span>
-                                {% endif %}
-                            </button>
-                        </li>
-                        <!-- profile -->
-                        <li class="nav-item d-flex align-items-center">
-                            <a class="nav-link d-flex align-items-center hover-shadow" href="{{ url_for('profile') }}">
-                                <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.image_file else 'default.png')) }}"
-                                     alt="Profile Picture"
-                                     class="rounded-circle"
-                                     style="width: 32px; height: 32px; object-fit: cover; border: 2px solid #ffd700; margin-right: 8px;">
-                                <span style="font-weight: 500;">{{ current_user.username }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-flex align-items-center">
-                            <a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt soundBtn"></i> Logout</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt soundBtn"></i> Login</a>
+                            <a class="nav-link" href="{{ url_for('about') }}"><i class="fas fa-scroll soundBtn"></i> About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('register') }}"><i class="fas fa-user-plus soundBtn"></i> Register</a>
+                            <a class="nav-link" href="{{ url_for('forums') }}"><i class="fas fa-comments soundBtn"></i> Forums</a>
                         </li>
-                    {% endif %}
-                </ul>
+                        {% if current_user.is_authenticated %}
+                            <li class="nav-item">   
+                                <a class="nav-link" href="{{ url_for('list_users') }}"><i class="fas fa-users soundBtn"></i> Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('guild_main') }}"><i class="fas fa-shield-halved soundBtn"></i> Guild</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <!-- right-side user authentication links -->
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        {% if current_user.is_authenticated %}
+                            <!-- offcanvas button -->
+                            <li class="nav-item d-flex align-items-center">
+                                <button id="offcanvasToggle"
+                                        class="btn p-0 text-light offcanvas-btn d-flex align-items-center py-1"
+                                        type="button"
+                                        data-bs-toggle="offcanvas"
+                                        data-bs-target="#offcanvas"
+                                        aria-controls="offcanvas">
+                                    <i class="fas fa-star"
+                                    style="font-size: 1.5rem; width: 32px; height: 32px; color: #ffd700; display: flex; align-items: center; justify-content: center;"></i>
+                                    <span class="ms-2 d-lg-none" style="font-size: 1rem;">Info</span>
+                                </button>
+                            </li>
+                            <!-- notification icon -->
+                            <li class="nav-item d-flex align-items-center">
+                                <button class="position-relative d-flex align-items-center btn p-0 text-light py-1"
+                                        id="notificationBell"
+                                        type="button"
+                                        data-bs-toggle="offcanvas"
+                                        data-bs-target="#notificationOffcanvas"
+                                        aria-controls="notificationOffcanvas"
+                                        style="background: none; border: none;">
+                                    <i class="fas fa-bell"
+                                    style="font-size: 1.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #bfa14a;"></i>
+                                    {% if unread_notifications|length > 0 %}
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ unread_notifications|length }}
+                                    </span>
+                                    {% endif %}
+                                    <span class="ms-2 d-lg-none" style="font-size: 1rem;">Notifications</span>
+                                </button>
+                            </li>
+                            <!-- profile -->
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="nav-link d-flex align-items-center hover-shadow py-1" href="{{ url_for('profile') }}">
+                                    <img src="{{ url_for('static', filename='profile_pics/' + (current_user.image_file if current_user.image_file else 'default.png')) }}"
+                                        alt="Profile Picture"
+                                        class="rounded-circle"
+                                        style="width: 32px; height: 32px; object-fit: cover; border: 2px solid #ffd700; margin-right: 8px;">
+                                    <span style="font-weight: 500;">{{ current_user.username }}</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
