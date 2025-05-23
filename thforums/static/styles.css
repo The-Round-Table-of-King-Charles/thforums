@@ -1041,7 +1041,5 @@ aside {
 @media screen and (max-width: 768px) {
     body {
         zoom: 0.75;
-        /* transform: scale(0.6);
-        transform-origin: 0 0; */
     }
 }
