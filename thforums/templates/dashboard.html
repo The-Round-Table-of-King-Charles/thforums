@@ -156,7 +156,7 @@
                     <i class="fas fa-scroll me-2"></i>Tavern Notices
                 </h4>
             </div>
-            <aside class="p-3" style="background: rgba(30,15,5,0.97); border-radius: 10px; border-left: 3px ridge #c9a227; box-shadow: 3px 3px 10px rgba(0,0,0,0.5); color: #e6d8a8; margin-top: 0; margin-bottom: 18px; padding: 8px;">
+            <aside class="static-sidebar p-3" style="background: rgba(30,15,5,0.97); border-radius: 10px; border-left: 3px ridge #c9a227; box-shadow: 3px 3px 10px rgba(0,0,0,0.5); color: #e6d8a8; margin-top: 0; margin-bottom: 18px; padding: 8px;">
                 <div class="p-1"></div>
                 <!-- announcement carousel -->
                 <div class="mb-3 mx-2">
@@ -211,13 +211,21 @@
                                             <i class="fas fa-reply text-info"></i>
                                         {% elif notif.type == 'commend' %}
                                             <i class="fas fa-thumbs-up text-success"></i>
+                                        {% elif notif.type == 'quest_accept' %}
+                                            <i class="fas fa-scroll text-warning"></i>
+                                        {% elif notif.type == 'quest_complete' %}
+                                            <i class="fas fa-scroll text-success"></i>
+                                        {% elif notif.type == 'guild_join' %}
+                                            <i class="fas fa-users text-primary"></i>
+                                        {% elif notif.type == 'guild_leave' %}
+                                            <i class="fas fa-user-minus text-danger"></i>
                                         {% else %}
                                             <i class="fas fa-info-circle text-secondary"></i>
                                         {% endif %}
                                     </span>
                                     <div>
                                         <span style="color:#fff;">{{ notif.message|safe }}</span>
-                                        <div class="small text-muted">{{ notif.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                                        <div class="small text-muted" style="color:#fff !important;">{{ notif.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
                                     </div>
                                 </li>
                                 {% endfor %}

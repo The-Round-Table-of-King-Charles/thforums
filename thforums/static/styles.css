@@ -833,6 +833,7 @@ aside {
     color: #fff !important;
 }
 
+/* Gold links for notification offcanvas */
 #notificationOffcanvas .list-group-item a {
     color: #ffd700 !important;
     text-decoration: underline;
@@ -1042,5 +1043,21 @@ aside {
   .navbar-nav.ms-auto {
     align-items: flex-end;
   }
+}
+
+/* =========================
+   Static Sidebar Gold Links
+   ========================= */
+.static-sidebar .list-group-item a,
+.static-sidebar a {
+    color: #ffd700 !important;
+    text-decoration: underline;
+    word-break: break-all;
+}
+
+.static-sidebar .list-group-item a:hover,
+.static-sidebar a:hover {
+    color: #fffbe7 !important;
+    text-shadow: 0 0 4px #ffd700;
 }
 

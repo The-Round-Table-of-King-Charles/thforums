@@ -334,8 +334,8 @@
                                 {% endif %}
                             </span>
                             <div>
-                                {{ notif.message|safe }}
-                                <div class="small text-muted">{{ notif.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                                <span style="color:#fff;">{{ notif.message|safe }}</span>
+                                <div class="small text-muted" style="color:#fff !important;">{{ notif.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
                             </div>
                         </li>
                         {% endfor %}
