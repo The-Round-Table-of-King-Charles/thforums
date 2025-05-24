@@ -68,6 +68,12 @@ body::before {
     pointer-events: none;
 }
 
+@media screen and (max-width: 768px) {
+    body {
+        zoom: 0.75;
+    }
+}
+
 main {
     
     flex: 1;
@@ -1037,3 +1043,4 @@ aside {
     align-items: flex-end;
   }
 }
+

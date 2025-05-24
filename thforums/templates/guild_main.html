@@ -3,11 +3,11 @@
 <div class="container">
     <div class="card p-4 mb-4 medieval-card shadow" style="background: #fffbe7; border-radius: 16px; border: 3px solid #bfa14a;">
         <div class="d-flex justify-content-between align-items-center">
-            <h2 class="mb-0 tavern-sign-straight"><i class="fas fa-shield-halved me-2"></i>{{ guild.guild_name }}</h2>
+            <h2 class="tavern-sign-straight"><i class="fas fa-shield-halved me-2"></i>{{ guild.guild_name }}</h2>
             {% if guild.is_owner(current_user) %}
                 <div>
-                    <a href="{{ url_for('guild_edit') }}" class="btn btn-outline-medieval ms-2 me-2 mb-2"><i class="fas fa-cog"></i> Settings</a>
-                    <a href="{{ url_for('guild_transfer') }}" class="btn btn-outline-medieval ms-2 me-2 mb-2"><i class="fas fa-user-shield"></i> Transfer Ownership</a>
+                    <a href="{{ url_for('guild_edit') }}" class="btn btn-outline-medieval m-2"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="{{ url_for('guild_transfer') }}" class="btn btn-outline-medieval m-2"><i class="fas fa-user-shield"></i> Transfer Ownership</a>
                 </div>
             {% endif %}
         </div>
